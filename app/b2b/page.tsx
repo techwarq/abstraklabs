@@ -45,7 +45,7 @@ export default function B2BSolutions() {
                         </h1>
                         <p className="text-xl text-gray-600 max-w-2xl leading-relaxed">
                             Our enterprise solutions are built on the principles of reliability, scalability, and absolute precision.
-                            We don't just solve problems; we eliminate them.
+                            We don&apos;t just solve problems; we eliminate them.
                         </p>
                     </motion.div>
 
