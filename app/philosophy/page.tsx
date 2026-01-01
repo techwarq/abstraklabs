@@ -35,7 +35,7 @@ export default function Philosophy() {
                             <span className="text-green-600">done right.</span>
                         </h1>
                         <p className="text-2xl md:text-3xl text-gray-800 max-w-3xl leading-relaxed font-light">
-                            We believe that AI shouldn't just do the work for you. It should act like a sidekick that helps you think better, work better, and grow.
+                            We believe that AI shouldn&apos;t just do the work for you. It should act like a sidekick that helps you think better, work better, and grow.
                         </p>
                     </motion.div>
 
@@ -50,7 +50,7 @@ export default function Philosophy() {
                             <div>
                                 <h3 className="text-4xl font-bold mb-6">The Sidekick Philosophy</h3>
                                 <p className="text-xl text-gray-600 leading-relaxed mb-12">
-                                    Our products are designed to amplify human potential, not replace it. We build for the builders, the curious, and those who want to push the boundaries of what's possible.
+                                    Our products are designed to amplify human potential, not replace it. We build for the builders, the curious, and those who want to push the boundaries of what&apos;s possible.
                                 </p>
                             </div>
                             <div className="text-6xl font-bold text-black/10">01</div>
@@ -66,7 +66,7 @@ export default function Philosophy() {
                             <div>
                                 <h3 className="text-4xl font-bold mb-6">A Trusted Standard</h3>
                                 <p className="text-xl text-gray-600 leading-relaxed mb-12">
-                                    We aim to be the umbrella brand for high-quality, thoughtful, and slightly crazy innovation. When you see Abstrak Labs, you know it's built with purpose.
+                                    We aim to be the umbrella brand for high-quality, thoughtful, and slightly crazy innovation. When you see Abstrak Labs, you know it&apos;s built with purpose.
                                 </p>
                             </div>
                             <div className="text-6xl font-bold text-green-600/20">02</div>
