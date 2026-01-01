@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import CountdownTimer from '../../components/CountdownTimer';
+
 export default function B2BSolutions() {
     const solutions = [
         {
@@ -19,20 +21,22 @@ export default function B2BSolutions() {
         <main className="min-h-screen bg-white text-black selection:bg-green-500 selection:text-white font-sans">
             <div className="fixed inset-0 bg-grid pointer-events-none z-0" />
 
+            <CountdownTimer />
+
             {/* Navigation */}
-            <header className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-sm border-b border-black/5">
+            <header className="sticky top-0 w-full z-50 bg-white/90 backdrop-blur-sm border-b border-black/5">
                 <div className="max-w-[1400px] mx-auto px-6 h-20 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
+                    <Link href="/" className="flex items-center gap-2">
                         <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
 
                         </div>
                         <span className="text-3xl font-bold tracking-tighter">abstrak<span className="text-green-600">labs</span></span>
-                    </div>
+                    </Link>
                     <div className="text-sm font-medium uppercase tracking-widest text-green-600">[ Enterprise ]</div>
                 </div>
             </header>
 
-            <div className="relative z-10 pt-40 pb-20 px-6">
+            <div className="relative z-10 pt-20 pb-20 px-6">
                 <div className="max-w-[1400px] mx-auto">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -89,6 +93,6 @@ export default function B2BSolutions() {
             <footer className="relative z-10 py-12 px-6 border-t border-black/5 text-center text-sm text-gray-500 uppercase tracking-widest">
                 © 2024 Abstrak Labs Enterprise Division
             </footer>
-        </main>
+        </main >
     );
 }

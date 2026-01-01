@@ -28,12 +28,12 @@ export default function ConsumerSolutions() {
             {/* Navigation */}
             <header className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-sm border-b border-black/5">
                 <div className="max-w-[1400px] mx-auto px-6 h-20 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
+                    <Link href="/" className="flex items-center gap-2">
                         <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
 
                         </div>
                         <span className="text-3xl font-bold tracking-tighter">abstrak<span className="text-green-600">labs</span></span>
-                    </div>
+                    </Link>
                     <div className="text-sm font-medium uppercase tracking-widest text-green-600">[ Consumer ]</div>
                 </div>
             </header>
