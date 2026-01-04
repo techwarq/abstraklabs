@@ -140,9 +140,9 @@ export default function LiveAnalytics() {
                         color="text-green-400"
                     />
                     <StatCard
-                        title="Total Sessions"
-                        value={stats.totalVisits}
-                        subtitle={range === '24h' ? "Today" : `Last ${range}`}
+                        title="Total Visits"
+                        value={(stats as any).allTimeVisits}
+                        subtitle="All time"
                         color="text-blue-400"
                     />
                 </div>
@@ -170,14 +170,16 @@ export default function LiveAnalytics() {
                 {/* Demographics Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="bg-zinc-900/30 backdrop-blur-md border border-zinc-800 p-8 rounded-3xl">
-                        <h3 className="text-zinc-500 font-medium mb-6">Top Browsers</h3>
-                        <div className="space-y-4">
+                        <div className="flex items-center justify-between mb-6">
+                            <h3 className="text-zinc-500 font-medium">Top Browsers</h3>
+                        </div>
+                        <div className="space-y-4 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
                             {Object.entries((stats as any).browserStats || {}).map(([name, count]: any) => (
                                 <div key={name} className="flex items-center justify-between">
                                     <span className="text-zinc-400">{name}</span>
                                     <div className="flex items-center gap-3 flex-1 justify-end">
                                         <div className="w-24 h-2 bg-zinc-800 rounded-full overflow-hidden">
-                                            <div className="h-full bg-blue-500" style={{ width: `${(count / Math.max(1, (stats as any).totalVisits)) * 100}%` }} />
+                                            <div className="h-full bg-blue-500" style={{ width: `${(count / Math.max(1, (stats as any).visitsInRange)) * 100}%` }} />
                                         </div>
                                         <span className="text-white font-mono w-8 text-right">{count}</span>
                                     </div>
@@ -188,14 +190,16 @@ export default function LiveAnalytics() {
                     </div>
 
                     <div className="bg-zinc-900/30 backdrop-blur-md border border-zinc-800 p-8 rounded-3xl">
-                        <h3 className="text-zinc-500 font-medium mb-6">Top Countries</h3>
-                        <div className="space-y-4">
+                        <div className="flex items-center justify-between mb-6">
+                            <h3 className="text-zinc-500 font-medium">Top Countries</h3>
+                        </div>
+                        <div className="space-y-4 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
                             {Object.entries((stats as any).countryStats || {}).map(([name, count]: any) => (
                                 <div key={name} className="flex items-center justify-between">
                                     <span className="text-zinc-400">{name === "Unknown" ? "🏳️ Unknown" : name}</span>
                                     <div className="flex items-center gap-3 flex-1 justify-end">
                                         <div className="w-24 h-2 bg-zinc-800 rounded-full overflow-hidden">
-                                            <div className="h-full bg-purple-500" style={{ width: `${(count / Math.max(1, (stats as any).totalVisits)) * 100}%` }} />
+                                            <div className="h-full bg-purple-500" style={{ width: `${(count / Math.max(1, (stats as any).visitsInRange)) * 100}%` }} />
                                         </div>
                                         <span className="text-white font-mono w-8 text-right">{count}</span>
                                     </div>

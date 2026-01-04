@@ -1,9 +1,13 @@
+export interface DailyData {
+    visits: number;
+    browsers: Record<string, number>;
+    countries: Record<string, number>;
+}
+
 export interface AnalyticsState {
-    totalVisits: number;
+    totalVisits: number; // All-time counter (legacy/simple)
     activeSessions: Map<string, number>; // sessionId -> lastHeartbeat timestamp
-    dailyStats: Record<string, number>; // YYYY-MM-DD -> count
-    browserStats: Record<string, number>; // Browser Name -> count
-    countryStats: Record<string, number>; // Country Code -> count
+    dailyStats: Record<string, DailyData>; // YYYY-MM-DD -> DailyData
 }
 
 // In-memory store
@@ -13,24 +17,19 @@ export const analyticsStore = globalForAnalytics.analytics || {
     totalVisits: 0,
     activeSessions: new Map<string, number>(),
     dailyStats: {},
-    browserStats: {},
-    countryStats: {},
 };
 
-// Reset store if it has data (to clear potential previous mock data during HMR)
-if (Object.keys(analyticsStore.dailyStats).length > 366) {
+// Reset store if data structure looks old (simple number instead of object)
+const firstKey = Object.keys(analyticsStore.dailyStats)[0];
+if (firstKey && typeof analyticsStore.dailyStats[firstKey] === 'number') {
     analyticsStore.totalVisits = 0;
     analyticsStore.dailyStats = {};
     analyticsStore.activeSessions = new Map<string, number>();
-    analyticsStore.browserStats = {};
-    analyticsStore.countryStats = {};
 }
 
-// Ensure properties exist (HMR safety)
+// Ensure properties exist
 if (!analyticsStore.dailyStats) analyticsStore.dailyStats = {};
 if (!analyticsStore.activeSessions) analyticsStore.activeSessions = new Map<string, number>();
-if (!analyticsStore.browserStats) analyticsStore.browserStats = {};
-if (!analyticsStore.countryStats) analyticsStore.countryStats = {};
 
 
 if (process.env.NODE_ENV !== "production") globalForAnalytics.analytics = analyticsStore;
@@ -46,13 +45,18 @@ export function recordVisit(sessionId: string, browser?: string, country?: strin
     analyticsStore.activeSessions.set(sessionId, Date.now());
 
     const today = getTodayKey();
-    analyticsStore.dailyStats[today] = (analyticsStore.dailyStats[today] || 0) + 1;
+    if (!analyticsStore.dailyStats[today]) {
+        analyticsStore.dailyStats[today] = { visits: 0, browsers: {}, countries: {} };
+    }
+
+    const dayData = analyticsStore.dailyStats[today];
+    dayData.visits++;
 
     if (browser) {
-        analyticsStore.browserStats[browser] = (analyticsStore.browserStats[browser] || 0) + 1;
+        dayData.browsers[browser] = (dayData.browsers[browser] || 0) + 1;
     }
     if (country) {
-        analyticsStore.countryStats[country] = (analyticsStore.countryStats[country] || 0) + 1;
+        dayData.countries[country] = (dayData.countries[country] || 0) + 1;
     }
 }
 
@@ -65,7 +69,6 @@ export function getStats(range: '24h' | '7d' | '1m' | '1y' = '24h') {
     const now = Date.now();
     const timeout = 60 * 1000;
 
-    // Convert to array to avoid "downlevelIteration" or target ES version issues
     const entries = Array.from(analyticsStore.activeSessions.entries());
     for (const [id, lastSeen] of entries) {
         if (now - lastSeen > timeout) {
@@ -75,34 +78,51 @@ export function getStats(range: '24h' | '7d' | '1m' | '1y' = '24h') {
 
     // Calculate filtered visits
     let rangeVisits = 0;
+    const aggregatedBrowsers: Record<string, number> = {};
+    const aggregatedCountries: Record<string, number> = {};
+
     const today = new Date();
     const cutoff = new Date();
 
     if (range === '24h') {
-        const key = getTodayKey();
-        rangeVisits = analyticsStore.dailyStats[key] || 0;
-    } else {
-        // Set cutoff date
-        if (range === '7d') cutoff.setDate(today.getDate() - 7);
-        if (range === '1m') cutoff.setDate(today.getDate() - 30);
-        if (range === '1y') cutoff.setDate(today.getDate() - 365);
-
-        const cutoffStr = cutoff.toISOString().split('T')[0];
-
-        // Sum up stats since cutoff
-        Object.entries(analyticsStore.dailyStats).forEach(([date, count]) => {
-            if (date >= cutoffStr) {
-                rangeVisits += count;
-            }
-        });
+        cutoff.setDate(today.getDate()); // Same day
+    } else if (range === '7d') {
+        cutoff.setDate(today.getDate() - 7);
+    } else if (range === '1m') {
+        cutoff.setDate(today.getDate() - 30);
+    } else if (range === '1y') {
+        cutoff.setDate(today.getDate() - 365);
     }
 
+    const cutoffStr = cutoff.toISOString().split('T')[0];
+
+    // Sum up stats since cutoff
+    Object.entries(analyticsStore.dailyStats).forEach(([date, data]) => {
+        // Special case for '24h': only show today. 
+        // For others, show anything >= cutoff.
+        const include = range === '24h' ? date === getTodayKey() : date >= cutoffStr;
+
+        if (include) {
+            rangeVisits += data.visits;
+
+            // Aggregate browsers
+            Object.entries(data.browsers).forEach(([b, count]) => {
+                aggregatedBrowsers[b] = (aggregatedBrowsers[b] || 0) + count;
+            });
+            // Aggregate countries
+            Object.entries(data.countries).forEach(([c, count]) => {
+                aggregatedCountries[c] = (aggregatedCountries[c] || 0) + count;
+            });
+        }
+    });
+
     return {
-        totalVisits: rangeVisits,
+        visitsInRange: rangeVisits,
+        allTimeVisits: analyticsStore.totalVisits,
         activeUsers: analyticsStore.activeSessions.size,
         chartData: getChartData(range),
-        browserStats: analyticsStore.browserStats,
-        countryStats: analyticsStore.countryStats,
+        browserStats: aggregatedBrowsers,
+        countryStats: aggregatedCountries,
     };
 }
 
@@ -116,9 +136,11 @@ function getChartData(range: string) {
         const d = new Date(today);
         d.setDate(d.getDate() - i);
         const key = d.toISOString().split('T')[0];
+
+        const dayData = analyticsStore.dailyStats[key];
         data.push({
             date: key,
-            value: analyticsStore.dailyStats[key] || 0
+            value: dayData ? dayData.visits : 0
         });
     }
     return data;
