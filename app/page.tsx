@@ -4,7 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import CountdownTimer from '../components/CountdownTimer';
+
 
 export default function Home() {
   return (
@@ -131,7 +131,7 @@ export default function Home() {
 
       {/* Footer - Large Outlined Text */}
       <footer className="relative z-10 text-center bg-black pt-20 pb-10 px-6 overflow-hidden">
-        <CountdownTimer />
+
         <div className="max-w-[1400px] mx-auto relative">
           {/* Main Text */}
           <div className="relative z-10">

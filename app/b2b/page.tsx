@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import CountdownTimer from '../../components/CountdownTimer';
+
 
 export default function B2BSolutions() {
     const solutions = [
@@ -21,7 +21,7 @@ export default function B2BSolutions() {
         <main className="min-h-screen bg-white text-black selection:bg-green-500 selection:text-white font-sans">
             <div className="fixed inset-0 bg-grid pointer-events-none z-0" />
 
-            <CountdownTimer />
+
 
             {/* Navigation */}
             <header className="sticky top-0 w-full z-50 bg-white/90 backdrop-blur-sm border-b border-black/5">
