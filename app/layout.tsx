@@ -4,8 +4,8 @@ import AnalyticsTracker from "../components/AnalyticsTracker";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Abstrak Labs | Humans + AI, done right.",
-  description: "Abstrak Labs builds B2B and consumer products that act as sidekicks for human potential. We architect ecosystems for efficiency and delight.",
+  title: "Abstrak Labs | Stop Hiring People for Work AI Can Do — $10/hr",
+  description: "You have the task. We have the agents. Give us research, data, lead gen, browser tasks — we deliver completed work at $10/hr. Don't learn automation, don't hire freelancers.",
   icons: {
     icon: "/logo.png",
   },
