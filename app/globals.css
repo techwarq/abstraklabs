@@ -5,7 +5,7 @@
 :root {
   --background: #F5F5F3;
   --foreground: #000000;
-  --grid: rgba(0,0,0,0.06);
+  --grid: rgba(0,0,0,0.08);
   --accent: #FF4B00;
   --accent-hover: #E84500;
   --card-bg: #FFFFFF;
@@ -30,11 +30,26 @@ body {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
+/* Pixel header — mimics inspo without external font */
+.pixel-head {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
 .bg-grid-brutalist {
   background-size: 80px 80px;
   background-image:
     linear-gradient(to right, var(--grid) 1px, transparent 1px),
     linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+}
+
+.bg-grid-dots {
+  background-size: 80px 80px;
+  background-image: radial-gradient(circle, var(--accent) 1.6px, transparent 1.6px);
+  background-position: 0 0;
 }
 
 .bg-grid-fine {
@@ -45,7 +60,7 @@ body {
 }
 
 .display-brutalist {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: ui-sans-serif, system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
   font-weight: 700;
   letter-spacing: -0.04em;
   line-height: 0.85;
@@ -57,20 +72,20 @@ body {
   width: 7px;
   height: 7px;
   background: var(--accent);
-  opacity: 0.9;
+  opacity: 0.95;
 }
 
-@layer utilities {
-  .text-outline-abstrak {
-    -webkit-text-stroke: 1.5px rgba(0,0,0,0.12);
-    color: transparent;
-  }
+.grid-corner {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 0.5px;
 }
 
 .scroll-hide::-webkit-scrollbar { display: none; }
 .scroll-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* sharp focus */
 *:focus-visible {
   outline: 1px solid var(--accent);
   outline-offset: 2px;
