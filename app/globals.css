@@ -3,14 +3,14 @@
 @tailwind utilities;
 
 :root {
-  --background: #F5F5F3;
-  --foreground: #000000;
-  --grid: rgba(0,0,0,0.08);
-  --accent: #FF4B00;
-  --accent-hover: #E84500;
+  --background: #EDE8D0;
+  --foreground: #1A1C1E;
+  --grid: rgba(26, 28, 30, 0.07);
+  --accent: #92A9E1;
+  --accent-hover: #7E9AD1;
   --card-bg: #FFFFFF;
   --muted: #8A8A8A;
-  --border: rgba(0,0,0,0.09);
+  --border: rgba(26, 28, 30, 0.09);
 }
 
 * { border-color: var(--border); }
@@ -55,8 +55,8 @@ body {
 .bg-grid-fine {
   background-size: 40px 40px;
   background-image:
-    linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px);
+    linear-gradient(to right, rgba(26,28,30,0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(26,28,30,0.05) 1px, transparent 1px);
 }
 
 .display-brutalist {

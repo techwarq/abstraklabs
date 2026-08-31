@@ -106,14 +106,14 @@ export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(2);
 
   return (
-    <main className="min-h-screen bg-[#F2F2F0] text-black selection:bg-[#FF4B00] selection:text-white">
+    <main className="min-h-screen bg-[#EDE8D0] text-black selection:bg-[#92A9E1] selection:text-white">
       {/* Blueprint grid — inspo style: light gray 80px + orange dots */}
       <div className="fixed inset-0 bg-grid-brutalist pointer-events-none opacity-[0.38]" />
       <div className="fixed inset-0 bg-grid-dots pointer-events-none opacity-[0.18]" style={{ backgroundPosition: "0 0" }} />
 
-      <div className="relative z-10 max-w-[1440px] mx-auto border-x border-black/[0.08] bg-[#F5F5F3]">
+      <div className="relative z-10 max-w-[1440px] mx-auto border-x border-black/[0.08] bg-[#EDE8D0]">
         {/* HEADER — slim sticky */}
-        <header className="sticky top-0 z-50 bg-[#F5F5F3]/92 backdrop-blur-[10px] border-b border-black/[0.08]">
+        <header className="sticky top-0 z-50 bg-[#EDE8D0]/92 backdrop-blur-[10px] border-b border-black/[0.08]">
           <div className="px-6 lg:px-8 h-[56px] flex items-center justify-between gap-6">
             <Link href="/" className="shrink-0 leading-none">
               <div className="pixel-head text-[13px] tracking-[-0.02em] leading-none">ABSTRAK LABS</div>
@@ -147,29 +147,29 @@ export default function Home() {
         {/* Top BIO tags like inspo — subtle blueprint header */}
         <div className="hidden lg:grid grid-cols-4 border-b border-black/[0.08] mono text-[9px] tracking-[0.14em] uppercase text-black/30">
           <div className="px-6 py-2 border-r border-black/[0.08] flex justify-between">
-            <span>BIO</span> <span className="text-[#FF4B00]">+</span>
+            <span>BIO</span> <span className="text-[#92A9E1]">+</span>
           </div>
           <div className="px-6 py-2 border-r border-black/[0.08] flex justify-between">
-            <span>BIO</span> <span className="text-[#FF4B00]">+</span>
+            <span>BIO</span> <span className="text-[#92A9E1]">+</span>
           </div>
           <div className="px-6 py-2 border-r border-black/[0.08] flex justify-between">
-            <span>BIO</span> <span className="text-[#FF4B00]">+</span>
+            <span>BIO</span> <span className="text-[#92A9E1]">+</span>
           </div>
           <div className="px-6 py-2 flex justify-between">
-            <span>BIO</span> <span className="text-[#FF4B00]">+</span>
+            <span>BIO</span> <span className="text-[#92A9E1]">+</span>
           </div>
         </div>
 
         {/* HERO — 60/40 */}
-        <section className="border-b border-black/[0.08] bg-[#F5F5F3] relative">
-          <div className="absolute top-3 left-3 w-[6px] h-[6px] bg-[#FF4B00] hidden lg:block" />
-          <div className="absolute top-3 right-3 w-[6px] h-[6px] bg-[#FF4B00] hidden lg:block" />
+        <section className="border-b border-black/[0.08] bg-[#EDE8D0] relative">
+          <div className="absolute top-3 left-3 w-[6px] h-[6px] bg-[#92A9E1] hidden lg:block" />
+          <div className="absolute top-3 right-3 w-[6px] h-[6px] bg-[#92A9E1] hidden lg:block" />
           <div className="grid grid-cols-12">
             {/* LEFT 60% */}
             <div className="col-span-12 lg:col-span-7 px-6 lg:px-9 py-8 lg:py-10 border-b lg:border-b-0 lg:border-r border-black/[0.08]">
               <div className="inline-flex items-center gap-3 mono text-[10px] tracking-[0.16em] uppercase text-black/50 border border-black/[0.08] bg-white px-3 py-1.5">
                 <span className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 bg-[#FF4B00] rounded-full" /> Digital labor on demand
+                  <span className="w-1.5 h-1.5 bg-[#92A9E1] rounded-full" /> Digital labor on demand
                 </span>
                 <span className="hidden sm:inline text-black/20">|</span>
                 <span className="hidden sm:inline">$10 / hour</span>
@@ -178,9 +178,9 @@ export default function Home() {
               </div>
 
               <h1 className="display-brutalist text-[44px] sm:text-[56px] lg:text-[68px] leading-[0.85] tracking-[-0.045em] mt-6">
-                Give us the <span className="text-[#FF4B00]">work.</span>
+                Give us the <span className="text-[#92A9E1]">work.</span>
                 <br />
-                We&apos;ll get it <span className="text-[#FF4B00]">done.</span>
+                We&apos;ll get it <span className="text-[#92A9E1]">done.</span>
               </h1>
 
               <p className="text-[14px] leading-[1.6] text-black/65 mt-5 max-w-[480px]">
@@ -196,7 +196,7 @@ export default function Home() {
               <div className="mt-7 flex gap-3">
                 <a
                   href="/hire"
-                  className="bg-[#FF4B00] hover:bg-[#E84500] text-white mono text-[11px] tracking-[0.14em] uppercase font-bold px-6 py-3 transition-colors"
+                  className="bg-[#92A9E1] hover:bg-[#7E9AD1] text-white mono text-[11px] tracking-[0.14em] uppercase font-bold px-6 py-3 transition-colors"
                 >
                   Give us a task →
                 </a>
@@ -230,7 +230,7 @@ export default function Home() {
 
                 <div className="px-6 py-5 flex-1">
                   <div className="mono text-[10px] tracking-[0.16em] uppercase text-black/40 font-bold">Customer request</div>
-                  <div className="mt-2 text-[13px] leading-[1.5] font-medium border border-black/[0.08] bg-[#F5F5F3] p-3.5">
+                  <div className="mt-2 text-[13px] leading-[1.5] font-medium border border-black/[0.08] bg-[#EDE8D0] p-3.5">
                     “Find 500 US SaaS companies, their founders, funding and LinkedIn.”
                   </div>
 
@@ -245,27 +245,27 @@ export default function Home() {
                     ].map((s) => (
                       <div key={s.n} className="flex items-center gap-3 px-3.5 py-2.5 border-b last:border-b-0 border-black/[0.06] mono text-[11px]">
                         <span className="text-[10px] text-black/30 w-5">{s.n}</span>
-                        <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${s.status === "done" ? "bg-black" : s.status === "active" ? "bg-[#FF4B00] animate-pulse" : "bg-black/15"}`} />
+                        <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${s.status === "done" ? "bg-black" : s.status === "active" ? "bg-[#92A9E1] animate-pulse" : "bg-black/15"}`} />
                         <span className={s.status === "queued" ? "text-black/40" : s.status === "active" ? "font-bold" : "text-black/70"}>{s.t}</span>
                         <span className="ml-auto text-[10px] tracking-wide uppercase">
-                          {s.status === "done" ? <span className="text-black/40">✓ Done</span> : s.status === "active" ? <span className="text-[#FF4B00]">● Working</span> : <span className="text-black/25">Queued</span>}
+                          {s.status === "done" ? <span className="text-black/40">✓ Done</span> : s.status === "active" ? <span className="text-[#92A9E1]">● Working</span> : <span className="text-black/25">Queued</span>}
                         </span>
                       </div>
                     ))}
                   </div>
 
                   <div className="mt-5 border border-black/[0.08] p-4">
-                    <div className="mono text-[10px] tracking-[0.16em] uppercase font-bold text-[#FF4B00]">Delivered</div>
+                    <div className="mono text-[10px] tracking-[0.16em] uppercase font-bold text-[#92A9E1]">Delivered</div>
                     <div className="text-[18px] font-bold tracking-tight mt-1">500 qualified companies</div>
 
                     <div className="mt-4 grid grid-cols-3 gap-0 border border-black/[0.08] mono text-center">
-                      <div className="py-3 border-r border-black/[0.08] bg-[#F5F5F3]">
+                      <div className="py-3 border-r border-black/[0.08] bg-[#EDE8D0]">
                         <div className="text-[10px] tracking-[0.14em] uppercase text-black/40">Time</div>
                         <div className="text-[13px] font-bold mt-1">6h 42m</div>
                       </div>
                       <div className="py-3 border-r border-black/[0.08] bg-white">
                         <div className="text-[10px] tracking-[0.14em] uppercase text-black/40">Cost</div>
-                        <div className="text-[13px] font-bold mt-1 text-[#FF4B00]">$67</div>
+                        <div className="text-[13px] font-bold mt-1 text-[#92A9E1]">$67</div>
                       </div>
                       <div className="py-3 bg-white">
                         <div className="text-[10px] tracking-[0.14em] uppercase text-black/40">Output</div>
@@ -275,7 +275,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="mt-auto bg-[#FF4B00] text-white mono text-[11px] tracking-[0.14em] uppercase font-bold px-6 py-3 flex items-center justify-between">
+                <div className="mt-auto bg-[#92A9E1] text-white mono text-[11px] tracking-[0.14em] uppercase font-bold px-6 py-3 flex items-center justify-between">
                   <span>Task complete</span> <span>→ $67</span>
                 </div>
               </div>
@@ -285,13 +285,13 @@ export default function Home() {
 
         {/* KEY VALUE STATEMENT — blueprint style */}
         <section className="border-b border-black/[0.08] bg-white relative">
-          <div className="absolute top-2 left-2 w-[5px] h-[5px] bg-[#FF4B00]/60 hidden lg:block" />
-          <div className="absolute top-2 right-2 w-[5px] h-[5px] bg-[#FF4B00]/60 hidden lg:block" />
+          <div className="absolute top-2 left-2 w-[5px] h-[5px] bg-[#92A9E1]/60 hidden lg:block" />
+          <div className="absolute top-2 right-2 w-[5px] h-[5px] bg-[#92A9E1]/60 hidden lg:block" />
           <div className="px-6 lg:px-10 py-8 text-center">
             <h2 className="pixel-head text-[22px] md:text-[30px] leading-[0.9] tracking-[-0.02em]">
               You don&apos;t need another tool.
               <br />
-              You need the <span className="text-[#FF4B00]">work done.</span>
+              You need the <span className="text-[#92A9E1]">work done.</span>
             </h2>
             <div className="mono text-[11px] leading-relaxed text-black/55 mt-4 max-w-[420px] mx-auto">
               <div>No prompts.</div>
@@ -303,7 +303,7 @@ export default function Home() {
         </section>
 
         {/* COMPARISON — compact sophisticated */}
-        <section id="difference" className="border-b border-black/[0.08] bg-[#F5F5F3]">
+        <section id="difference" className="border-b border-black/[0.08] bg-[#EDE8D0]">
           <div className="grid grid-cols-12">
             <div className="col-span-12 md:col-span-6 px-6 lg:px-9 py-7 bg-white border-b md:border-b-0 md:border-r border-black/[0.08]">
               <div className="mono text-[10px] tracking-[0.16em] uppercase font-bold text-black/40">Other AI tools</div>
@@ -320,7 +320,7 @@ export default function Home() {
               <div className="mono text-[10px] tracking-[0.16em] uppercase font-bold text-white/40">Abstrak Labs</div>
               <div className="mt-5 mono text-[10px] tracking-[0.14em] uppercase font-bold text-white/50">You:</div>
               <div className="mono text-[13px] font-medium mt-1">Describe the task.</div>
-              <div className="mt-5 mono text-[10px] tracking-[0.14em] uppercase font-bold text-[#FF4B00]">We:</div>
+              <div className="mt-5 mono text-[10px] tracking-[0.14em] uppercase font-bold text-[#92A9E1]">We:</div>
               <ul className="mt-1 mono text-[12.5px] leading-relaxed text-white/80 space-y-1.5">
                 <li>Figure out the workflow</li>
                 <li>Run the workers</li>
@@ -331,15 +331,15 @@ export default function Home() {
           </div>
           <div className="bg-black border-t border-white/10 py-5 text-center">
             <div className="display-brutalist text-white text-[16px] md:text-[20px] tracking-[-0.02em] leading-none">
-              You buy the result. <span className="text-[#FF4B00]">Not the software.</span>
+              You buy the result. <span className="text-[#92A9E1]">Not the software.</span>
             </div>
           </div>
         </section>
 
         {/* WHAT WE DO — 3×2 — pixel header like MEDIA PRESENCE */}
         <section id="services" className="border-b border-black/[0.08] bg-white relative">
-          <div className="absolute top-2 left-2 w-[5px] h-[5px] bg-[#FF4B00]/60 hidden lg:block" />
-          <div className="absolute top-2 right-2 w-[5px] h-[5px] bg-[#FF4B00]/60 hidden lg:block" />
+          <div className="absolute top-2 left-2 w-[5px] h-[5px] bg-[#92A9E1]/60 hidden lg:block" />
+          <div className="absolute top-2 right-2 w-[5px] h-[5px] bg-[#92A9E1]/60 hidden lg:block" />
           <div className="px-6 lg:px-8 py-8 border-b border-black/[0.08]">
             <h2 className="pixel-head text-[22px] md:text-[28px] leading-[0.9] tracking-[-0.02em]">WHAT DO YOU NEED OFF YOUR PLATE?</h2>
             <p className="mono text-[11.5px] leading-relaxed text-black/55 mt-3 max-w-[560px]">
@@ -349,7 +349,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-black/[0.08]">
             {services.map((s) => (
-              <div key={s.n} className="bg-white px-6 py-7 group hover:bg-[#F5F5F3] transition-colors">
+              <div key={s.n} className="bg-white px-6 py-7 group hover:bg-[#EDE8D0] transition-colors">
                 <div className="flex items-start justify-between">
                   <div className="mono text-[10px] tracking-[0.16em] text-black/30">{s.n}</div>
                   <span className="w-6 h-6 border border-black/[0.08] grid place-items-center mono text-[10px] group-hover:bg-black group-hover:text-white group-hover:border-black transition-colors">
@@ -371,9 +371,9 @@ export default function Home() {
         </section>
 
         {/* PORTFOLIO — inspo: pixel head, All Projects badge, < > arrows, blueprint corners */}
-        <section id="work" className="border-b border-black/[0.08] bg-[#F5F5F3] relative">
-          <div className="absolute top-2 left-2 w-[5px] h-[5px] bg-[#FF4B00]/60 hidden lg:block" />
-          <div className="absolute top-2 right-2 w-[5px] h-[5px] bg-[#FF4B00]/60 hidden lg:block" />
+        <section id="work" className="border-b border-black/[0.08] bg-[#EDE8D0] relative">
+          <div className="absolute top-2 left-2 w-[5px] h-[5px] bg-[#92A9E1]/60 hidden lg:block" />
+          <div className="absolute top-2 right-2 w-[5px] h-[5px] bg-[#92A9E1]/60 hidden lg:block" />
           <div className="hidden lg:flex absolute left-0 top-[220px] -translate-x-1/2 z-20 border border-black/[0.08] bg-white">
             <button className="w-7 h-7 grid place-items-center mono text-[12px] hover:bg-black hover:text-white transition-colors">‹</button>
             <button className="w-7 h-7 grid place-items-center mono text-[12px] border-l border-black/[0.08] hover:bg-black hover:text-white transition-colors">›</button>
@@ -420,9 +420,9 @@ export default function Home() {
                   </div>
                   <div className="bg-white p-3 border-l border-black/[0.08]">
                     <div className="text-[10px] tracking-[0.14em] uppercase text-black/40">Cost</div>
-                    <div className="font-bold mt-1 text-[#FF4B00]">{p.cost}</div>
+                    <div className="font-bold mt-1 text-[#92A9E1]">{p.cost}</div>
                   </div>
-                  <div className="bg-[#F5F5F3] p-3 border-t border-black/[0.08]">
+                  <div className="bg-[#EDE8D0] p-3 border-t border-black/[0.08]">
                     <div className="text-[10px] tracking-[0.14em] uppercase text-black/40">Delivered</div>
                     <div className="font-bold text-[11px] leading-tight mt-1">{p.delivered}</div>
                   </div>
@@ -441,8 +441,8 @@ export default function Home() {
 
         {/* HOW IT WORKS — 5 steps: Tell us → Estimate → Approve → We work → Get it done */}
         <section id="how" className="border-b border-black/[0.08] bg-white relative">
-          <div className="absolute top-2 left-2 w-[5px] h-[5px] bg-[#FF4B00]/60 hidden lg:block" />
-          <div className="absolute top-2 right-2 w-[5px] h-[5px] bg-[#FF4B00]/60 hidden lg:block" />
+          <div className="absolute top-2 left-2 w-[5px] h-[5px] bg-[#92A9E1]/60 hidden lg:block" />
+          <div className="absolute top-2 right-2 w-[5px] h-[5px] bg-[#92A9E1]/60 hidden lg:block" />
           <div className="px-6 lg:px-8 py-8 border-b border-black/[0.08] text-center">
             <h2 className="pixel-head text-[20px] md:text-[28px] leading-[0.9] tracking-[-0.02em]">
               YOU HAVE THE TASK.
@@ -454,32 +454,32 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-5 gap-px bg-black/[0.08]">
             <div className="bg-white px-6 py-7 relative">
-              <div className="mono text-[10px] tracking-[0.16em] font-bold text-[#FF4B00]">01</div>
+              <div className="mono text-[10px] tracking-[0.16em] font-bold text-[#92A9E1]">01</div>
               <h3 className="mono text-[12px] font-bold tracking-[0.08em] uppercase mt-2">Tell us</h3>
               <p className="mono text-[11.5px] text-black/60 mt-2 leading-relaxed">Describe what you need.</p>
               <p className="mono text-[11px] text-black/50 mt-2">“Find 500 companies matching these criteria.”</p>
               <div className="hidden md:block absolute top-1/2 -right-3 w-6 h-6 bg-white border border-black/[0.08] grid place-items-center mono text-[10px] z-10">↓</div>
             </div>
             <div className="bg-white px-6 py-7 relative">
-              <div className="mono text-[10px] tracking-[0.16em] font-bold text-[#FF4B00]">02</div>
+              <div className="mono text-[10px] tracking-[0.16em] font-bold text-[#92A9E1]">02</div>
               <h3 className="mono text-[12px] font-bold tracking-[0.08em] uppercase mt-2">Get an estimate</h3>
               <p className="mono text-[11.5px] text-black/60 mt-2 leading-relaxed">We ask questions and estimate the time/cost.</p>
               <div className="hidden md:block absolute top-1/2 -right-3 w-6 h-6 bg-white border border-black/[0.08] grid place-items-center mono text-[10px] z-10">↓</div>
             </div>
             <div className="bg-white px-6 py-7 relative">
-              <div className="mono text-[10px] tracking-[0.16em] font-bold text-[#FF4B00]">03</div>
+              <div className="mono text-[10px] tracking-[0.16em] font-bold text-[#92A9E1]">03</div>
               <h3 className="mono text-[12px] font-bold tracking-[0.08em] uppercase mt-2">Approve</h3>
               <p className="mono text-[11.5px] text-black/60 mt-2 leading-relaxed">Authorize the maximum budget.</p>
               <div className="hidden md:block absolute top-1/2 -right-3 w-6 h-6 bg-white border border-black/[0.08] grid place-items-center mono text-[10px] z-10">↓</div>
             </div>
             <div className="bg-white px-6 py-7 relative">
-              <div className="mono text-[10px] tracking-[0.16em] font-bold text-[#FF4B00]">04</div>
+              <div className="mono text-[10px] tracking-[0.16em] font-bold text-[#92A9E1]">04</div>
               <h3 className="mono text-[12px] font-bold tracking-[0.08em] uppercase mt-2">We work</h3>
               <p className="mono text-[11.5px] text-black/60 mt-2 leading-relaxed">Your AI freelancer gets started.</p>
               <div className="hidden md:block absolute top-1/2 -right-3 w-6 h-6 bg-white border border-black/[0.08] grid place-items-center mono text-[10px] z-10">↓</div>
             </div>
             <div className="bg-white px-6 py-7">
-              <div className="mono text-[10px] tracking-[0.16em] font-bold text-[#FF4B00]">05</div>
+              <div className="mono text-[10px] tracking-[0.16em] font-bold text-[#92A9E1]">05</div>
               <h3 className="mono text-[12px] font-bold tracking-[0.08em] uppercase mt-2">Get it done</h3>
               <p className="mono text-[11.5px] text-black/60 mt-2 leading-relaxed">Receive the finished work and pay only for actual time.</p>
             </div>
@@ -488,9 +488,9 @@ export default function Home() {
         </section>
 
         {/* YOU'RE ALWAYS IN CONTROL — payment + authorization + guarantee (product story, not legal) */}
-        <section className="border-b border-black/[0.08] bg-[#F5F5F3] relative">
-          <div className="absolute top-2 left-2 w-[5px] h-[5px] bg-[#FF4B00]/60 hidden lg:block" />
-          <div className="absolute top-2 right-2 w-[5px] h-[5px] bg-[#FF4B00]/60 hidden lg:block" />
+        <section className="border-b border-black/[0.08] bg-[#EDE8D0] relative">
+          <div className="absolute top-2 left-2 w-[5px] h-[5px] bg-[#92A9E1]/60 hidden lg:block" />
+          <div className="absolute top-2 right-2 w-[5px] h-[5px] bg-[#92A9E1]/60 hidden lg:block" />
           <div className="px-6 lg:px-8 py-8 border-b border-black/[0.08] bg-white">
             <h2 className="pixel-head text-[22px] md:text-[30px] leading-[0.9] tracking-[-0.02em]">YOU&apos;RE ALWAYS IN CONTROL.</h2>
             <p className="mono text-[12px] leading-relaxed text-black/60 mt-3 max-w-[640px]">We don&apos;t ask you to blindly pay for an AI and hope it works.</p>
@@ -499,9 +499,9 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-black/[0.08]">
             {/* 01 — SEE THE ESTIMATE */}
             <div className="bg-white p-6 lg:p-7">
-              <div className="mono text-[10px] tracking-[0.16em] font-bold text-[#FF4B00]">01 — SEE THE ESTIMATE</div>
+              <div className="mono text-[10px] tracking-[0.16em] font-bold text-[#92A9E1]">01 — SEE THE ESTIMATE</div>
               <p className="mono text-[12px] leading-relaxed text-black/70 mt-3">Before work starts, we&apos;ll ask the questions needed to understand your task.</p>
-              <div className="mt-4 border border-black/[0.08] bg-[#F5F5F3] p-4 mono text-[11px] leading-relaxed">
+              <div className="mt-4 border border-black/[0.08] bg-[#EDE8D0] p-4 mono text-[11px] leading-relaxed">
                 <div>
                   <span className="text-black/50 uppercase tracking-[0.14em] text-[10px]">Estimated:</span> <span className="font-bold">4–6 hours</span>
                 </div>
@@ -516,16 +516,16 @@ export default function Home() {
 
             {/* 02 — AUTHORIZE */}
             <div className="bg-white p-6 lg:p-7">
-              <div className="mono text-[10px] tracking-[0.16em] font-bold text-[#FF4B00]">02 — AUTHORIZE THE BUDGET</div>
+              <div className="mono text-[10px] tracking-[0.16em] font-bold text-[#92A9E1]">02 — AUTHORIZE THE BUDGET</div>
               <p className="mono text-[12px] leading-relaxed text-black/70 mt-3">You approve the maximum amount before your AI freelancer starts.</p>
               <div className="mt-4 bg-black text-white mono text-[11px] leading-relaxed p-4 text-center font-bold">You will only be charged for actual work performed.</div>
             </div>
 
             {/* 03 — WATCH THE WORK */}
             <div className="bg-white p-6 lg:p-7">
-              <div className="mono text-[10px] tracking-[0.16em] font-bold text-[#FF4B00]">03 — WATCH THE WORK</div>
+              <div className="mono text-[10px] tracking-[0.16em] font-bold text-[#92A9E1]">03 — WATCH THE WORK</div>
               <p className="mono text-[12px] leading-relaxed text-black/70 mt-3">Your task dashboard shows:</p>
-              <div className="mt-4 border border-black/[0.08] p-4 bg-[#F5F5F3]">
+              <div className="mt-4 border border-black/[0.08] p-4 bg-[#EDE8D0]">
                 <div className="mono text-[10px] tracking-[0.14em] uppercase font-bold flex items-center gap-2">
                   WORKING <span className="w-1.5 h-1.5 bg-[#16A34A] rounded-full animate-pulse" />
                 </div>
@@ -544,14 +544,14 @@ export default function Home() {
 
             {/* 04 — GET THE RESULT */}
             <div className="bg-white p-6 lg:p-7">
-              <div className="mono text-[10px] tracking-[0.16em] font-bold text-[#FF4B00]">04 — GET THE RESULT</div>
+              <div className="mono text-[10px] tracking-[0.16em] font-bold text-[#92A9E1]">04 — GET THE RESULT</div>
               <p className="mono text-[12px] leading-relaxed text-black/70 mt-3">When the task is complete:</p>
               <div className="mt-4 border border-black/[0.08] bg-white p-4 mono text-[11px]">
                 <div>
                   <span className="text-black/50 uppercase tracking-[0.14em] text-[10px]">Time:</span> <span className="font-bold">4h 18m</span>
                 </div>
                 <div className="mt-1">
-                  <span className="text-black/50 uppercase tracking-[0.14em] text-[10px]">Final cost:</span> <span className="font-bold text-[#FF4B00]">$43.00</span>
+                  <span className="text-black/50 uppercase tracking-[0.14em] text-[10px]">Final cost:</span> <span className="font-bold text-[#92A9E1]">$43.00</span>
                 </div>
                 <div className="mono text-[11px] text-black/60 mt-3 leading-relaxed">You only pay for what was actually used.</div>
               </div>
@@ -561,14 +561,14 @@ export default function Home() {
           {/* Orange/black callout — NOT WHAT YOU EXPECTED? */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-px bg-black/[0.08] border-t border-black/[0.08]">
             <div className="col-span-12 lg:col-span-4 bg-black text-white p-6 lg:p-8 flex flex-col justify-center">
-              <h3 className="pixel-head text-[18px] leading-[0.9] tracking-[-0.02em] text-[#FF4B00]">NOT WHAT YOU EXPECTED?</h3>
+              <h3 className="pixel-head text-[18px] leading-[0.9] tracking-[-0.02em] text-[#92A9E1]">NOT WHAT YOU EXPECTED?</h3>
               <p className="mono text-[12px] leading-relaxed text-white/70 mt-3">Tell us what went wrong.</p>
             </div>
-            <div className="col-span-12 lg:col-span-8 bg-[#FF4B00] text-white p-6 lg:p-8">
+            <div className="col-span-12 lg:col-span-8 bg-[#92A9E1] text-white p-6 lg:p-8">
               <p className="mono text-[13px] leading-relaxed font-medium">We&apos;ll review the original requirements and delivered work.</p>
               <p className="mono text-[13px] leading-relaxed font-bold mt-2">If we didn&apos;t complete the agreed task correctly, we&apos;ll make it right — either by redoing the affected work at no additional charge or refunding the applicable amount.</p>
               <p className="mono text-[10px] leading-relaxed text-white/80 mt-4">Changes to requirements, incomplete instructions, or work completed according to the agreed scope aren&apos;t eligible for refunds.</p>
-              <Link href="/work-guarantee" className="inline-block mt-4 mono text-[10px] tracking-[0.14em] uppercase font-bold border border-white/30 px-3 py-1.5 hover:bg-white hover:text-[#FF4B00] transition-colors">
+              <Link href="/work-guarantee" className="inline-block mt-4 mono text-[10px] tracking-[0.14em] uppercase font-bold border border-white/30 px-3 py-1.5 hover:bg-white hover:text-[#92A9E1] transition-colors">
                 Read guarantee details →
               </Link>
             </div>
@@ -576,9 +576,9 @@ export default function Home() {
         </section>
 
         {/* WORKER TYPES — pixel like TESTIMONIALS inspo */}
-        <section className="border-b border-black/[0.08] bg-[#F5F5F3] relative">
-          <div className="absolute top-2 left-2 w-[5px] h-[5px] bg-[#FF4B00]/60 hidden lg:block" />
-          <div className="absolute top-2 right-2 w-[5px] h-[5px] bg-[#FF4B00]/60 hidden lg:block" />
+        <section className="border-b border-black/[0.08] bg-[#EDE8D0] relative">
+          <div className="absolute top-2 left-2 w-[5px] h-[5px] bg-[#92A9E1]/60 hidden lg:block" />
+          <div className="absolute top-2 right-2 w-[5px] h-[5px] bg-[#92A9E1]/60 hidden lg:block" />
           <div className="px-6 lg:px-8 py-6 bg-white border-b border-black/[0.08] flex items-center justify-between gap-4">
             <h2 className="pixel-head text-[18px] md:text-[22px] tracking-[-0.02em]">HIRE THE WORK. NOT THE TOOL.</h2>
             <span className="hidden md:inline mono text-[10px] tracking-[0.14em] uppercase text-black/40">• Powered by autonomous AI workers</span>
@@ -598,7 +598,7 @@ export default function Home() {
           <div className="px-6 lg:px-8 py-9 lg:py-10">
             <div className="mono text-[10px] tracking-[0.16em] uppercase text-white/40">Pricing — Simple by design</div>
             <div className="display-brutalist text-[44px] md:text-[56px] leading-none tracking-[-0.04em] mt-3">
-              $10 <span className="text-white/40 text-[22px] align-middle">/</span> <span className="text-[#FF4B00]">hour.</span>
+              $10 <span className="text-white/40 text-[22px] align-middle">/</span> <span className="text-[#92A9E1]">hour.</span>
             </div>
             <div className="mono text-[11px] leading-relaxed text-white/55 mt-4">
               No subscription.
@@ -614,26 +614,26 @@ export default function Home() {
               <div className="bg-black px-5 py-4">
                 <div className="mono text-[11px] text-white/50 leading-tight">500 companies researched</div>
                 <div className="mono text-[13px] font-bold mt-2">
-                  6h 42m <span className="text-white/30">→</span> <span className="text-[#FF4B00]">$67</span>
+                  6h 42m <span className="text-white/30">→</span> <span className="text-[#92A9E1]">$67</span>
                 </div>
               </div>
               <div className="bg-black px-5 py-4">
                 <div className="mono text-[11px] text-white/50 leading-tight">1,000 leads enriched</div>
                 <div className="mono text-[13px] font-bold mt-2">
-                  5h 30m <span className="text-white/30">→</span> <span className="text-[#FF4B00]">$55</span>
+                  5h 30m <span className="text-white/30">→</span> <span className="text-[#92A9E1]">$55</span>
                 </div>
               </div>
               <div className="bg-black px-5 py-4">
                 <div className="mono text-[11px] text-white/50 leading-tight">10,000 products processed</div>
                 <div className="mono text-[13px] font-bold mt-2">
-                  7h 50m <span className="text-white/30">→</span> <span className="text-[#FF4B00]">$78</span>
+                  7h 50m <span className="text-white/30">→</span> <span className="text-[#92A9E1]">$78</span>
                 </div>
               </div>
             </div>
 
             <a
               href="/hire"
-              className="mt-6 inline-flex bg-[#FF4B00] hover:bg-[#E84500] text-white mono text-[11px] tracking-[0.14em] uppercase font-bold px-6 py-3 transition-colors"
+              className="mt-6 inline-flex bg-[#92A9E1] hover:bg-[#7E9AD1] text-white mono text-[11px] tracking-[0.14em] uppercase font-bold px-6 py-3 transition-colors"
             >
               Give us a task →
             </a>
@@ -642,8 +642,8 @@ export default function Home() {
 
         {/* TRANSPARENCY — pixel header like inspo */}
         <section className="border-b border-black/[0.08] bg-white relative">
-          <div className="absolute top-2 left-2 w-[5px] h-[5px] bg-[#FF4B00]/60 hidden lg:block" />
-          <div className="absolute top-2 right-2 w-[5px] h-[5px] bg-[#FF4B00]/60 hidden lg:block" />
+          <div className="absolute top-2 left-2 w-[5px] h-[5px] bg-[#92A9E1]/60 hidden lg:block" />
+          <div className="absolute top-2 right-2 w-[5px] h-[5px] bg-[#92A9E1]/60 hidden lg:block" />
           <div className="px-6 lg:px-8 py-7 border-b border-black/[0.08]">
             <h2 className="pixel-head text-[20px] md:text-[24px] leading-[0.9] tracking-[-0.02em]">KNOW WHAT YOU&apos;RE PAYING FOR.</h2>
             <p className="mono text-[11px] text-black/50 mt-2">Every task has a clear scope, delivery and cost.</p>
@@ -671,47 +671,47 @@ export default function Home() {
             <p className="mono text-[11px] text-black/50 mt-2">Choose the work you want to offload — each page explains the tasks, workflow, deliverables and cost.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-black/[0.08]">
-            <Link href="/ai-freelancer" className="bg-white p-5 hover:bg-[#F5F5F3] transition-colors">
+            <Link href="/ai-freelancer" className="bg-white p-5 hover:bg-[#EDE8D0] transition-colors">
               <div className="mono text-[11px] font-bold tracking-[0.04em]">Hire an AI Freelancer →</div>
               <div className="mono text-[11px] text-black/60 mt-1">General — research, data, leads, documents from $10/hr</div>
             </Link>
-            <Link href="/ai-data-entry" className="bg-white p-5 hover:bg-[#F5F5F3] transition-colors">
+            <Link href="/ai-data-entry" className="bg-white p-5 hover:bg-[#EDE8D0] transition-colors">
               <div className="mono text-[11px] font-bold">AI Data Entry Freelancer →</div>
               <div className="mono text-[11px] text-black/60 mt-1">PDF → Excel, spreadsheets, CRM entry</div>
             </Link>
-            <Link href="/ai-research" className="bg-white p-5 hover:bg-[#F5F5F3] transition-colors">
+            <Link href="/ai-research" className="bg-white p-5 hover:bg-[#EDE8D0] transition-colors">
               <div className="mono text-[11px] font-bold">AI Research Freelancer →</div>
               <div className="mono text-[11px] text-black/60 mt-1">Market, company and competitor research</div>
             </Link>
-            <Link href="/ai-lead-generation" className="bg-white p-5 hover:bg-[#F5F5F3] transition-colors">
+            <Link href="/ai-lead-generation" className="bg-white p-5 hover:bg-[#EDE8D0] transition-colors">
               <div className="mono text-[11px] font-bold">AI Lead Generation Freelancer →</div>
               <div className="mono text-[11px] text-black/60 mt-1">Prospect lists, ICP filtering, verification</div>
             </Link>
-            <Link href="/ai-data-cleaning" className="bg-white p-5 hover:bg-[#F5F5F3] transition-colors">
+            <Link href="/ai-data-cleaning" className="bg-white p-5 hover:bg-[#EDE8D0] transition-colors">
               <div className="mono text-[11px] font-bold">AI Data Cleaning Freelancer →</div>
               <div className="mono text-[11px] text-black/60 mt-1">Deduplication, normalization, hygiene</div>
             </Link>
-            <Link href="/ai-crm-cleanup" className="bg-white p-5 hover:bg-[#F5F5F3] transition-colors">
+            <Link href="/ai-crm-cleanup" className="bg-white p-5 hover:bg-[#EDE8D0] transition-colors">
               <div className="mono text-[11px] font-bold">AI CRM Cleanup Freelancer →</div>
               <div className="mono text-[11px] text-black/60 mt-1">De-dupe contacts, normalize fields</div>
             </Link>
-            <Link href="/ai-invoice-processing" className="bg-white p-5 hover:bg-[#F5F5F3] transition-colors">
+            <Link href="/ai-invoice-processing" className="bg-white p-5 hover:bg-[#EDE8D0] transition-colors">
               <div className="mono text-[11px] font-bold">AI Invoice Processing Freelancer →</div>
               <div className="mono text-[11px] text-black/60 mt-1">Extract line items, reconcile totals</div>
             </Link>
-            <Link href="/ai-ecommerce-operations" className="bg-white p-5 hover:bg-[#F5F5F3] transition-colors">
+            <Link href="/ai-ecommerce-operations" className="bg-white p-5 hover:bg-[#EDE8D0] transition-colors">
               <div className="mono text-[11px] font-bold">AI E-commerce Operations Freelancer →</div>
               <div className="mono text-[11px] text-black/60 mt-1">Catalog cleanup, product data entry</div>
             </Link>
-            <Link href="/ai-web-research" className="bg-white p-5 hover:bg-[#F5F5F3] transition-colors">
+            <Link href="/ai-web-research" className="bg-white p-5 hover:bg-[#EDE8D0] transition-colors">
               <div className="mono text-[11px] font-bold">AI Web Research Freelancer →</div>
               <div className="mono text-[11px] text-black/60 mt-1">Company & web research with citations</div>
             </Link>
-            <Link href="/ai-document-processing" className="bg-white p-5 hover:bg-[#F5F5F3] transition-colors">
+            <Link href="/ai-document-processing" className="bg-white p-5 hover:bg-[#EDE8D0] transition-colors">
               <div className="mono text-[11px] font-bold">AI Document Processing Freelancer →</div>
               <div className="mono text-[11px] text-black/60 mt-1">PDF extraction, forms, records</div>
             </Link>
-            <Link href="/work" className="bg-[#F5F5F3] p-5 hover:bg-white transition-colors border border-black/10">
+            <Link href="/work" className="bg-[#EDE8D0] p-5 hover:bg-white transition-colors border border-black/10">
               <div className="mono text-[11px] font-bold">Sample Workflows →</div>
               <div className="mono text-[11px] text-black/60 mt-1">CRM cleanup, invoices, catalog — see task, input, output, time & cost</div>
             </Link>
@@ -719,15 +719,15 @@ export default function Home() {
         </section>
 
         {/* FAQ — inspo: 3-col header with pixel FAQ, cube, Most Common Questions */}
-        <section id="faq" className="border-b border-black/[0.08] bg-[#F5F5F3] relative">
-          <div className="absolute top-2 left-2 w-[5px] h-[5px] bg-[#FF4B00]/60 hidden lg:block" />
-          <div className="absolute top-2 right-2 w-[5px] h-[5px] bg-[#FF4B00]/60 hidden lg:block" />
+        <section id="faq" className="border-b border-black/[0.08] bg-[#EDE8D0] relative">
+          <div className="absolute top-2 left-2 w-[5px] h-[5px] bg-[#92A9E1]/60 hidden lg:block" />
+          <div className="absolute top-2 right-2 w-[5px] h-[5px] bg-[#92A9E1]/60 hidden lg:block" />
           <div className="grid grid-cols-12 bg-white border-b border-black/[0.08]">
             <div className="col-span-5 lg:col-span-4 px-6 lg:px-8 py-6 border-r border-black/[0.08] flex items-center">
               <h2 className="pixel-head text-[26px] md:text-[30px] tracking-[-0.02em]">FAQ</h2>
             </div>
             <div className="col-span-3 lg:col-span-4 px-6 py-6 border-r border-black/[0.08] hidden md:flex items-center justify-center">
-              <div className="w-8 h-8 border border-black/[0.08] bg-[#F5F5F3] grid place-items-center">
+              <div className="w-8 h-8 border border-black/[0.08] bg-[#EDE8D0] grid place-items-center">
                 <div className="w-3 h-3 bg-black/10 rotate-45" />
               </div>
             </div>
@@ -743,11 +743,11 @@ export default function Home() {
                 <div key={f.q}>
                   <button
                     onClick={() => setOpenFaq(open ? null : i)}
-                    className="w-full flex items-center justify-between gap-6 px-6 lg:px-8 py-4 text-left hover:bg-[#F5F5F3] transition-colors"
+                    className="w-full flex items-center justify-between gap-6 px-6 lg:px-8 py-4 text-left hover:bg-[#EDE8D0] transition-colors"
                   >
                     <span className="mono text-[12.5px] font-medium leading-snug">{f.q}</span>
                     <span
-                      className={`w-7 h-7 shrink-0 grid place-items-center mono text-[13px] font-bold border ${open ? "bg-black text-white border-black" : "bg-[#FF4B00] text-white border-[#FF4B00]"}`}
+                      className={`w-7 h-7 shrink-0 grid place-items-center mono text-[13px] font-bold border ${open ? "bg-black text-white border-black" : "bg-[#92A9E1] text-white border-[#92A9E1]"}`}
                     >
                       {open ? "×" : "+"}
                     </span>
@@ -756,7 +756,7 @@ export default function Home() {
                     {open && (
                       <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
                         <div className="px-6 lg:px-8 pb-5">
-                          <div className="mono text-[11.5px] leading-relaxed text-black/60 bg-[#F5F5F3] border border-black/[0.06] p-4 max-w-[720px]">{f.a}</div>
+                          <div className="mono text-[11.5px] leading-relaxed text-black/60 bg-[#EDE8D0] border border-black/[0.06] p-4 max-w-[720px]">{f.a}</div>
                         </div>
                       </motion.div>
                     )}
@@ -784,7 +784,7 @@ export default function Home() {
             <div className="mono text-[10px] tracking-[0.16em] uppercase font-bold mt-5">$10 / hour</div>
             <a
               href="/hire"
-              className="mt-6 inline-flex bg-[#FF4B00] hover:bg-[#E84500] text-white mono text-[11px] tracking-[0.14em] uppercase font-bold px-8 py-3.5 transition-colors"
+              className="mt-6 inline-flex bg-[#92A9E1] hover:bg-[#7E9AD1] text-white mono text-[11px] tracking-[0.14em] uppercase font-bold px-8 py-3.5 transition-colors"
             >
               Give us your task →
             </a>
@@ -809,16 +809,16 @@ export default function Home() {
             </span>
           </div>
 
-          <div className="bg-[#F5F5F3] px-6 lg:px-10 py-9 md:py-12 overflow-hidden relative border-t border-black/[0.08]">
+          <div className="bg-[#EDE8D0] px-6 lg:px-10 py-9 md:py-12 overflow-hidden relative border-t border-black/[0.08]">
             <div className="absolute inset-0 bg-grid-fine opacity-[0.16] pointer-events-none" />
             {/* Inspo corner orange dots */}
-            <div className="absolute top-3 left-3 w-[7px] h-[7px] bg-[#FF4B00]" />
-            <div className="absolute top-3 right-3 w-[7px] h-[7px] bg-[#FF4B00]" />
-            <div className="absolute bottom-3 left-3 w-[7px] h-[7px] bg-[#FF4B00]" />
-            <div className="absolute bottom-3 right-3 w-[7px] h-[7px] bg-[#FF4B00]" />
+            <div className="absolute top-3 left-3 w-[7px] h-[7px] bg-[#92A9E1]" />
+            <div className="absolute top-3 right-3 w-[7px] h-[7px] bg-[#92A9E1]" />
+            <div className="absolute bottom-3 left-3 w-[7px] h-[7px] bg-[#92A9E1]" />
+            <div className="absolute bottom-3 right-3 w-[7px] h-[7px] bg-[#92A9E1]" />
             <div className="relative flex justify-center items-baseline gap-[0.06em] flex-wrap select-none">
               <span className="pixel-head text-[14vw] md:text-[11vw] lg:text-[142px] leading-none tracking-[-0.03em] text-black opacity-[0.07]">ABSTRAK</span>
-              <span className="pixel-head text-[14vw] md:text-[11vw] lg:text-[142px] leading-none tracking-[-0.03em] text-[#FF4B00]">LABS</span>
+              <span className="pixel-head text-[14vw] md:text-[11vw] lg:text-[142px] leading-none tracking-[-0.03em] text-[#92A9E1]">LABS</span>
             </div>
             <div className="relative mono text-[9px] tracking-[0.22em] uppercase text-black/30 text-center mt-4">Digital Labor — $10/hr — Give us the work. We’ll get it done.</div>
           </div>

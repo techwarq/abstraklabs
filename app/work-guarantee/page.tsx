@@ -17,10 +17,10 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <main className="min-h-screen bg-[#F5F5F3] text-black">
+    <main className="min-h-screen bg-[#EDE8D0] text-black">
       <div className="fixed inset-0 bg-grid-brutalist pointer-events-none opacity-[0.22]" />
-      <div className="relative max-w-[1440px] mx-auto border-x border-black/[0.08] bg-[#F5F5F3]">
-        <header className="sticky top-0 bg-[#F5F5F3]/90 backdrop-blur-[8px] border-b border-black/[0.08] px-6 lg:px-8 h-[56px] flex items-center justify-between">
+      <div className="relative max-w-[1440px] mx-auto border-x border-black/[0.08] bg-[#EDE8D0]">
+        <header className="sticky top-0 bg-[#EDE8D0]/90 backdrop-blur-[8px] border-b border-black/[0.08] px-6 lg:px-8 h-[56px] flex items-center justify-between">
           <Link href="/" className="text-[11px] font-bold">ABSTRAK LABS</Link>
           <Link href="/hire" className="bg-black text-white mono text-[11px] px-4 py-2.5">Hire a worker — $10/hr →</Link>
         </header>
@@ -65,7 +65,7 @@ export default function Page() {
               <li>After work: you’re charged only for actual time used (e.g., 4h 18m → $43.00), never more than the maximum you approved.</li>
             </ul>
 
-            <div className="mt-8 border border-black/[0.08] bg-[#F5F5F3] p-4 mono text-[11px] leading-relaxed">
+            <div className="mt-8 border border-black/[0.08] bg-[#EDE8D0] p-4 mono text-[11px] leading-relaxed">
               <div className="font-bold">Questions?</div>
               <div className="mt-1">
                 Email <a href="mailto:hello@abstraklabs.com" className="underline">hello@abstraklabs.com</a> — we typically reply within hours.
@@ -73,7 +73,7 @@ export default function Page() {
             </div>
 
             <div className="mt-8 flex gap-3">
-              <Link href="/hire" className="bg-[#FF4B00] text-white mono text-[11px] px-6 py-3">Hire a worker →</Link>
+              <Link href="/hire" className="bg-[#92A9E1] text-white mono text-[11px] px-6 py-3">Hire a worker →</Link>
               <Link href="/" className="bg-white border border-black/15 mono text-[11px] px-6 py-3">Back to home</Link>
             </div>
           </div>

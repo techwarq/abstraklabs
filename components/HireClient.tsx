@@ -45,9 +45,9 @@ export default function HireClient() {
   };
 
   return (
-    <main className="min-h-screen bg-[#F5F5F3] text-black flex flex-col">
+    <main className="min-h-screen bg-[#EDE8D0] text-black flex flex-col">
       <div className="fixed inset-0 bg-grid-brutalist pointer-events-none opacity-[0.18]" />
-      <header className="relative z-10 border-b border-black/[0.08] bg-[#F5F5F3]/90 backdrop-blur-[8px] sticky top-0">
+      <header className="relative z-10 border-b border-black/[0.08] bg-[#EDE8D0]/90 backdrop-blur-[8px] sticky top-0">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-8 h-[56px] flex items-center justify-between border-x border-black/[0.08]">
           <Link href="/" className="leading-none">
             <div className="text-[11px] font-bold tracking-[-0.02em]">ABSTRAK LABS</div>
@@ -66,9 +66,9 @@ export default function HireClient() {
 
       <div className="relative z-10 flex-1 flex items-center justify-center p-6 lg:p-10">
         <div className="w-full max-w-[760px] border border-black/[0.08] bg-white shadow-sm">
-          <div className="flex items-center justify-between px-6 py-3 border-b border-black/[0.08] bg-[#F5F5F3] mono text-[10px] tracking-[0.16em] uppercase">
+          <div className="flex items-center justify-between px-6 py-3 border-b border-black/[0.08] bg-[#EDE8D0] mono text-[10px] tracking-[0.16em] uppercase">
             <span className="font-bold flex items-center gap-2">
-              <span className="w-1.5 h-1.5 bg-[#FF4B00] rounded-full" /> New task
+              <span className="w-1.5 h-1.5 bg-[#92A9E1] rounded-full" /> New task
             </span>
             <span className="text-black/40">$10 / hour · No subscription</span>
           </div>
@@ -77,7 +77,7 @@ export default function HireClient() {
             <h1 className="display-brutalist text-[26px] md:text-[32px] leading-[0.9] tracking-[-0.03em]">
               What do you want to
               <br />
-              <span className="text-[#FF4B00]">get done?</span>
+              <span className="text-[#92A9E1]">get done?</span>
             </h1>
             <p className="mono text-[12px] leading-relaxed text-black/55 mt-3 max-w-[460px] mx-auto">
               Describe it in plain English. We figure out the workflow and deliver the result.
@@ -85,7 +85,7 @@ export default function HireClient() {
           </div>
 
           {messages.length > 0 && (
-            <div className="px-6 lg:px-8 py-6 space-y-4 max-h-[32vh] overflow-y-auto border-b border-black/[0.08] bg-[#F5F5F3]/40">
+            <div className="px-6 lg:px-8 py-6 space-y-4 max-h-[32vh] overflow-y-auto border-b border-black/[0.08] bg-[#EDE8D0]/40">
               {messages.map((m, i) => (
                 <div
                   key={i}
@@ -97,7 +97,7 @@ export default function HireClient() {
                 </div>
               ))}
               {sent && (
-                <div className="bg-[#FF4B00] text-white mono text-[12px] p-4 text-center font-bold">
+                <div className="bg-[#92A9E1] text-white mono text-[12px] p-4 text-center font-bold">
                   ✓ Task received — we&apos;ll email you at {email} within hours to confirm scope & start.
                 </div>
               )}
@@ -106,7 +106,7 @@ export default function HireClient() {
 
           <div className="p-6 lg:p-8">
             <label className="mono text-[10px] tracking-[0.16em] uppercase font-bold text-black/60">Your task</label>
-            <div className="mt-2 border border-black/[0.12] bg-[#F5F5F3] focus-within:border-black focus-within:bg-white transition-colors">
+            <div className="mt-2 border border-black/[0.12] bg-[#EDE8D0] focus-within:border-black focus-within:bg-white transition-colors">
               <textarea
                 ref={taRef}
                 value={input}
@@ -125,7 +125,7 @@ export default function HireClient() {
                   <button
                     onClick={handleSend}
                     disabled={!input.trim()}
-                    className="bg-[#FF4B00] hover:bg-[#E84500] disabled:bg-black/10 disabled:text-black/30 text-white font-bold tracking-[0.14em] uppercase px-6 py-2.5 transition-colors"
+                    className="bg-[#92A9E1] hover:bg-[#7E9AD1] disabled:bg-black/10 disabled:text-black/30 text-white font-bold tracking-[0.14em] uppercase px-6 py-2.5 transition-colors"
                   >
                     Send →
                   </button>
@@ -151,7 +151,7 @@ export default function HireClient() {
             )}
 
             {messages.length > 0 && !sent && (
-              <form onSubmit={handleSubmitEmail} className="mt-6 border border-black/[0.08] bg-[#F5F5F3] p-4">
+              <form onSubmit={handleSubmitEmail} className="mt-6 border border-black/[0.08] bg-[#EDE8D0] p-4">
                 <div className="mono text-[10px] tracking-[0.16em] uppercase font-bold">Where should we deliver?</div>
                 <div className="mt-2 flex gap-2">
                   <input

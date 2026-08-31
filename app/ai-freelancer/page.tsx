@@ -99,12 +99,12 @@ export default function Page() {
   };
 
   return (
-    <main className="min-h-screen bg-[#F5F5F3] text-black selection:bg-[#FF4B00] selection:text-white">
+    <main className="min-h-screen bg-[#EDE8D0] text-black selection:bg-[#92A9E1] selection:text-white">
       <JsonLd data={[serviceJsonLd, faqJsonLd, breadcrumbJsonLd]} />
       <div className="fixed inset-0 bg-grid-brutalist pointer-events-none opacity-[0.22]" />
-      <div className="relative max-w-[1440px] mx-auto border-x border-black/[0.08] bg-[#F5F5F3]">
+      <div className="relative max-w-[1440px] mx-auto border-x border-black/[0.08] bg-[#EDE8D0]">
         {/* Header */}
-        <header className="sticky top-0 z-10 bg-[#F5F5F3]/92 backdrop-blur-[8px] border-b border-black/[0.08]">
+        <header className="sticky top-0 z-10 bg-[#EDE8D0]/92 backdrop-blur-[8px] border-b border-black/[0.08]">
           <div className="px-6 lg:px-8 h-[56px] flex items-center justify-between">
             <Link href="/" className="leading-none">
               <div className="text-[11px] font-bold tracking-[-0.02em]">ABSTRAK LABS</div>
@@ -122,20 +122,20 @@ export default function Page() {
         </header>
 
         {/* Hero */}
-        <section className="border-b border-black/[0.08] bg-[#F5F5F3]">
+        <section className="border-b border-black/[0.08] bg-[#EDE8D0]">
           <div className="px-6 lg:px-8 py-10 lg:py-12">
             <div className="mono text-[10px] tracking-[0.16em] uppercase text-black/40">Abstrak Labs — Digital Labor</div>
             <h1 className="display-brutalist text-[36px] sm:text-[46px] lg:text-[54px] leading-[0.85] tracking-[-0.04em] mt-3">
               Hire an AI Freelancer
             </h1>
-            <p className="mono text-[11px] tracking-[0.14em] uppercase font-bold text-[#FF4B00] mt-3">From $10/hour · No subscription</p>
+            <p className="mono text-[11px] tracking-[0.14em] uppercase font-bold text-[#92A9E1] mt-3">From $10/hour · No subscription</p>
             <p className="text-[15px] leading-relaxed text-black/70 mt-6 max-w-[720px]">
               Abstrak Labs lets businesses hire AI freelancers to complete digital work such as research, data entry, lead generation, data
               cleaning, document processing and repetitive browser tasks. AI freelancers are available from{" "}
               <strong className="text-black">$10/hour</strong>.
             </p>
             <div className="mt-7 flex gap-3">
-              <Link href="/hire" className="bg-[#FF4B00] text-white mono text-[11px] tracking-[0.14em] uppercase font-bold px-6 py-3">
+              <Link href="/hire" className="bg-[#92A9E1] text-white mono text-[11px] tracking-[0.14em] uppercase font-bold px-6 py-3">
                 Hire an AI freelancer →
               </Link>
               <Link href="/work" className="bg-white border border-black/15 mono text-[11px] tracking-[0.14em] uppercase font-bold px-6 py-3">
@@ -176,7 +176,7 @@ export default function Page() {
         </section>
 
         {/* What can do */}
-        <section className="border-b border-black/[0.08] bg-[#F5F5F3]">
+        <section className="border-b border-black/[0.08] bg-[#EDE8D0]">
           <div className="px-6 lg:px-8 py-8 bg-white border-b border-black/[0.08]">
             <h2 className="text-[18px] font-bold tracking-tight">What can an AI freelancer do?</h2>
             <p className="mono text-[12px] text-black/60 mt-2">Example tasks that map directly to hiring intent. Each links to a dedicated service page.</p>
@@ -193,8 +193,8 @@ export default function Page() {
               { href: "/ai-document-processing", t: "Document processing", d: "Forms, records, PDFs → structured data." },
               { href: "/ai-research", t: "Research", d: "Market, company and tender/grant research." },
             ].map((c) => (
-              <Link key={c.href} href={c.href} className="bg-white p-6 hover:bg-[#F5F5F3] transition-colors group">
-                <div className="mono text-[12px] font-bold tracking-[0.04em] group-hover:text-[#FF4B00]">{c.t} →</div>
+              <Link key={c.href} href={c.href} className="bg-white p-6 hover:bg-[#EDE8D0] transition-colors group">
+                <div className="mono text-[12px] font-bold tracking-[0.04em] group-hover:text-[#92A9E1]">{c.t} →</div>
                 <div className="mono text-[11.5px] text-black/60 mt-1 leading-relaxed">{c.d}</div>
               </Link>
             ))}
@@ -234,7 +234,7 @@ export default function Page() {
                 </Link>
               </div>
             </div>
-            <div className="col-span-12 lg:col-span-5 bg-[#F5F5F3] p-6 lg:p-8 border-t lg:border-t-0 lg:border-l border-black/[0.08]">
+            <div className="col-span-12 lg:col-span-5 bg-[#EDE8D0] p-6 lg:p-8 border-t lg:border-t-0 lg:border-l border-black/[0.08]">
               <div className="mono text-[10px] tracking-[0.16em] uppercase font-bold text-black/40">Sample delivery</div>
               <div className="mt-3 border border-black/[0.08] bg-white p-4">
                 <div className="mono text-[11px] font-bold">500 qualified companies</div>
@@ -246,7 +246,7 @@ export default function Page() {
                   </div>
                   <div className="bg-white py-2 border-l border-black/[0.08]">
                     <div className="text-[10px] text-black/40 uppercase tracking-[0.14em]">Cost</div>
-                    <div className="text-[13px] font-bold text-[#FF4B00]">$67</div>
+                    <div className="text-[13px] font-bold text-[#92A9E1]">$67</div>
                   </div>
                 </div>
                 <div className="mono text-[10px] text-black/40 mt-2">Sample workflow — clearly labeled, not a client project</div>
@@ -261,7 +261,7 @@ export default function Page() {
         </section>
 
         {/* Differences */}
-        <section className="border-b border-black/[0.08] bg-[#F5F5F3]">
+        <section className="border-b border-black/[0.08] bg-[#EDE8D0]">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-black/[0.08]">
             <div className="bg-white p-6 lg:p-8">
               <h2 className="text-[14px] font-bold">AI freelancer vs human freelancer</h2>
@@ -301,7 +301,7 @@ export default function Page() {
             <h2 className="display-brutalist text-[28px] md:text-[36px] leading-[0.9]">Hire an AI freelancer today.</h2>
             <p className="mono text-[12px] text-white/60 mt-3">Describe the task. We’ll handle the workflow and deliver the result. From $10/hour.</p>
             <div className="mt-6 flex justify-center gap-3">
-              <Link href="/hire" className="bg-[#FF4B00] text-white mono text-[11px] tracking-[0.14em] uppercase font-bold px-6 py-3">
+              <Link href="/hire" className="bg-[#92A9E1] text-white mono text-[11px] tracking-[0.14em] uppercase font-bold px-6 py-3">
                 Hire an AI freelancer →
               </Link>
               <Link href="/work" className="border border-white/20 mono text-[11px] tracking-[0.14em] uppercase font-bold px-6 py-3">
@@ -329,7 +329,7 @@ export default function Page() {
           </div>
         </section>
 
-        <footer className="border-t border-black/[0.08] bg-[#F5F5F3] px-6 lg:px-8 py-6 mono text-[10px] tracking-[0.14em] uppercase text-black/40 flex justify-between">
+        <footer className="border-t border-black/[0.08] bg-[#EDE8D0] px-6 lg:px-8 py-6 mono text-[10px] tracking-[0.14em] uppercase text-black/40 flex justify-between">
           <span>© 2024 Abstrak Labs</span>
           <Link href="/" className="hover:text-black">
             ← Back to home
