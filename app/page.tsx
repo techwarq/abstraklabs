@@ -177,10 +177,10 @@ export default function Home() {
                 <span className="hidden sm:inline">No subscription</span>
               </div>
 
-              <h1 className="display-brutalist text-[44px] sm:text-[56px] lg:text-[68px] leading-[0.85] tracking-[-0.045em] mt-6">
-                Give us the <span className="text-[#92A9E1]">work.</span>
+              <h1 className="display-brutalist text-[40px] sm:text-[52px] lg:text-[62px] leading-[0.85] tracking-[-0.045em] mt-6">
+                Have work to do?
                 <br />
-                We&apos;ll get it <span className="text-[#92A9E1]">done.</span>
+                Hire an AI <span className="text-[#92A9E1]">Freelancer.</span>
               </h1>
 
               <p className="text-[14px] leading-[1.6] text-black/65 mt-5 max-w-[480px]">
@@ -189,8 +189,9 @@ export default function Home() {
               </p>
 
               <div className="mt-5 mono text-[11.5px] leading-relaxed">
-                <div className="text-black/60">Tell us what you need in plain English.</div>
-                <div className="font-bold tracking-[0.08em] uppercase text-[11px] mt-1">We figure out the workflow. You get the result.</div>
+                <div className="text-black/60">Give us the task. We&apos;ll handle the work from start to finish.</div>
+                <div className="font-bold tracking-[0.08em] uppercase text-[11px] mt-1">$10/hour · No subscription</div>
+                <div className="mono text-[11px] text-black/50 mt-2">Very easy to understand.</div>
               </div>
 
               <div className="mt-7 flex gap-3">
