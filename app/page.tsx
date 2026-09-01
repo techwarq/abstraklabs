@@ -537,51 +537,80 @@ export default function Home() {
           </div>
         </motion.section>
 
-        {/* WHY ABSTRAK LABS — bento */}
-        <motion.section
-          id="difference"
-          {...revealProps}
-          className="mt-4 md:mt-5 grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-5 lg:auto-rows-[1fr]"
-        >
-          <div className={`${card} lg:col-span-7 lg:row-span-2 px-7 md:px-10 py-10 md:py-12 flex flex-col justify-center`}>
-            <h2 className="text-[26px] md:text-[36px] leading-[1.15] tracking-[-0.02em] font-semibold">
-              You don&apos;t need another tool.
+        {/* WHY ABSTRAK LABS — AI freelancer positioning */}
+        <motion.section id="difference" {...revealProps} className={`${card} mt-4 md:mt-5 overflow-hidden`}>
+          <div className="px-6 md:px-10 py-14 md:py-16 text-center border-b border-black/[0.06]">
+            <h2 className="text-[32px] sm:text-[42px] md:text-[52px] leading-[1.1] tracking-[-0.02em] font-semibold max-w-[720px] mx-auto">
+              Hire an AI freelancer.
               <br />
-              You need the <span className={`${serif.className} font-normal`} style={{ color: ACCENT }}>work done.</span>
+              <span style={{ color: ACCENT }}>Not another AI tool.</span>
             </h2>
-            <div className="text-[13px] leading-relaxed text-black/50 mt-5 max-w-[420px]">
-              <div>No prompts. No workflows to build. No freelancers to manage.</div>
-              <div className="font-semibold text-black mt-2">Just give us the task.</div>
-            </div>
+            <p className={`${serif.className} text-[18px] md:text-[22px] text-black/55 mt-5 max-w-[520px] mx-auto`}>
+              You give it the job. The agent figures out how to get it done.
+            </p>
           </div>
 
-          <div className={`${card} lg:col-span-5 px-6 lg:px-8 py-7`}>
-            <div className="text-[11px] font-semibold tracking-[0.08em] uppercase text-black/35">Other AI tools</div>
-            <div className="text-[11px] font-semibold tracking-[0.06em] uppercase mt-5 text-black/45">You have to:</div>
-            <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1.5 text-[13.5px] leading-relaxed text-black/70">
-              <li>Prompt</li>
-              <li>Configure</li>
-              <li>Iterate</li>
-              <li>Debug</li>
-              <li>Manage</li>
-            </ul>
+          <div className="grid grid-cols-1 md:grid-cols-3">
+            {[
+              {
+                n: "01",
+                title: "Describe the task",
+                statement: "Tell us what you need in plain English.",
+                quotes: ["Find 1,000 qualified leads.", "Clean my CRM.", "Process 500 invoices."],
+                closing: "No prompting. No workflows.",
+              },
+              {
+                n: "02",
+                title: "Your AI agent gets to work",
+                statement: "We turn your request into a working agent.",
+                quotes: ["It researches, browses, processes, verifies and completes the task."],
+                closing: "You don't operate the agent. It does the work.",
+              },
+              {
+                n: "03",
+                title: "Get the result",
+                statement: "See the work happen. Pay for the time used.",
+                pill: "6h 42m → $67",
+                closing: "Finished files, data, reports or results — delivered.",
+              },
+            ].map((s, i) => (
+              <motion.div
+                key={s.n}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, margin: "-60px" }}
+                variants={fadeUp}
+                transition={{ duration: 0.5, delay: i * 0.1, ease: easeOut }}
+                className={`px-7 md:px-8 py-9 md:py-10 ${i < 2 ? "md:border-r" : ""} ${i > 0 ? "border-t md:border-t-0" : ""} border-black/[0.06]`}
+              >
+                <div className="text-[11px] font-bold tracking-[0.08em] uppercase" style={{ color: ACCENT }}>
+                  {s.n} — {s.title}
+                </div>
+                <div className="text-[15px] font-semibold mt-3 leading-snug">{s.statement}</div>
+
+                {s.quotes && (
+                  <div className="mt-4 border-l-2 border-black/[0.1] pl-3 space-y-1.5">
+                    {s.quotes.map((q) => (
+                      <div key={q} className={`${serif.className} text-[14px] text-black/50 leading-relaxed`}>
+                        &quot;{q}&quot;
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {s.pill && (
+                  <div className="mt-4 inline-block mono text-[12px] px-3 py-1.5 rounded-lg" style={{ background: "#EEF1FB", color: "#5B6FCB" }}>
+                    {s.pill}
+                  </div>
+                )}
+
+                <div className="text-[13px] font-semibold mt-4 leading-snug">{s.closing}</div>
+              </motion.div>
+            ))}
           </div>
 
-          <div className="lg:col-span-5 rounded-[22px] bg-[#141414] text-white px-6 lg:px-8 py-7 shadow-[0_2px_16px_-4px_rgba(20,20,20,0.06)]">
-            <div className="text-[11px] font-semibold tracking-[0.08em] uppercase text-white/35">Abstrak Labs</div>
-            <div className="mt-5 flex flex-wrap gap-x-6 gap-y-3">
-              <div>
-                <div className="text-[11px] font-semibold tracking-[0.06em] uppercase text-white/45">You:</div>
-                <div className="text-[13.5px] font-medium mt-1">Describe the task.</div>
-              </div>
-              <div>
-                <div className="text-[11px] font-semibold tracking-[0.06em] uppercase" style={{ color: ACCENT }}>We:</div>
-                <ul className="mt-1 text-[13.5px] leading-relaxed text-white/75 space-y-1">
-                  <li>Figure out the workflow · Run the workers</li>
-                  <li>Verify the output · Deliver the result</li>
-                </ul>
-              </div>
-            </div>
+          <div className="py-5 text-center text-[11px] tracking-[0.14em] uppercase font-semibold text-black/40 border-t border-black/[0.06]">
+            No software to learn · No subscription · $10/hour
           </div>
         </motion.section>
 
