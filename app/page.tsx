@@ -437,7 +437,7 @@ export default function Home() {
                   </div>
                   <div className="mt-2 relative text-[13px] leading-[1.5] font-medium bg-[#F5F4F1] rounded-xl pl-4 pr-3.5 py-3.5 overflow-hidden">
                     <span className="absolute left-0 top-0 bottom-0 w-[3px]" style={{ background: ACCENT }} />
-                    "Find 500 US SaaS companies, their founders, funding and LinkedIn."
+                    &quot;Find 500 US SaaS companies, their founders, funding and LinkedIn.&quot;
                   </div>
 
                   <div className="mt-5 flex items-center justify-between">
@@ -681,7 +681,7 @@ export default function Home() {
                 <h3 className="text-[16px] font-semibold tracking-tight mt-4 leading-tight">{p.title}</h3>
 
                 <div className="mt-4 text-[10.5px] font-semibold tracking-[0.08em] uppercase text-black/40">Client request</div>
-                <div className="text-[13px] leading-relaxed text-black/60 mt-1">"{p.request}"</div>
+                <div className="text-[13px] leading-relaxed text-black/60 mt-1">&quot;{p.request}&quot;</div>
 
                 <div className="mt-5 grid grid-cols-2 gap-2">
                   <div className="bg-[#F5F4F1] rounded-xl p-3">

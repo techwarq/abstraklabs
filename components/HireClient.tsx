@@ -155,7 +155,7 @@ export default function HireClient() {
                         onClick={() => setInput(ex)}
                         className="text-left text-[11.5px] leading-snug rounded-full border border-black/[0.08] bg-white hover:border-black/20 hover:bg-[#F5F4F1] px-3.5 py-2 transition-colors max-w-full"
                       >
-                        "{ex}"
+                        &quot;{ex}&quot;
                       </button>
                     ))}
                   </div>

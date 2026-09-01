@@ -165,7 +165,7 @@ function WorkRender({ n }: { n: string }) {
         style={{ background: n === "01" || n === "03" ? VIOLET : LIME }}
       />
       <div className="absolute left-3 top-3 mono text-[9px] tracking-[0.14em] text-white/50">REF_{n}</div>
-      <div className="absolute right-3 top-3 mono text-[9px] tracking-[0.14em] text-white/30">// SCN</div>
+      <div className="absolute right-3 top-3 mono text-[9px] tracking-[0.14em] text-white/30">{"// SCN"}</div>
       <div className="absolute left-3 bottom-3 mono text-[26px] font-bold text-white/10 leading-none">{n}</div>
     </div>
   );
