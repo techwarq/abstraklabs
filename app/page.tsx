@@ -323,17 +323,8 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-8 px-6 md:px-10 lg:px-14 py-12 md:py-16 lg:py-20 items-center">
             {/* LEFT */}
             <motion.div initial="hidden" animate="show" variants={heroStagger}>
-              <motion.div
-                variants={fadeUp}
-                transition={{ duration: 0.5, ease: easeOut }}
-                className="w-9 h-9 rounded-xl grid place-items-center"
-                style={{ background: ACCENT }}
-              >
-                <Image src="/icon-mark.png" alt="" width={40} height={48} className="h-5 w-auto" />
-              </motion.div>
-
-              <motion.h1 variants={fadeUp} transition={{ duration: 0.5, ease: easeOut }} className="mt-6 leading-[0.98] tracking-[-0.02em]">
-                <span className={`${serif.className} block text-[32px] sm:text-[40px] lg:text-[46px] text-black/70`}>
+              <motion.h1 variants={fadeUp} transition={{ duration: 0.5, ease: easeOut }} className="leading-[0.98] tracking-[-0.02em]">
+                <span className={`${serif.className} block text-[40px] sm:text-[50px] lg:text-[58px] text-black/70`}>
                   Have work to do?
                 </span>
                 <span className="block text-[38px] sm:text-[48px] lg:text-[54px] font-semibold">
