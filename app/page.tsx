@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Instrument_Serif } from "next/font/google";
 import Link from "next/link";
+import Image from "next/image";
 
 const serif = Instrument_Serif({ subsets: ["latin"], weight: "400", style: "italic" });
 
@@ -206,7 +207,7 @@ function FooterOrbit() {
       ))}
 
       <div className="absolute left-1/2 bottom-2 -translate-x-1/2 w-16 h-16 rounded-full bg-white grid place-items-center shadow-[0_10px_30px_-8px_rgba(0,0,0,0.5)] z-10">
-        <span className="text-[20px]" style={{ color: INK }}>✦</span>
+        <Image src="/icon-mark-dark.png" alt="" width={40} height={48} className="h-7 w-auto" />
       </div>
     </div>
   );
@@ -285,9 +286,8 @@ export default function Home() {
             transition={{ duration: 0.6, ease: easeOut }}
             className="w-full max-w-[980px] bg-[#141414] text-white rounded-full pl-4 pr-2 py-2 flex items-center justify-between gap-4 shadow-[0_10px_30px_-8px_rgba(0,0,0,0.35)]"
           >
-            <Link href="/" className="flex items-center gap-2 shrink-0">
-              <span style={{ color: ACCENT }}>✦</span>
-              <span className="text-[13px] font-semibold tracking-[-0.01em]">Abstrak Labs</span>
+            <Link href="/" className="flex items-center shrink-0">
+              <Image src="/abstrak-logo-mark.png" alt="Abstrak Labs" width={126} height={40} className="h-7 w-auto" priority />
             </Link>
 
             <nav className="hidden lg:flex items-center gap-5 text-[12.5px] text-white/65">
@@ -326,10 +326,10 @@ export default function Home() {
               <motion.div
                 variants={fadeUp}
                 transition={{ duration: 0.5, ease: easeOut }}
-                className="w-9 h-9 rounded-xl bg-[#F3F2EF] border border-black/[0.06] grid place-items-center text-[15px]"
-                style={{ color: ACCENT }}
+                className="w-9 h-9 rounded-xl grid place-items-center"
+                style={{ background: ACCENT }}
               >
-                ✦
+                <Image src="/icon-mark.png" alt="" width={40} height={48} className="h-5 w-auto" />
               </motion.div>
 
               <motion.h1 variants={fadeUp} transition={{ duration: 0.5, ease: easeOut }} className="mt-6 leading-[0.98] tracking-[-0.02em]">
@@ -435,12 +435,26 @@ export default function Home() {
                       <span className="w-1.5 h-1.5 bg-[#16A34A] rounded-full animate-pulse" /> Worker online
                     </span>
                   </div>
-                  <div className="mt-2 text-[13px] leading-[1.5] font-medium bg-[#F5F4F1] rounded-xl p-3.5">
+                  <div className="mt-2 relative text-[13px] leading-[1.5] font-medium bg-[#F5F4F1] rounded-xl pl-4 pr-3.5 py-3.5 overflow-hidden">
+                    <span className="absolute left-0 top-0 bottom-0 w-[3px]" style={{ background: ACCENT }} />
                     "Find 500 US SaaS companies, their founders, funding and LinkedIn."
                   </div>
 
-                  <div className="mt-4 text-[10.5px] font-semibold tracking-[0.08em] uppercase text-black/40">Worker activity</div>
-                  <div className="mt-2 rounded-xl border border-black/[0.06] overflow-hidden">
+                  <div className="mt-5 flex items-center justify-between">
+                    <div className="text-[10.5px] font-semibold tracking-[0.08em] uppercase text-black/40">Worker activity</div>
+                    <div className="text-[10px] font-semibold text-black/35">2/4 done</div>
+                  </div>
+                  <div className="mt-1.5 h-1 rounded-full bg-black/[0.06] overflow-hidden">
+                    <motion.div
+                      className="h-full rounded-full"
+                      style={{ background: ACCENT }}
+                      initial={{ width: 0 }}
+                      animate={{ width: "50%" }}
+                      transition={{ duration: 0.8, delay: 0.75, ease: easeOut }}
+                    />
+                  </div>
+
+                  <div className="mt-3 rounded-xl border border-black/[0.06] overflow-hidden">
                     {[
                       { n: "01", t: "Searching companies", status: "done" },
                       { n: "02", t: "Verifying websites", status: "done" },
@@ -454,16 +468,31 @@ export default function Home() {
                         transition={{ duration: 0.4, delay: 0.6 + i * 0.1, ease: easeOut }}
                         className="flex items-center gap-3 px-3.5 py-2.5 border-b last:border-b-0 border-black/[0.05] text-[11.5px]"
                       >
-                        <span
-                          className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                            s.status === "done" ? "bg-black/70" : s.status === "active" ? "animate-pulse" : "bg-black/15"
-                          }`}
-                          style={s.status === "active" ? { background: ACCENT } : undefined}
-                        />
+                        <span className="relative w-[18px] h-[18px] shrink-0 grid place-items-center">
+                          {s.status === "done" && (
+                            <span className="w-[18px] h-[18px] rounded-full bg-[#141414] grid place-items-center">
+                              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M5 12.5l4.5 4.5L19 7" />
+                              </svg>
+                            </span>
+                          )}
+                          {s.status === "active" && (
+                            <>
+                              <span className="absolute w-[18px] h-[18px] rounded-full animate-ping" style={{ background: ACCENT, opacity: 0.35 }} />
+                              <span className="relative w-2.5 h-2.5 rounded-full" style={{ background: ACCENT }} />
+                            </>
+                          )}
+                          {s.status === "queued" && <span className="w-[14px] h-[14px] rounded-full border-2 border-black/15" />}
+                        </span>
                         <span className={s.status === "queued" ? "text-black/35" : s.status === "active" ? "font-semibold" : "text-black/60"}>
                           {s.t}
                         </span>
-                        <span className="ml-auto text-[10px] tracking-wide uppercase text-black/30">
+                        <span
+                          className={`ml-auto text-[9.5px] font-semibold tracking-wide uppercase px-2 py-1 rounded-full ${
+                            s.status === "done" ? "bg-black/[0.05] text-black/40" : s.status === "queued" ? "text-black/30" : "text-white"
+                          }`}
+                          style={s.status === "active" ? { background: ACCENT } : undefined}
+                        >
                           {s.status === "done" ? "Done" : s.status === "active" ? "Working" : "Queued"}
                         </span>
                       </motion.div>
@@ -474,23 +503,40 @@ export default function Home() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 1.05, ease: easeOut }}
-                    className="mt-4 rounded-xl p-4"
-                    style={{ background: "#F5F4F1" }}
+                    className="mt-4 rounded-xl overflow-hidden border border-black/[0.06]"
                   >
-                    <div className="text-[10.5px] font-semibold tracking-[0.08em] uppercase" style={{ color: ACCENT }}>Delivered</div>
-                    <div className="text-[16px] font-semibold tracking-tight mt-1">500 qualified companies</div>
-                    <div className="mt-3 grid grid-cols-3 gap-2 text-center">
-                      <div className="bg-white rounded-lg py-2.5 border border-black/[0.06]">
-                        <div className="text-[9.5px] uppercase text-black/40">Time</div>
-                        <div className="text-[12px] font-semibold mt-0.5">6h 42m</div>
-                      </div>
-                      <div className="bg-white rounded-lg py-2.5 border border-black/[0.06]">
-                        <div className="text-[9.5px] uppercase text-black/40">Cost</div>
-                        <div className="text-[12px] font-semibold mt-0.5" style={{ color: ACCENT }}>$67</div>
-                      </div>
-                      <div className="bg-white rounded-lg py-2.5 border border-black/[0.06]">
-                        <div className="text-[9.5px] uppercase text-black/40">Output</div>
-                        <div className="text-[10px] font-semibold mt-0.5 leading-tight">Spreadsheet</div>
+                    <div className="flex items-center gap-2 px-4 py-2.5" style={{ background: ACCENT }}>
+                      <span className="w-4 h-4 rounded-full bg-white/25 grid place-items-center shrink-0">
+                        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M5 12.5l4.5 4.5L19 7" />
+                        </svg>
+                      </span>
+                      <div className="text-[10.5px] font-semibold tracking-[0.08em] uppercase text-white">Delivered</div>
+                    </div>
+                    <div className="px-4 py-4" style={{ background: "#F5F4F1" }}>
+                      <div className="text-[16px] font-semibold tracking-tight">500 qualified companies</div>
+                      <div className="mt-3 grid grid-cols-3 gap-2 text-center">
+                        <div className="bg-white rounded-lg py-2.5 border border-black/[0.06]">
+                          <div className="flex items-center justify-center gap-1 text-black/35">
+                            <GlyphClock color="currentColor" />
+                            <span className="text-[9px] font-semibold uppercase">Time</span>
+                          </div>
+                          <div className="text-[12px] font-semibold mt-1">6h 42m</div>
+                        </div>
+                        <div className="bg-white rounded-lg py-2.5 border border-black/[0.06]">
+                          <div className="flex items-center justify-center gap-1 text-black/35">
+                            <GlyphDollar color="currentColor" />
+                            <span className="text-[9px] font-semibold uppercase">Cost</span>
+                          </div>
+                          <div className="text-[12px] font-semibold mt-1" style={{ color: ACCENT }}>$67</div>
+                        </div>
+                        <div className="bg-white rounded-lg py-2.5 border border-black/[0.06]">
+                          <div className="flex items-center justify-center gap-1 text-black/35">
+                            <GlyphSheet color="currentColor" />
+                            <span className="text-[9px] font-semibold uppercase">Output</span>
+                          </div>
+                          <div className="text-[10px] font-semibold mt-1 leading-tight">Spreadsheet</div>
+                        </div>
                       </div>
                     </div>
                   </motion.div>
@@ -987,10 +1033,7 @@ export default function Home() {
           {/* LINKS */}
           <div className="relative border-t border-white/[0.08] px-6 md:px-10 py-8 grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <div className="flex items-center gap-2">
-                <span style={{ color: ACCENT }}>✦</span>
-                <span className="text-white text-[13px] font-semibold tracking-[-0.01em]">Abstrak Labs</span>
-              </div>
+              <Image src="/abstrak-logo-mark.png" alt="Abstrak Labs" width={126} height={40} className="h-6 w-auto" />
               <div className="text-white/35 text-[11px] mt-3">© 2024 Abstrak Labs. All rights reserved.</div>
             </div>
 
