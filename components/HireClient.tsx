@@ -7,57 +7,51 @@ import { Instrument_Serif } from "next/font/google";
 
 const serif = Instrument_Serif({ subsets: ["latin"], weight: "400", style: "italic" });
 
-type Msg = { role: "user" | "agent"; text: string; meta?: string };
-
 const ACCENT = "#92A9E1";
 
 const LEADS_API = "https://agents-api.sonalinayak0804.workers.dev/api/leads";
 
 export default function HireClient() {
-  const [input, setInput] = useState("");
-  const [taskText, setTaskText] = useState("");
-  const [messages, setMessages] = useState<Msg[]>([]);
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [detailsConfirmed, setDetailsConfirmed] = useState(false);
+  const [detailsError, setDetailsError] = useState("");
+
+  const [input, setInput] = useState("");
+  const [taskSent, setTaskSent] = useState("");
   const [sent, setSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+
   const taRef = useRef<HTMLTextAreaElement>(null);
 
-  const handleSend = () => {
-    const text = input.trim();
-    if (!text) return;
-    const userMsg: Msg = { role: "user", text };
-    const len = text.length;
-    const hours = Math.max(2, Math.min(12, Math.round(len / 45) + 3));
-    const mins = [12, 30, 42, 15, 0][hours % 5];
-    const cost = hours * 10 + (mins > 0 ? 1 : 0) * 2;
-    const timeStr = `${hours}h ${String(mins).padStart(2, "0")}m`;
-    const agentMsg: Msg = {
-      role: "agent",
-      text: `Got it. We'll handle it.\n\nTask: "${text.slice(0, 140)}${text.length > 140 ? "…" : ""}"\n\nEstimated: ${timeStr} → $${cost} at $10/hr. We'll verify scope and confirm before starting. Where should we deliver the result?`,
-      meta: `${timeStr} · $${cost} · $10/hr`,
-    };
-    setMessages((m) => [...m, userMsg, agentMsg]);
-    setTaskText(text);
-    setInput("");
+  const handleConfirmDetails = (e: React.FormEvent) => {
+    e.preventDefault();
+    setDetailsError("");
+    if (!name.trim()) return setDetailsError("Tell us your name.");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) return setDetailsError("Enter a valid email.");
+    setDetailsConfirmed(true);
     setTimeout(() => taRef.current?.focus(), 50);
   };
 
-  const handleSubmitEmail = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSend = async () => {
+    const text = input.trim();
+    if (!text || submitting) return;
     setError("");
     setSubmitting(true);
     try {
       const res = await fetch(LEADS_API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, work_description: taskText }),
+        body: JSON.stringify({ email, work_description: `Name: ${name.trim()}\n\n${text}` }),
       });
       if (!res.ok) {
-        setError(res.status === 400 ? "Please enter a valid email." : "Something went wrong — try again.");
+        setError(res.status === 400 ? "Something's off with that submission — try again." : "Something went wrong — try again.");
         return;
       }
+      setTaskSent(text);
       setSent(true);
+      setInput("");
     } catch {
       setError("Couldn't reach the server — check your connection and try again.");
     } finally {
@@ -102,99 +96,111 @@ export default function HireClient() {
                 Not live yet — tell us your task, get 50% off Talo
               </div>
               <h1 className="text-[32px] md:text-[44px] leading-[1.05] tracking-[-0.02em] font-semibold">
-                What do you want to <span className={serif.className} style={{ color: ACCENT }}>get done?</span>
+                {detailsConfirmed ? (
+                  <>
+                    Hey {name.trim().split(" ")[0]}, what do you want to{" "}
+                    <span className={serif.className} style={{ color: ACCENT }}>get done?</span>
+                  </>
+                ) : (
+                  <>
+                    Who are we <span className={serif.className} style={{ color: ACCENT }}>talking to?</span>
+                  </>
+                )}
               </h1>
               <p className="text-[14px] leading-relaxed text-black/50 mt-4 max-w-[460px] mx-auto">
-                Describe it in plain English. We&apos;ll get back to you with scope, time, cost — and 50% off early access.
+                {detailsConfirmed
+                  ? "Describe it in plain English — we'll get back to you soon with 50% off early access."
+                  : "So we know who to reach with your 50% off access."}
               </p>
             </div>
 
-            {messages.length > 0 && (
-              <div className="mt-8 space-y-3 max-h-[32vh] overflow-y-auto">
-                {messages.map((m, i) => (
-                  <div
-                    key={i}
-                    className={`text-[12.5px] leading-relaxed p-4 rounded-2xl ${
-                      m.role === "user"
-                        ? "bg-[#141414] text-white ml-10 shadow-[0_4px_16px_-6px_rgba(0,0,0,0.25)]"
-                        : "bg-white mr-10 shadow-[0_4px_16px_-6px_rgba(0,0,0,0.1)]"
-                    }`}
+            {!detailsConfirmed && (
+              <form onSubmit={handleConfirmDetails} className="mt-8">
+                <div className="rounded-[28px] bg-white shadow-[0_4px_24px_-8px_rgba(20,20,20,0.1)] p-2 space-y-1.5">
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Your name"
+                    autoFocus
+                    className="w-full bg-transparent border-0 rounded-[22px] px-4 py-3.5 text-[14px] placeholder:text-black/30 outline-none focus:outline-none focus:ring-0 appearance-none"
+                  />
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@email.com"
+                    className="w-full bg-transparent border-0 rounded-[22px] px-4 py-3.5 text-[14px] placeholder:text-black/30 outline-none focus:outline-none focus:ring-0 appearance-none"
+                  />
+                  <button
+                    type="submit"
+                    className="w-full text-white font-semibold py-3.5 rounded-[22px] transition-all hover:scale-[1.01] active:scale-[0.98]"
+                    style={{ background: ACCENT }}
                   >
-                    <div className="text-[10px] tracking-[0.1em] uppercase opacity-55 mb-1">{m.role === "user" ? "You" : "Talo · Worker"}</div>
-                    <div className="whitespace-pre-wrap">{m.text}</div>
-                    {m.meta && <div className="text-[10px] tracking-[0.08em] uppercase mt-2 opacity-55">{m.meta}</div>}
-                  </div>
-                ))}
-                {sent && (
-                  <div className="text-white text-[12.5px] p-4 rounded-2xl text-center font-semibold" style={{ background: ACCENT }}>
-                    ✓ Task received — we&apos;ll email you at {email} within hours with your 50% off access.
-                  </div>
-                )}
+                    Continue →
+                  </button>
+                </div>
+                {detailsError && <div className="text-[11.5px] text-red-500 text-center mt-3">{detailsError}</div>}
+              </form>
+            )}
+
+            {detailsConfirmed && sent && (
+              <div className="mt-8">
+                <div className="text-[12.5px] leading-relaxed p-4 rounded-2xl bg-[#141414] text-white ml-10 shadow-[0_4px_16px_-6px_rgba(0,0,0,0.25)]">
+                  <div className="text-[10px] tracking-[0.1em] uppercase opacity-55 mb-1">You</div>
+                  <div className="whitespace-pre-wrap">{taskSent}</div>
+                </div>
+                <div className="text-white text-[13px] leading-relaxed p-4 rounded-2xl text-center font-semibold mt-3" style={{ background: ACCENT }}>
+                  ✓ Got it, {name.trim().split(" ")[0]} — we&apos;ll get back to you at {email} soon with your 50% off access.
+                </div>
               </div>
             )}
 
-            <div className="mt-8">
-              <div className="relative rounded-[28px] bg-white shadow-[0_4px_24px_-8px_rgba(20,20,20,0.1)] focus-within:shadow-[0_10px_34px_-10px_rgba(20,20,20,0.18)] transition-shadow">
-                <textarea
-                  ref={taRef}
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) handleSend();
-                  }}
-                  placeholder="Describe your task… e.g., I need 1,000 companies matching these criteria and their decision makers with verified emails"
-                  rows={4}
-                  className="w-full bg-transparent border-0 p-5 pr-16 text-[13.5px] leading-relaxed placeholder:text-black/30 outline-none focus:outline-none focus:ring-0 resize-none appearance-none"
-                />
-                <button
-                  onClick={handleSend}
-                  disabled={!input.trim()}
-                  aria-label="Send task"
-                  className="absolute right-3.5 bottom-3.5 w-11 h-11 rounded-full grid place-items-center text-white transition-all hover:scale-[1.06] active:scale-[0.95] disabled:hover:scale-100 disabled:bg-black/10 disabled:text-black/30"
-                  style={!input.trim() ? undefined : { background: ACCENT }}
-                >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 19V5M5 12l7-7 7 7" />
-                  </svg>
-                </button>
+            {detailsConfirmed && !sent && (
+              <div className="mt-8">
+                <div className="relative rounded-[28px] bg-white shadow-[0_4px_24px_-8px_rgba(20,20,20,0.1)] focus-within:shadow-[0_10px_34px_-10px_rgba(20,20,20,0.18)] transition-shadow">
+                  <textarea
+                    ref={taRef}
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) handleSend();
+                    }}
+                    placeholder="Describe your task… e.g., I need 1,000 companies matching these criteria and their decision makers with verified emails"
+                    rows={4}
+                    className="w-full bg-transparent border-0 p-5 pr-16 text-[13.5px] leading-relaxed placeholder:text-black/30 outline-none focus:outline-none focus:ring-0 resize-none appearance-none"
+                  />
+                  <button
+                    onClick={handleSend}
+                    disabled={!input.trim() || submitting}
+                    aria-label="Send task"
+                    className="absolute right-3.5 bottom-3.5 w-11 h-11 rounded-full grid place-items-center text-white transition-all hover:scale-[1.06] active:scale-[0.95] disabled:hover:scale-100 disabled:bg-black/10 disabled:text-black/30"
+                    style={!input.trim() || submitting ? undefined : { background: ACCENT }}
+                  >
+                    {submitting ? (
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" className="animate-spin">
+                        <path d="M21 12a9 9 0 1 1-9-9" />
+                      </svg>
+                    ) : (
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M12 19V5M5 12l7-7 7 7" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+                <div className="flex items-center justify-between px-4 mt-2 text-[11px]">
+                  <span className="text-black/35 hidden sm:inline">Press ⌘+Enter to send · Plain English is fine</span>
+                  <span className="text-black/25 ml-auto">{input.length}/1000</span>
+                </div>
+                {error && <div className="text-[11.5px] text-red-500 text-center mt-2">{error}</div>}
               </div>
-              <div className="flex items-center justify-between px-4 mt-2 text-[11px]">
-                <span className="text-black/35 hidden sm:inline">Press ⌘+Enter to send · Plain English is fine</span>
-                <span className="text-black/25 ml-auto">{input.length}/1000</span>
-              </div>
+            )}
 
-              {messages.length > 0 && !sent && (
-                <form onSubmit={handleSubmitEmail} className="mt-4 rounded-2xl bg-white shadow-[0_4px_24px_-8px_rgba(20,20,20,0.1)] p-4">
-                  <div className="text-[10.5px] tracking-[0.08em] uppercase font-semibold">Where should we deliver?</div>
-                  <div className="mt-2 flex gap-2">
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="you@company.com"
-                      required
-                      className="flex-1 rounded-full bg-[#F5F4F1] px-4 py-2.5 text-[12.5px] outline-none placeholder:text-black/30 focus:bg-[#EFEEEA]"
-                    />
-                    <button
-                      type="submit"
-                      disabled={submitting}
-                      className="bg-[#141414] text-white text-[11.5px] font-semibold px-6 py-2.5 rounded-full hover:bg-black hover:scale-[1.03] active:scale-[0.97] transition-all disabled:opacity-50 disabled:hover:scale-100"
-                    >
-                      {submitting ? "Sending…" : "Confirm →"}
-                    </button>
-                  </div>
-                  {error ? (
-                    <div className="text-[10.5px] text-red-500 mt-2">{error}</div>
-                  ) : (
-                    <div className="text-[10.5px] text-black/40 mt-2">We&apos;ll confirm scope, time &amp; cost before starting. No spam.</div>
-                  )}
-                </form>
-              )}
-
+            {detailsConfirmed && (
               <div className="text-[10.5px] tracking-[0.06em] uppercase text-black/35 text-center mt-6">
                 $10 / hour · Pay for the work, not the software · Response within hours
               </div>
-            </div>
+            )}
           </div>
         </div>
 
