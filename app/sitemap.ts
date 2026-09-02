@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { siteUrl } from "../lib/site";
+import { requestSiteUrl } from "../lib/site";
 
 // Last modified for static pages — update when content changes
 const staticRoutes = [
@@ -25,6 +25,7 @@ const staticRoutes = [
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
+  const siteUrl = requestSiteUrl();
   return staticRoutes.map((route) => ({
     url: `${siteUrl}${route || "/"}`,
     lastModified: now,
