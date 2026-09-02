@@ -3,24 +3,25 @@
 import { useState, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { Instrument_Serif } from "next/font/google";
+
+const serif = Instrument_Serif({ subsets: ["latin"], weight: "400", style: "italic" });
 
 type Msg = { role: "user" | "agent"; text: string; meta?: string };
 
 const ACCENT = "#92A9E1";
 
+const LEADS_API = "https://agents-api.sonalinayak0804.workers.dev/api/leads";
+
 export default function HireClient() {
   const [input, setInput] = useState("");
+  const [taskText, setTaskText] = useState("");
   const [messages, setMessages] = useState<Msg[]>([]);
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
   const taRef = useRef<HTMLTextAreaElement>(null);
-
-  const examples = [
-    "Find 500 US SaaS companies, their founders, funding and LinkedIn",
-    "Collect 1,200 profiles matching our ICP - enrich emails",
-    "Research 15 competitors - pricing, features, positioning",
-    "Extract 10,000 products from 8 marketplaces into a sheet",
-  ];
 
   const handleSend = () => {
     const text = input.trim();
@@ -37,14 +38,31 @@ export default function HireClient() {
       meta: `${timeStr} · $${cost} · $10/hr`,
     };
     setMessages((m) => [...m, userMsg, agentMsg]);
+    setTaskText(text);
     setInput("");
     setTimeout(() => taRef.current?.focus(), 50);
   };
 
-  const handleSubmitEmail = (e: React.FormEvent) => {
+  const handleSubmitEmail = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.includes("@")) return;
-    setSent(true);
+    setError("");
+    setSubmitting(true);
+    try {
+      const res = await fetch(LEADS_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, work_description: taskText }),
+      });
+      if (!res.ok) {
+        setError(res.status === 400 ? "Please enter a valid email." : "Something went wrong — try again.");
+        return;
+      }
+      setSent(true);
+    } catch {
+      setError("Couldn't reach the server — check your connection and try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -74,50 +92,49 @@ export default function HireClient() {
         </header>
 
         <div className="relative z-10 flex-1 flex items-center justify-center p-6 lg:p-10">
-          <div className="w-full max-w-[720px] rounded-[22px] bg-white border border-black/[0.06] shadow-[0_2px_16px_-4px_rgba(20,20,20,0.06)] overflow-hidden">
-            <div className="flex items-center justify-between px-6 py-3.5 border-b border-black/[0.06] bg-[#F5F4F1] text-[11px] tracking-[0.04em] uppercase">
-              <span className="font-semibold flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full" style={{ background: ACCENT }} /> New task
-              </span>
-              <span className="text-black/40">$10 / hour · No subscription</span>
-            </div>
-
-            <div className="px-6 lg:px-8 py-9 text-center border-b border-black/[0.06]">
-              <h1 className="text-[26px] md:text-[32px] leading-[1.1] tracking-[-0.02em] font-semibold">
-                What do you want to
-                <br />
-                <span style={{ color: ACCENT }}>get done?</span>
+          <div className="w-full max-w-[680px]">
+            <div className="text-center">
+              <div
+                className="inline-flex items-center gap-1.5 text-[11.5px] font-semibold px-3.5 py-1.5 rounded-full mb-6"
+                style={{ background: "#EEF1FB", color: "#5B6FCB" }}
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                Not live yet — tell us your task, get 50% off Talo
+              </div>
+              <h1 className="text-[32px] md:text-[44px] leading-[1.05] tracking-[-0.02em] font-semibold">
+                What do you want to <span className={serif.className} style={{ color: ACCENT }}>get done?</span>
               </h1>
-              <p className="text-[13px] leading-relaxed text-black/50 mt-3 max-w-[440px] mx-auto">
-                Describe it in plain English. We figure out the workflow and deliver the result.
+              <p className="text-[14px] leading-relaxed text-black/50 mt-4 max-w-[460px] mx-auto">
+                Describe it in plain English. We&apos;ll get back to you with scope, time, cost — and 50% off early access.
               </p>
             </div>
 
             {messages.length > 0 && (
-              <div className="px-6 lg:px-8 py-6 space-y-3 max-h-[32vh] overflow-y-auto border-b border-black/[0.06] bg-[#FAFAF9]">
+              <div className="mt-8 space-y-3 max-h-[32vh] overflow-y-auto">
                 {messages.map((m, i) => (
                   <div
                     key={i}
-                    className={`text-[12.5px] leading-relaxed p-4 rounded-xl ${
-                      m.role === "user" ? "bg-[#141414] text-white ml-8" : "bg-white border border-black/[0.06] mr-8"
+                    className={`text-[12.5px] leading-relaxed p-4 rounded-2xl ${
+                      m.role === "user"
+                        ? "bg-[#141414] text-white ml-10 shadow-[0_4px_16px_-6px_rgba(0,0,0,0.25)]"
+                        : "bg-white mr-10 shadow-[0_4px_16px_-6px_rgba(0,0,0,0.1)]"
                     }`}
                   >
-                    <div className="text-[10px] tracking-[0.1em] uppercase opacity-55 mb-1">{m.role === "user" ? "You" : "Abstrak · Worker"}</div>
+                    <div className="text-[10px] tracking-[0.1em] uppercase opacity-55 mb-1">{m.role === "user" ? "You" : "Talo · Worker"}</div>
                     <div className="whitespace-pre-wrap">{m.text}</div>
                     {m.meta && <div className="text-[10px] tracking-[0.08em] uppercase mt-2 opacity-55">{m.meta}</div>}
                   </div>
                 ))}
                 {sent && (
-                  <div className="text-white text-[12.5px] p-4 rounded-xl text-center font-semibold" style={{ background: ACCENT }}>
-                    ✓ Task received — we&apos;ll email you at {email} within hours to confirm scope &amp; start.
+                  <div className="text-white text-[12.5px] p-4 rounded-2xl text-center font-semibold" style={{ background: ACCENT }}>
+                    ✓ Task received — we&apos;ll email you at {email} within hours with your 50% off access.
                   </div>
                 )}
               </div>
             )}
 
-            <div className="p-6 lg:p-8">
-              <label className="text-[10.5px] tracking-[0.08em] uppercase font-semibold text-black/50">Your task</label>
-              <div className="mt-2 rounded-xl border border-black/[0.1] bg-[#F5F4F1] focus-within:border-black/25 focus-within:bg-white transition-colors overflow-hidden">
+            <div className="mt-8">
+              <div className="relative rounded-[28px] bg-white shadow-[0_4px_24px_-8px_rgba(20,20,20,0.1)] focus-within:shadow-[0_10px_34px_-10px_rgba(20,20,20,0.18)] transition-shadow">
                 <textarea
                   ref={taRef}
                   value={input}
@@ -127,43 +144,27 @@ export default function HireClient() {
                   }}
                   placeholder="Describe your task… e.g., I need 1,000 companies matching these criteria and their decision makers with verified emails"
                   rows={4}
-                  className="w-full bg-transparent p-4 text-[13px] leading-relaxed placeholder:text-black/30 outline-none resize-none"
+                  className="w-full bg-transparent border-0 p-5 pr-16 text-[13.5px] leading-relaxed placeholder:text-black/30 outline-none focus:outline-none focus:ring-0 resize-none appearance-none"
                 />
-                <div className="flex items-center justify-between px-3 py-2.5 border-t border-black/[0.06] bg-white text-[11px]">
-                  <span className="text-black/40 hidden sm:inline">Press ⌘+Enter to send · Plain English is fine</span>
-                  <div className="flex items-center gap-3 ml-auto">
-                    <span className="text-black/30 hidden sm:inline">{input.length}/1000</span>
-                    <button
-                      onClick={handleSend}
-                      disabled={!input.trim()}
-                      className="text-white font-semibold px-5 py-2.5 rounded-full transition-all hover:scale-[1.03] active:scale-[0.97] disabled:hover:scale-100 disabled:bg-black/10 disabled:text-black/30"
-                      style={!input.trim() ? undefined : { background: ACCENT }}
-                    >
-                      Send →
-                    </button>
-                  </div>
-                </div>
+                <button
+                  onClick={handleSend}
+                  disabled={!input.trim()}
+                  aria-label="Send task"
+                  className="absolute right-3.5 bottom-3.5 w-11 h-11 rounded-full grid place-items-center text-white transition-all hover:scale-[1.06] active:scale-[0.95] disabled:hover:scale-100 disabled:bg-black/10 disabled:text-black/30"
+                  style={!input.trim() ? undefined : { background: ACCENT }}
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 19V5M5 12l7-7 7 7" />
+                  </svg>
+                </button>
+              </div>
+              <div className="flex items-center justify-between px-4 mt-2 text-[11px]">
+                <span className="text-black/35 hidden sm:inline">Press ⌘+Enter to send · Plain English is fine</span>
+                <span className="text-black/25 ml-auto">{input.length}/1000</span>
               </div>
 
-              {messages.length === 0 && (
-                <div className="mt-5">
-                  <div className="text-[10.5px] tracking-[0.08em] uppercase text-black/40 font-medium">Try an example</div>
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {examples.map((ex) => (
-                      <button
-                        key={ex}
-                        onClick={() => setInput(ex)}
-                        className="text-left text-[11.5px] leading-snug rounded-full border border-black/[0.08] bg-white hover:border-black/20 hover:bg-[#F5F4F1] px-3.5 py-2 transition-colors max-w-full"
-                      >
-                        &quot;{ex}&quot;
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
               {messages.length > 0 && !sent && (
-                <form onSubmit={handleSubmitEmail} className="mt-6 rounded-xl border border-black/[0.06] bg-[#F5F4F1] p-4">
+                <form onSubmit={handleSubmitEmail} className="mt-4 rounded-2xl bg-white shadow-[0_4px_24px_-8px_rgba(20,20,20,0.1)] p-4">
                   <div className="text-[10.5px] tracking-[0.08em] uppercase font-semibold">Where should we deliver?</div>
                   <div className="mt-2 flex gap-2">
                     <input
@@ -172,16 +173,21 @@ export default function HireClient() {
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="you@company.com"
                       required
-                      className="flex-1 rounded-full border border-black/[0.1] bg-white px-4 py-2.5 text-[12.5px] outline-none placeholder:text-black/30 focus:border-black/25"
+                      className="flex-1 rounded-full bg-[#F5F4F1] px-4 py-2.5 text-[12.5px] outline-none placeholder:text-black/30 focus:bg-[#EFEEEA]"
                     />
                     <button
                       type="submit"
-                      className="bg-[#141414] text-white text-[11.5px] font-semibold px-6 py-2.5 rounded-full hover:bg-black hover:scale-[1.03] active:scale-[0.97] transition-all"
+                      disabled={submitting}
+                      className="bg-[#141414] text-white text-[11.5px] font-semibold px-6 py-2.5 rounded-full hover:bg-black hover:scale-[1.03] active:scale-[0.97] transition-all disabled:opacity-50 disabled:hover:scale-100"
                     >
-                      Confirm →
+                      {submitting ? "Sending…" : "Confirm →"}
                     </button>
                   </div>
-                  <div className="text-[10.5px] text-black/40 mt-2">We&apos;ll confirm scope, time &amp; cost before starting. No spam.</div>
+                  {error ? (
+                    <div className="text-[10.5px] text-red-500 mt-2">{error}</div>
+                  ) : (
+                    <div className="text-[10.5px] text-black/40 mt-2">We&apos;ll confirm scope, time &amp; cost before starting. No spam.</div>
+                  )}
                 </form>
               )}
 
@@ -194,7 +200,7 @@ export default function HireClient() {
 
         <footer className="relative z-10 pb-6">
           <div className="rounded-[22px] bg-white border border-black/[0.06] px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] tracking-[0.04em] text-black/45">
-            <span>© 2024 Abstrak Labs — Digital Labor</span>
+            <span>© 2026 Talo by Abstrak Labs</span>
             <span className="hidden sm:inline">Give us the work. We&apos;ll get it done.</span>
           </div>
         </footer>
