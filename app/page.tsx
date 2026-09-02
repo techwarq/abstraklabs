@@ -318,7 +318,7 @@ export default function Home() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: easeOut }}
-          className={`${card} mt-4 md:mt-6 relative overflow-hidden`}
+          className={`${card} mt-8 md:mt-12 relative overflow-hidden`}
         >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-8 px-6 md:px-10 lg:px-14 py-12 md:py-16 lg:py-20 items-center">
             {/* LEFT */}
