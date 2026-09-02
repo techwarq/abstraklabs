@@ -19,6 +19,7 @@ const staticRoutes = [
   "/work/invoice-processing",
   "/work/product-catalog-cleanup",
   "/work-guarantee",
+  "/privacy",
   "/hire",
 ];
 

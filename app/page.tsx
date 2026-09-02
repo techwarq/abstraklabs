@@ -1078,7 +1078,7 @@ export default function Home() {
               <div className="text-white text-[12px] font-semibold uppercase tracking-[0.04em] mb-3">Useful links</div>
               <div className="flex flex-col gap-2 text-[12.5px] text-white/50">
                 <Link href="/work-guarantee" className="hover:text-white transition-colors w-fit">Work Guarantee</Link>
-                <a href="#" className="hover:text-white transition-colors w-fit">Privacy Policy</a>
+                <Link href="/privacy" className="hover:text-white transition-colors w-fit">Privacy Policy</Link>
                 <a href="#" className="hover:text-white transition-colors w-fit">Terms of Service</a>
               </div>
             </div>
