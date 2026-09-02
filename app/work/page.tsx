@@ -67,7 +67,7 @@ export default function Page() {
         <section className="px-6 lg:px-8 py-10 border-b border-black/[0.08]">
           <div className="mono text-[10px] tracking-[0.16em] uppercase text-black/40">Work — Sample Workflows</div>
           <h1 className="display-brutalist text-[36px] lg:text-[48px] leading-[0.85] mt-3">Real Workflows. Sample Deliveries.</h1>
-          <p className="mono text-[11px] tracking-[0.14em] uppercase font-bold text-[#92A9E1] mt-3">Not client projects — internal demos to show how work is done</p>
+          <p className="mono text-[11px] tracking-[0.14em] uppercase font-bold text-[#719DF4] mt-3">Not client projects — internal demos to show how work is done</p>
           <p className="text-[14px] leading-relaxed text-black/65 mt-4 max-w-[720px]">
             We’re early-stage, so we don’t fabricate customers or testimonials. These are sample deliveries that show the task, input, workflow,
             output, time and cost — clearly labeled as internal demos.
@@ -81,7 +81,7 @@ export default function Page() {
                 <span className="bg-black text-white px-2 py-1">{s.label}</span>
                 <span className="text-black/40">Sample {s.n}</span>
               </div>
-              <h2 className="text-[16px] font-bold tracking-tight uppercase mt-4 group-hover:text-[#92A9E1]">{s.title} →</h2>
+              <h2 className="text-[16px] font-bold tracking-tight uppercase mt-4 group-hover:text-[#719DF4]">{s.title} →</h2>
               <div className="mono text-[10px] tracking-[0.14em] uppercase font-bold text-black/40 mt-4">Task</div>
               <div className="mono text-[12px] text-black/70 mt-1 leading-relaxed">{s.task}</div>
               <div className="mono text-[10px] tracking-[0.14em] uppercase font-bold text-black/40 mt-3">Input</div>
@@ -95,7 +95,7 @@ export default function Page() {
                 </div>
                 <div className="bg-white py-2 border-l border-black/[0.08]">
                   <div className="text-[10px] text-black/40 uppercase">Cost</div>
-                  <div className="text-[12px] font-bold text-[#92A9E1]">{s.cost}</div>
+                  <div className="text-[12px] font-bold text-[#719DF4]">{s.cost}</div>
                 </div>
               </div>
               <div className="mono text-[11px] text-black/50 mt-3">Output: {s.output}</div>
@@ -124,7 +124,7 @@ export default function Page() {
         <section className="bg-black text-white px-6 lg:px-8 py-10 text-center">
           <h2 className="display-brutalist text-[28px]">Want your own delivery?</h2>
           <p className="mono text-[12px] text-white/60 mt-2">Describe the task — we’ll handle the workflow and deliver the result. From $10/hour.</p>
-          <Link href="/hire" className="mt-6 inline-block bg-[#92A9E1] mono text-[11px] px-6 py-3">Hire an AI freelancer →</Link>
+          <Link href="/hire" className="mt-6 inline-block bg-[#719DF4] mono text-[11px] px-6 py-3">Hire an AI freelancer →</Link>
         </section>
       </div>
     </main>

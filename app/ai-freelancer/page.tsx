@@ -99,7 +99,7 @@ export default function Page() {
   };
 
   return (
-    <main className="min-h-screen bg-[#EDE8D0] text-black selection:bg-[#92A9E1] selection:text-white">
+    <main className="min-h-screen bg-[#EDE8D0] text-black selection:bg-[#719DF4] selection:text-white">
       <JsonLd data={[serviceJsonLd, faqJsonLd, breadcrumbJsonLd]} />
       <div className="fixed inset-0 bg-grid-brutalist pointer-events-none opacity-[0.22]" />
       <div className="relative max-w-[1440px] mx-auto border-x border-black/[0.08] bg-[#EDE8D0]">
@@ -128,14 +128,14 @@ export default function Page() {
             <h1 className="display-brutalist text-[36px] sm:text-[46px] lg:text-[54px] leading-[0.85] tracking-[-0.04em] mt-3">
               Hire an AI Freelancer
             </h1>
-            <p className="mono text-[11px] tracking-[0.14em] uppercase font-bold text-[#92A9E1] mt-3">From $10/hour · No subscription</p>
+            <p className="mono text-[11px] tracking-[0.14em] uppercase font-bold text-[#719DF4] mt-3">From $10/hour · No subscription</p>
             <p className="text-[15px] leading-relaxed text-black/70 mt-6 max-w-[720px]">
               Abstrak Labs lets businesses hire AI freelancers to complete digital work such as research, data entry, lead generation, data
               cleaning, document processing and repetitive browser tasks. AI freelancers are available from{" "}
               <strong className="text-black">$10/hour</strong>.
             </p>
             <div className="mt-7 flex gap-3">
-              <Link href="/hire" className="bg-[#92A9E1] text-white mono text-[11px] tracking-[0.14em] uppercase font-bold px-6 py-3">
+              <Link href="/hire" className="bg-[#719DF4] text-white mono text-[11px] tracking-[0.14em] uppercase font-bold px-6 py-3">
                 Hire an AI freelancer →
               </Link>
               <Link href="/work" className="bg-white border border-black/15 mono text-[11px] tracking-[0.14em] uppercase font-bold px-6 py-3">
@@ -194,7 +194,7 @@ export default function Page() {
               { href: "/ai-research", t: "Research", d: "Market, company and tender/grant research." },
             ].map((c) => (
               <Link key={c.href} href={c.href} className="bg-white p-6 hover:bg-[#EDE8D0] transition-colors group">
-                <div className="mono text-[12px] font-bold tracking-[0.04em] group-hover:text-[#92A9E1]">{c.t} →</div>
+                <div className="mono text-[12px] font-bold tracking-[0.04em] group-hover:text-[#719DF4]">{c.t} →</div>
                 <div className="mono text-[11.5px] text-black/60 mt-1 leading-relaxed">{c.d}</div>
               </Link>
             ))}
@@ -246,7 +246,7 @@ export default function Page() {
                   </div>
                   <div className="bg-white py-2 border-l border-black/[0.08]">
                     <div className="text-[10px] text-black/40 uppercase tracking-[0.14em]">Cost</div>
-                    <div className="text-[13px] font-bold text-[#92A9E1]">$67</div>
+                    <div className="text-[13px] font-bold text-[#719DF4]">$67</div>
                   </div>
                 </div>
                 <div className="mono text-[10px] text-black/40 mt-2">Sample workflow — clearly labeled, not a client project</div>
@@ -301,7 +301,7 @@ export default function Page() {
             <h2 className="display-brutalist text-[28px] md:text-[36px] leading-[0.9]">Hire an AI freelancer today.</h2>
             <p className="mono text-[12px] text-white/60 mt-3">Describe the task. We’ll handle the workflow and deliver the result. From $10/hour.</p>
             <div className="mt-6 flex justify-center gap-3">
-              <Link href="/hire" className="bg-[#92A9E1] text-white mono text-[11px] tracking-[0.14em] uppercase font-bold px-6 py-3">
+              <Link href="/hire" className="bg-[#719DF4] text-white mono text-[11px] tracking-[0.14em] uppercase font-bold px-6 py-3">
                 Hire an AI freelancer →
               </Link>
               <Link href="/work" className="border border-white/20 mono text-[11px] tracking-[0.14em] uppercase font-bold px-6 py-3">

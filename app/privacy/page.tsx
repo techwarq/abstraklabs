@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { absoluteUrl } from "../../lib/site";
 
-const ACCENT = "#92A9E1";
+const ACCENT = "#719DF4";
 
 export const metadata: Metadata = {
   title: "Privacy Policy — Talo by Abstrak Labs",

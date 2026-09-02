@@ -8,7 +8,7 @@ import Image from "next/image";
 
 const serif = Instrument_Serif({ subsets: ["latin"], weight: "400", style: "italic" });
 
-const ACCENT = "#92A9E1";
+const ACCENT = "#719DF4";
 const INK = "#141414";
 
 const portfolio = [
@@ -172,7 +172,7 @@ function GlyphDollar({ color }: { color: string }) {
 }
 
 const orbitBadges = [
-  { Glyph: GlyphSheet, color: "#92A9E1", top: "2%", left: "16%", delay: 0 },
+  { Glyph: GlyphSheet, color: "#719DF4", top: "2%", left: "16%", delay: 0 },
   { Glyph: GlyphCheck, color: "#4ADE80", top: "-4%", left: "68%", delay: 0.3 },
   { Glyph: GlyphDollar, color: "#F5A623", top: "48%", left: "2%", delay: 0.6 },
   { Glyph: GlyphClock, color: "#60A5FA", top: "42%", left: "84%", delay: 0.9 },
@@ -274,7 +274,7 @@ export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(2);
 
   return (
-    <main className="min-h-screen bg-[#EFEEEC] text-[#141414] selection:bg-[#92A9E1] selection:text-white">
+    <main className="min-h-screen bg-[#EFEEEC] text-[#141414] selection:bg-[#719DF4] selection:text-white">
       <div className="fixed inset-0 bg-lines-soft pointer-events-none opacity-[0.7]" />
 
       <div className="relative z-10 max-w-[1920px] mx-auto px-3 md:px-5">

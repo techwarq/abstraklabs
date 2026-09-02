@@ -7,7 +7,7 @@ import { Instrument_Serif } from "next/font/google";
 
 const serif = Instrument_Serif({ subsets: ["latin"], weight: "400", style: "italic" });
 
-const ACCENT = "#92A9E1";
+const ACCENT = "#719DF4";
 
 const LEADS_API = "https://agents-api.sonalinayak0804.workers.dev/api/leads";
 

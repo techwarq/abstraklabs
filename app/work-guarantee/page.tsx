@@ -73,7 +73,7 @@ export default function Page() {
             </div>
 
             <div className="mt-8 flex gap-3">
-              <Link href="/hire" className="bg-[#92A9E1] text-white mono text-[11px] px-6 py-3">Hire a worker →</Link>
+              <Link href="/hire" className="bg-[#719DF4] text-white mono text-[11px] px-6 py-3">Hire a worker →</Link>
               <Link href="/" className="bg-white border border-black/15 mono text-[11px] px-6 py-3">Back to home</Link>
             </div>
           </div>

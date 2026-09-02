@@ -32,7 +32,7 @@ export default function Page() {
             <span className="border border-black/15 px-2 py-1 text-black/50">Public-Data Workflow</span>
           </div>
           <h1 className="display-brutalist text-[28px] lg:text-[36px] leading-[0.9] mt-4">CRM Cleanup — 15k Contacts</h1>
-          <p className="mono text-[11px] tracking-[0.14em] uppercase font-bold text-[#92A9E1] mt-2">Not a client project — internal demo to show process</p>
+          <p className="mono text-[11px] tracking-[0.14em] uppercase font-bold text-[#719DF4] mt-2">Not a client project — internal demo to show process</p>
           <div className="mt-4 flex gap-3 mono text-[11px]">
             <Link href="/work" className="underline">← All work</Link>
             <Link href="/ai-crm-cleanup" className="underline">Service: CRM Cleanup →</Link>
@@ -67,7 +67,7 @@ export default function Page() {
               </div>
               <div className="bg-white py-3 border-l border-black/[0.08]">
                 <div className="text-[10px] tracking-[0.14em] uppercase text-black/40">Cost</div>
-                <div className="text-[14px] font-bold text-[#92A9E1]">$51</div>
+                <div className="text-[14px] font-bold text-[#719DF4]">$51</div>
               </div>
               <div className="bg-white py-3 col-span-2 border-t border-black/[0.08]">
                 <div className="text-[10px] tracking-[0.14em] uppercase text-black/40">Deliverable</div>
@@ -76,7 +76,7 @@ export default function Page() {
             </div>
 
             <div className="mono text-[10px] text-black/40 mt-3">Clearly labeled INTERNAL DEMO — do not represent as customer result.</div>
-            <Link href="/hire" className="mt-6 inline-block bg-[#92A9E1] text-white mono text-[11px] px-6 py-3">Hire for your CRM →</Link>
+            <Link href="/hire" className="mt-6 inline-block bg-[#719DF4] text-white mono text-[11px] px-6 py-3">Hire for your CRM →</Link>
             <div className="mono text-[11px] mt-4">Related: <Link href="/ai-data-cleaning" className="underline">Data Cleaning</Link> · <Link href="/ai-crm-cleanup" className="underline">CRM Service</Link></div>
           </div>
         </section>

@@ -59,7 +59,7 @@ export default function Page() {
             workflows. <strong>Hire an AI document processing worker from $10/hour.</strong>
           </p>
           <div className="mt-6 flex gap-3">
-            <Link href="/hire" className="bg-[#92A9E1] text-white mono text-[11px] px-6 py-3">Hire an AI freelancer →</Link>
+            <Link href="/hire" className="bg-[#719DF4] text-white mono text-[11px] px-6 py-3">Hire an AI freelancer →</Link>
             <Link href="/work" className="bg-white border border-black/15 mono text-[11px] px-6 py-3">See sample work →</Link>
           </div>
         </section>
@@ -91,7 +91,7 @@ export default function Page() {
               <h3 className="mono text-[11px] font-bold uppercase">Sample delivery</h3>
               <div className="mt-2 border border-black/[0.08] bg-white p-4 mono text-center">
                 <div className="text-[11px] text-black/50 uppercase tracking-[0.14em]">1,000 documents processed</div>
-                <div className="text-[13px] font-bold mt-2">6h 20m → <span className="text-[#92A9E1]">$63</span></div>
+                <div className="text-[13px] font-bold mt-2">6h 20m → <span className="text-[#719DF4]">$63</span></div>
                 <div className="text-[10px] text-black/40 mt-1">Sample workflow · not a client project</div>
               </div>
             </div>
@@ -113,7 +113,7 @@ export default function Page() {
 
         <section className="bg-black text-white px-6 lg:px-8 py-10 text-center">
           <h2 className="display-brutalist text-[28px]">Hire an AI document processing freelancer</h2>
-          <Link href="/hire" className="mt-6 inline-block bg-[#92A9E1] mono text-[11px] px-6 py-3">Hire an AI freelancer →</Link>
+          <Link href="/hire" className="mt-6 inline-block bg-[#719DF4] mono text-[11px] px-6 py-3">Hire an AI freelancer →</Link>
         </section>
       </div>
     </main>
