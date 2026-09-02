@@ -287,7 +287,7 @@ export default function Home() {
             className="w-full max-w-[980px] bg-[#141414] text-white rounded-full pl-4 pr-2 py-2 flex items-center justify-between gap-4 shadow-[0_10px_30px_-8px_rgba(0,0,0,0.35)]"
           >
             <Link href="/" className="flex items-center shrink-0">
-              <Image src="/abstrak-logo-mark.png" alt="Abstrak Labs" width={126} height={40} className="h-7 w-auto" priority />
+              <Image src="/talo-logo-mark.png" alt="Talo" width={329} height={140} className="h-7 w-auto" priority />
             </Link>
 
             <nav className="hidden lg:flex items-center gap-5 text-[12.5px] text-white/65">
@@ -372,8 +372,14 @@ export default function Home() {
               transition={{ duration: 0.7, delay: 0.25, ease: easeOut }}
               className="relative lg:pl-4"
             >
+              {/* ambient glow */}
+              <div
+                className="absolute -inset-8 rounded-[44px] blur-3xl opacity-70 -z-10 pointer-events-none"
+                style={{ background: `radial-gradient(60% 60% at 50% 35%, ${ACCENT}66, transparent 72%)` }}
+              />
+
               <motion.div
-                className="hidden sm:flex absolute -top-5 -right-3 z-20 w-14 h-14 rounded-2xl bg-white border border-black/[0.06] shadow-[0_10px_25px_-8px_rgba(0,0,0,0.2)] items-center justify-center"
+                className="hidden sm:flex absolute -top-5 -right-3 z-20 w-14 h-14 rounded-2xl bg-white border border-black/[0.06] shadow-[0_14px_30px_-10px_rgba(52,63,130,0.35)] items-center justify-center"
                 initial={{ opacity: 0, scale: 0.4, rotate: 8 }}
                 animate={{ opacity: 1, scale: 1, rotate: 8, y: [0, -8, 0] }}
                 transition={{
@@ -385,7 +391,7 @@ export default function Home() {
                 <IconSheet />
               </motion.div>
               <motion.div
-                className="hidden sm:flex absolute -bottom-4 -left-5 z-20 w-16 h-16 rounded-2xl bg-white border border-black/[0.06] shadow-[0_10px_25px_-8px_rgba(0,0,0,0.2)] items-center justify-center"
+                className="hidden sm:flex absolute -bottom-4 -left-5 z-20 w-16 h-16 rounded-2xl bg-white border border-black/[0.06] shadow-[0_14px_30px_-10px_rgba(52,63,130,0.35)] items-center justify-center"
                 initial={{ opacity: 0, scale: 0.4, rotate: -10 }}
                 animate={{ opacity: 1, scale: 1, rotate: -10, y: [0, -8, 0] }}
                 transition={{
@@ -397,7 +403,7 @@ export default function Home() {
                 <IconCheck />
               </motion.div>
               <motion.div
-                className="hidden lg:flex absolute top-[38%] -right-6 z-20 w-12 h-12 rounded-2xl bg-white border border-black/[0.06] shadow-[0_10px_25px_-8px_rgba(0,0,0,0.2)] items-center justify-center"
+                className="hidden lg:flex absolute top-[38%] -right-6 z-20 w-12 h-12 rounded-2xl bg-white border border-black/[0.06] shadow-[0_14px_30px_-10px_rgba(52,63,130,0.35)] items-center justify-center"
                 initial={{ opacity: 0, scale: 0.4, rotate: 6 }}
                 animate={{ opacity: 1, scale: 1, rotate: 6, y: [0, -8, 0] }}
                 transition={{
@@ -409,17 +415,27 @@ export default function Home() {
                 <IconDollar />
               </motion.div>
 
-              <div className="relative rounded-2xl bg-white border border-black/[0.08] shadow-[0_25px_60px_-20px_rgba(0,0,0,0.3)] overflow-hidden">
-                <div className="flex items-center gap-2 px-4 py-3 border-b border-black/[0.06] bg-[#FAFAF9]">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F57]" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#FEBC2E]" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#28C840]" />
-                  <span className="ml-3 text-[10.5px] text-black/35 bg-white border border-black/[0.06] rounded-full px-3 py-1 flex-1 text-center max-w-[220px]">
-                    app.abstraklabs.com
-                  </span>
-                </div>
+              {/* gradient frame */}
+              <div
+                className="relative rounded-[28px] p-2.5 md:p-3 overflow-hidden shadow-[0_35px_70px_-20px_rgba(40,48,110,0.45)]"
+                style={{ background: `linear-gradient(150deg, #4E5FBD 0%, ${ACCENT} 55%, #D6DDF3 100%)` }}
+              >
+                <div
+                  className="absolute inset-0 opacity-[0.5] mix-blend-overlay pointer-events-none"
+                  style={{ background: "radial-gradient(120% 90% at 15% 0%, rgba(255,255,255,0.5), transparent 55%)" }}
+                />
 
-                <div className="px-5 py-5">
+                <div className="relative rounded-[20px] bg-white border border-black/[0.06] shadow-[0_10px_30px_-12px_rgba(0,0,0,0.25)] overflow-hidden">
+                  <div className="flex items-center gap-2 px-4 py-3 border-b border-black/[0.06] bg-[#FAFAF9]">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F57]" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#FEBC2E]" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#28C840]" />
+                    <span className="ml-3 text-[10.5px] text-black/35 bg-white border border-black/[0.06] rounded-full px-3 py-1 flex-1 text-center max-w-[220px]">
+                      app.abstraklabs.com
+                    </span>
+                  </div>
+
+                  <div className="px-5 py-5">
                   <div className="flex items-center justify-between">
                     <div className="text-[10.5px] font-semibold tracking-[0.08em] uppercase text-black/40">Customer request</div>
                     <span className="flex items-center gap-1.5 text-[10.5px] text-[#16A34A] font-semibold">
@@ -531,6 +547,7 @@ export default function Home() {
                       </div>
                     </div>
                   </motion.div>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -538,7 +555,7 @@ export default function Home() {
         </motion.section>
 
         {/* WHY ABSTRAK LABS — AI freelancer positioning */}
-        <motion.section id="difference" {...revealProps} className={`${card} mt-4 md:mt-5 overflow-hidden`}>
+        <motion.section id="difference" {...revealProps} className={`scroll-mt-28 ${card} mt-4 md:mt-5 overflow-hidden`}>
           <div className="px-6 md:px-10 py-14 md:py-16 text-center border-b border-black/[0.06]">
             <h2 className="text-[32px] sm:text-[42px] md:text-[52px] leading-[1.1] tracking-[-0.02em] font-semibold max-w-[720px] mx-auto">
               Hire an AI freelancer.
@@ -621,7 +638,7 @@ export default function Home() {
         </motion.div>
 
         {/* WHAT WE DO */}
-        <motion.section id="services" {...revealProps} className={`${card} mt-4 md:mt-5 overflow-hidden`}>
+        <motion.section id="services" {...revealProps} className={`scroll-mt-28 ${card} mt-4 md:mt-5 overflow-hidden`}>
           <div className="px-6 lg:px-8 py-8 border-b border-black/[0.06]">
             <h2 className="text-[24px] md:text-[30px] leading-[1.1] tracking-[-0.02em] font-semibold">What do you need off your plate?</h2>
             <p className="text-[13px] leading-relaxed text-black/50 mt-3 max-w-[560px]">
@@ -664,7 +681,7 @@ export default function Home() {
         </motion.section>
 
         {/* PORTFOLIO */}
-        <motion.section id="work" {...revealProps} className={`${card} mt-4 md:mt-5 overflow-hidden`}>
+        <motion.section id="work" {...revealProps} className={`scroll-mt-28 ${card} mt-4 md:mt-5 overflow-hidden`}>
           <div className="px-6 lg:px-8 py-8 border-b border-black/[0.06] flex items-end justify-between gap-6">
             <div>
               <div className="text-[11px] font-semibold tracking-[0.08em] uppercase text-black/40">Our work — Things we&apos;ve actually done</div>
@@ -726,7 +743,7 @@ export default function Home() {
         </motion.section>
 
         {/* HOW IT WORKS */}
-        <motion.section id="how" {...revealProps} className={`${card} mt-4 md:mt-5 overflow-hidden`}>
+        <motion.section id="how" {...revealProps} className={`scroll-mt-28 ${card} mt-4 md:mt-5 overflow-hidden`}>
           <div className="px-6 lg:px-8 py-8 border-b border-black/[0.06] text-center">
             <h2 className="text-[22px] md:text-[28px] leading-[1.1] tracking-[-0.02em] font-semibold">
               You have the task. We have the workers.
@@ -862,7 +879,7 @@ export default function Home() {
         </motion.section>
 
         {/* PRICING */}
-        <motion.section id="pricing" {...revealProps} className="rounded-[22px] mt-4 md:mt-5 bg-[#141414] text-white overflow-hidden">
+        <motion.section id="pricing" {...revealProps} className="scroll-mt-28 rounded-[22px] mt-4 md:mt-5 bg-[#141414] text-white overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 px-6 lg:px-10 py-9 lg:py-12 items-center">
             <div>
               <div className="text-[11px] tracking-[0.08em] uppercase text-white/40">Pricing — Simple by design</div>
@@ -967,7 +984,7 @@ export default function Home() {
         </motion.section>
 
         {/* FAQ */}
-        <motion.section id="faq" {...revealProps} className={`${card} mt-4 md:mt-5 overflow-hidden`}>
+        <motion.section id="faq" {...revealProps} className={`scroll-mt-28 ${card} mt-4 md:mt-5 overflow-hidden`}>
           <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-8 px-6 lg:px-8 py-7 border-b border-black/[0.06]">
             <h2 className="text-[26px] md:text-[30px] tracking-[-0.02em] font-semibold">FAQ</h2>
             <div>
@@ -1053,8 +1070,8 @@ export default function Home() {
           {/* LINKS */}
           <div className="relative border-t border-white/[0.08] px-6 md:px-10 py-8 grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <Image src="/abstrak-logo-mark.png" alt="Abstrak Labs" width={126} height={40} className="h-6 w-auto" />
-              <div className="text-white/35 text-[11px] mt-3">© 2024 Abstrak Labs. All rights reserved.</div>
+              <Image src="/talo-by-abstrak-lockup.png" alt="Talo by Abstrak Labs" width={613} height={464} className="h-16 w-auto" />
+              <div className="text-white/35 text-[11px] mt-3">© 2026 Talo. All rights reserved.</div>
             </div>
 
             <div>

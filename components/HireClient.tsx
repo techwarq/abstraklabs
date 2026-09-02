@@ -56,7 +56,7 @@ export default function HireClient() {
         <header className="sticky top-3 md:top-4 z-50 pt-3 md:pt-4 flex justify-center">
           <div className="w-full max-w-[980px] bg-[#141414] text-white rounded-full pl-4 pr-2 py-2 flex items-center justify-between gap-4 shadow-[0_10px_30px_-8px_rgba(0,0,0,0.35)]">
             <Link href="/" className="flex items-center shrink-0">
-              <Image src="/abstrak-logo-mark.png" alt="Abstrak Labs" width={126} height={40} className="h-7 w-auto" priority />
+              <Image src="/talo-logo-mark.png" alt="Talo" width={329} height={140} className="h-7 w-auto" priority />
             </Link>
 
             <div className="flex items-center gap-3 shrink-0">
