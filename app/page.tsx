@@ -109,33 +109,6 @@ const faqs = [
   { q: "What happens if something needs correction?", a: "We check output before delivery and handle corrections if the result doesn't meet the agreed requirements. Small fixes included." },
 ];
 
-/* ---------- small icon set for hero stickers ---------- */
-
-function IconSheet() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={INK} strokeWidth="1.5">
-      <rect x="3.5" y="3.5" width="17" height="17" rx="3" />
-      <path d="M3.5 10h17M10 10v10.5" />
-    </svg>
-  );
-}
-function IconCheck() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="2">
-      <circle cx="12" cy="12" r="9" />
-      <path d="M7.5 12.5l3 3 6-6.5" />
-    </svg>
-  );
-}
-function IconDollar() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={INK} strokeWidth="1.5">
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 6.5v11M15 9.2c0-1.2-1.3-2.2-3-2.2s-3 .9-3 2.2 1.3 1.9 3 2.2c1.7.3 3 1 3 2.3s-1.3 2.1-3 2.1-3-.8-3-2.1" />
-    </svg>
-  );
-}
-
 /* ---------- footer orbit glyphs ---------- */
 
 function GlyphSheet({ color }: { color: string }) {
@@ -377,43 +350,6 @@ export default function Home() {
                 className="absolute -inset-8 rounded-[44px] blur-3xl opacity-70 -z-10 pointer-events-none"
                 style={{ background: `radial-gradient(60% 60% at 50% 35%, ${ACCENT}66, transparent 72%)` }}
               />
-
-              <motion.div
-                className="hidden sm:flex absolute -top-5 -right-3 z-20 w-14 h-14 rounded-2xl bg-white border border-black/[0.06] shadow-[0_14px_30px_-10px_rgba(52,63,130,0.35)] items-center justify-center"
-                initial={{ opacity: 0, scale: 0.4, rotate: 8 }}
-                animate={{ opacity: 1, scale: 1, rotate: 8, y: [0, -8, 0] }}
-                transition={{
-                  opacity: { duration: 0.4, delay: 0.8 },
-                  scale: { duration: 0.4, delay: 0.8 },
-                  y: { duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1.2 },
-                }}
-              >
-                <IconSheet />
-              </motion.div>
-              <motion.div
-                className="hidden sm:flex absolute -bottom-4 -left-5 z-20 w-16 h-16 rounded-2xl bg-white border border-black/[0.06] shadow-[0_14px_30px_-10px_rgba(52,63,130,0.35)] items-center justify-center"
-                initial={{ opacity: 0, scale: 0.4, rotate: -10 }}
-                animate={{ opacity: 1, scale: 1, rotate: -10, y: [0, -8, 0] }}
-                transition={{
-                  opacity: { duration: 0.4, delay: 0.95 },
-                  scale: { duration: 0.4, delay: 0.95 },
-                  y: { duration: 3.4, repeat: Infinity, ease: "easeInOut", delay: 1.4 },
-                }}
-              >
-                <IconCheck />
-              </motion.div>
-              <motion.div
-                className="hidden lg:flex absolute top-[38%] -right-6 z-20 w-12 h-12 rounded-2xl bg-white border border-black/[0.06] shadow-[0_14px_30px_-10px_rgba(52,63,130,0.35)] items-center justify-center"
-                initial={{ opacity: 0, scale: 0.4, rotate: 6 }}
-                animate={{ opacity: 1, scale: 1, rotate: 6, y: [0, -8, 0] }}
-                transition={{
-                  opacity: { duration: 0.4, delay: 1.1 },
-                  scale: { duration: 0.4, delay: 1.1 },
-                  y: { duration: 2.8, repeat: Infinity, ease: "easeInOut", delay: 1.6 },
-                }}
-              >
-                <IconDollar />
-              </motion.div>
 
               {/* gradient frame */}
               <div
