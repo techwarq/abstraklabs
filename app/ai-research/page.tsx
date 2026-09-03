@@ -13,6 +13,7 @@ export const metadata: Metadata = {
     description: "Market, company and competitor research — structured, sourced reports. Hire AI research from $10/hour.",
     url: absoluteUrl("/ai-research"),
     type: "website",
+    images: [{ url: absoluteUrl("/og-image.png"), width: 1200, height: 630 }],
   },
 };
 

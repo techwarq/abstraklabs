@@ -13,6 +13,7 @@ export const metadata: Metadata = {
     description: "Prospect research, company lists and verified contacts. Hire AI lead generation from $10/hour.",
     url: absoluteUrl("/ai-lead-generation"),
     type: "website",
+    images: [{ url: absoluteUrl("/og-image.png"), width: 1200, height: 630 }],
   },
 };
 

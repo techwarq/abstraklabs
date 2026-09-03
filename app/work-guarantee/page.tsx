@@ -12,6 +12,7 @@ export const metadata: Metadata = {
     description: "If we didn't complete the agreed task correctly, we'll make it right — redo or refund.",
     url: absoluteUrl("/work-guarantee"),
     type: "website",
+    images: [{ url: absoluteUrl("/og-image.png"), width: 1200, height: 630 }],
   },
 };
 

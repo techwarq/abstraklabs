@@ -12,6 +12,7 @@ export const metadata: Metadata = {
     description: "Sample AI freelancer workflows with task, input, workflow, output, time and cost.",
     url: absoluteUrl("/work"),
     type: "website",
+    images: [{ url: absoluteUrl("/og-image.png"), width: 1200, height: 630 }],
   },
 };
 

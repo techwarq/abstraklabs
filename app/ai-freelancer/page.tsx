@@ -14,6 +14,7 @@ export const metadata: Metadata = {
       "Hire an AI freelancer to handle research, data entry, lead generation, data cleaning, document processing and repetitive digital work. Start at $10/hour.",
     url: absoluteUrl("/ai-freelancer"),
     type: "website",
+    images: [{ url: absoluteUrl("/og-image.png"), width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",

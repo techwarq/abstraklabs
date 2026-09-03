@@ -13,6 +13,7 @@ export const metadata: Metadata = {
     description: "Deduplicate, normalize and clean spreadsheets & databases. Hire AI data cleaning from $10/hour.",
     url: absoluteUrl("/ai-data-cleaning"),
     type: "website",
+    images: [{ url: absoluteUrl("/og-image.png"), width: 1200, height: 630 }],
   },
 };
 

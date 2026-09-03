@@ -12,6 +12,7 @@ export const metadata: Metadata = {
     description: "Task, input, workflow, output, time and cost for an invoice processing demo.",
     url: absoluteUrl("/work/invoice-processing"),
     type: "article",
+    images: [{ url: absoluteUrl("/og-image.png"), width: 1200, height: 630 }],
   },
 };
 
