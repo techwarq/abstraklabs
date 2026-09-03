@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     description: "Catalog cleanup, product entry and variant normalization. Hire AI e-commerce ops from $10/hour.",
     url: absoluteUrl("/ai-ecommerce-operations"),
     type: "website",
-    images: [{ url: absoluteUrl("/og-image.png"), width: 1200, height: 630 }],
+    images: [{ url: absoluteUrl("/og-image.jpg"), width: 1200, height: 675 }],
   },
 };
 

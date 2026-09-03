@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     description: "Describe the work — we handle the workflow and deliver the result. From $10/hour.",
     url: absoluteUrl("/hire"),
     type: "website",
-    images: [{ url: absoluteUrl("/og-image.png"), width: 1200, height: 630 }],
+    images: [{ url: absoluteUrl("/og-image.jpg"), width: 1200, height: 675 }],
   },
   twitter: {
     card: "summary",

@@ -58,9 +58,9 @@ export const metadata: Metadata = {
       "Hire an AI freelancer to handle research, data entry, lead generation, data cleaning, document processing and repetitive digital work. Start at $10/hour.",
     images: [
       {
-        url: `${siteUrl}/og-image.png`,
+        url: `${siteUrl}/og-image.jpg`,
         width: 1200,
-        height: 630,
+        height: 675,
         alt: "Talo by Abstrak Labs — Hire AI freelancers and get work done.",
       },
     ],
@@ -70,7 +70,7 @@ export const metadata: Metadata = {
     title: "Hire an AI Freelancer From $10/Hour | Abstrak Labs",
     description:
       "Hire an AI freelancer to handle research, data entry, lead generation, data cleaning, document processing and repetitive digital work. Start at $10/hour.",
-    images: [`${siteUrl}/og-image.png`],
+    images: [`${siteUrl}/og-image.jpg`],
   },
   icons: {
     icon: "/favicon.png?v=2",

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     description: "Extract line items and totals from PDFs, reconcile and structure for accounting. Hire AI invoice processing from $10/hour.",
     url: absoluteUrl("/ai-invoice-processing"),
     type: "website",
-    images: [{ url: absoluteUrl("/og-image.png"), width: 1200, height: 630 }],
+    images: [{ url: absoluteUrl("/og-image.jpg"), width: 1200, height: 675 }],
   },
 };
 

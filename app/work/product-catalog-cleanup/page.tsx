@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     description: "Task, input, workflow, output, time and cost for a catalog cleanup demo.",
     url: absoluteUrl("/work/product-catalog-cleanup"),
     type: "article",
-    images: [{ url: absoluteUrl("/og-image.png"), width: 1200, height: 630 }],
+    images: [{ url: absoluteUrl("/og-image.jpg"), width: 1200, height: 675 }],
   },
 };
 

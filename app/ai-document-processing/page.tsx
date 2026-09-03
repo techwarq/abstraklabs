@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     description: "PDF extraction, forms and records → structured data. Hire AI document processing from $10/hour.",
     url: absoluteUrl("/ai-document-processing"),
     type: "website",
-    images: [{ url: absoluteUrl("/og-image.png"), width: 1200, height: 630 }],
+    images: [{ url: absoluteUrl("/og-image.jpg"), width: 1200, height: 675 }],
   },
 };
 
