@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useRef, useState } from "react";
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { Instrument_Serif } from "next/font/google";
 import Link from "next/link";
 import Image from "next/image";
@@ -242,6 +242,289 @@ const heroStagger = {
   hidden: {},
   show: { transition: { staggerChildren: 0.09, delayChildren: 0.1 } },
 };
+
+/* ---------- "why abstrak labs" scroll-scrubbed steps ---------- */
+
+const diffSteps = [
+  {
+    n: "01",
+    title: "Describe the task",
+    statement: "Tell us what you need in plain English.",
+    quotes: ["Find 1,000 qualified leads.", "Clean my CRM.", "Process 500 invoices."],
+    closing: "No prompting. No workflows.",
+  },
+  {
+    n: "02",
+    title: "Your AI agent gets to work",
+    statement: "We turn your request into a working agent.",
+    quotes: ["It researches, browses, processes, verifies and completes the task."],
+    closing: "You don't operate the agent. It does the work.",
+  },
+  {
+    n: "03",
+    title: "Get the result",
+    statement: "See the work happen. Pay for the time used.",
+    pill: "6h 42m → $67",
+    closing: "Finished files, data, reports or results — delivered.",
+  },
+];
+
+function DiffDemoTask() {
+  return (
+    <div className="rounded-2xl border border-black/[0.06] bg-white shadow-[0_20px_50px_-20px_rgba(20,20,20,0.25)] overflow-hidden">
+      <div className="flex items-center gap-2 px-4 py-3 border-b border-black/[0.06] bg-[#FAFAF9]">
+        <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F57]" />
+        <span className="w-2.5 h-2.5 rounded-full bg-[#FEBC2E]" />
+        <span className="w-2.5 h-2.5 rounded-full bg-[#28C840]" />
+        <span className="ml-3 text-[10.5px] text-black/35 bg-white border border-black/[0.06] rounded-full px-3 py-1 flex-1 text-center max-w-[220px]">
+          app.abstraklabs.com
+        </span>
+      </div>
+      <div className="px-5 py-6">
+        <div className="text-[10.5px] font-semibold tracking-[0.08em] uppercase text-black/40">Describe your task</div>
+        <div className="mt-3 relative text-[13.5px] leading-[1.6] font-medium bg-[#F5F4F1] rounded-xl pl-4 pr-3.5 py-4 overflow-hidden">
+          <span className="absolute left-0 top-0 bottom-0 w-[3px]" style={{ background: ACCENT }} />
+          &quot;Find 1,000 qualified leads matching our ICP.&quot;
+        </div>
+        <div className="mt-4 flex justify-end">
+          <span className="inline-flex items-center gap-2 bg-[#141414] text-white text-[12px] font-semibold px-5 py-2.5 rounded-full">
+            Send task <span>→</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DiffDemoWorking() {
+  return (
+    <div className="rounded-2xl border border-black/[0.06] bg-white shadow-[0_20px_50px_-20px_rgba(20,20,20,0.25)] overflow-hidden">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-black/[0.06]">
+        <div className="text-[10.5px] font-semibold tracking-[0.08em] uppercase text-black/40">Worker activity</div>
+        <span className="flex items-center gap-1.5 text-[10.5px] text-[#16A34A] font-semibold">
+          <span className="w-1.5 h-1.5 bg-[#16A34A] rounded-full animate-pulse" /> Working
+        </span>
+      </div>
+      <div className="px-5 py-5">
+        <div className="h-1 rounded-full bg-black/[0.06] overflow-hidden">
+          <motion.div
+            className="h-full rounded-full"
+            style={{ background: ACCENT }}
+            initial={{ width: 0 }}
+            whileInView={{ width: "62%" }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, ease: easeOut }}
+          />
+        </div>
+        <div className="mt-4 rounded-xl border border-black/[0.06] overflow-hidden">
+          {[
+            { t: "Searching companies", status: "done" },
+            { t: "Verifying websites", status: "done" },
+            { t: "Matching decision makers", status: "active" },
+            { t: "Enriching data", status: "queued" },
+          ].map((s) => (
+            <div key={s.t} className="flex items-center gap-3 px-3.5 py-2.5 border-b last:border-b-0 border-black/[0.05] text-[11.5px]">
+              <span className="relative w-[18px] h-[18px] shrink-0 grid place-items-center">
+                {s.status === "done" && (
+                  <span className="w-[18px] h-[18px] rounded-full bg-[#141414] grid place-items-center">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M5 12.5l4.5 4.5L19 7" />
+                    </svg>
+                  </span>
+                )}
+                {s.status === "active" && (
+                  <>
+                    <span className="absolute w-[18px] h-[18px] rounded-full animate-ping" style={{ background: ACCENT, opacity: 0.35 }} />
+                    <span className="relative w-2.5 h-2.5 rounded-full" style={{ background: ACCENT }} />
+                  </>
+                )}
+                {s.status === "queued" && <span className="w-[14px] h-[14px] rounded-full border-2 border-black/15" />}
+              </span>
+              <span className={s.status === "queued" ? "text-black/35" : s.status === "active" ? "font-semibold" : "text-black/60"}>{s.t}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DiffDemoResult() {
+  return (
+    <div className="rounded-2xl border border-black/[0.06] bg-white shadow-[0_20px_50px_-20px_rgba(20,20,20,0.25)] overflow-hidden">
+      <div className="flex items-center gap-2 px-5 py-3.5" style={{ background: ACCENT }}>
+        <span className="w-4 h-4 rounded-full bg-white/25 grid place-items-center shrink-0">
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M5 12.5l4.5 4.5L19 7" />
+          </svg>
+        </span>
+        <div className="text-[10.5px] font-semibold tracking-[0.08em] uppercase text-white">Delivered</div>
+      </div>
+      <div className="px-5 py-6" style={{ background: "#F5F4F1" }}>
+        <div className="text-[17px] font-semibold tracking-tight">1,000 qualified leads</div>
+        <div className="mt-4 grid grid-cols-3 gap-2 text-center">
+          <div className="bg-white rounded-lg py-3 border border-black/[0.06]">
+            <div className="flex items-center justify-center gap-1 text-black/35">
+              <GlyphClock color="currentColor" />
+              <span className="text-[9px] font-semibold uppercase">Time</span>
+            </div>
+            <div className="text-[12.5px] font-semibold mt-1">5h 30m</div>
+          </div>
+          <div className="bg-white rounded-lg py-3 border border-black/[0.06]">
+            <div className="flex items-center justify-center gap-1 text-black/35">
+              <GlyphDollar color="currentColor" />
+              <span className="text-[9px] font-semibold uppercase">Cost</span>
+            </div>
+            <div className="text-[12.5px] font-semibold mt-1" style={{ color: ACCENT }}>$55</div>
+          </div>
+          <div className="bg-white rounded-lg py-3 border border-black/[0.06]">
+            <div className="flex items-center justify-center gap-1 text-black/35">
+              <GlyphSheet color="currentColor" />
+              <span className="text-[9px] font-semibold uppercase">Output</span>
+            </div>
+            <div className="text-[10.5px] font-semibold mt-1 leading-tight">Spreadsheet</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const diffDemos = [DiffDemoTask, DiffDemoWorking, DiffDemoResult];
+
+function DifferenceStepText({ step }: { step: (typeof diffSteps)[number] }) {
+  return (
+    <>
+      <div className="text-[11px] font-bold tracking-[0.08em] uppercase" style={{ color: ACCENT }}>
+        {step.n} — {step.title}
+      </div>
+      <div className="text-[15px] font-semibold mt-3 leading-snug">{step.statement}</div>
+      {step.quotes && (
+        <div className="mt-4 border-l-2 border-black/[0.1] pl-3 space-y-1.5">
+          {step.quotes.map((q) => (
+            <div key={q} className={`${serif.className} text-[14px] text-black/50 leading-relaxed`}>
+              &quot;{q}&quot;
+            </div>
+          ))}
+        </div>
+      )}
+      {step.pill && (
+        <div className="mt-4 inline-block mono text-[12px] px-3 py-1.5 rounded-lg" style={{ background: "#EEF1FB", color: "#5B6FCB" }}>
+          {step.pill}
+        </div>
+      )}
+      <div className="text-[13px] font-semibold mt-4 leading-snug">{step.closing}</div>
+    </>
+  );
+}
+
+function DifferenceSection() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
+  const [active, setActive] = useState(0);
+
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    const idx = Math.min(diffSteps.length - 1, Math.max(0, Math.floor(v * diffSteps.length)));
+    setActive(idx);
+  });
+
+  const s = diffSteps[active];
+  const ActiveDemo = diffDemos[active];
+
+  return (
+    <section id="difference" className="scroll-mt-28 mt-4 md:mt-5">
+      <motion.div {...revealProps} className={`${card} px-6 md:px-10 py-14 md:py-16 text-center overflow-hidden`}>
+        <h2 className="text-[32px] sm:text-[42px] md:text-[52px] leading-[1.1] tracking-[-0.02em] font-semibold max-w-[720px] mx-auto">
+          Hire an AI freelancer.
+          <br />
+          <span style={{ color: ACCENT }}>Not another AI tool.</span>
+        </h2>
+        <p className={`${serif.className} text-[18px] md:text-[22px] text-black/55 mt-5 max-w-[520px] mx-auto`}>
+          You give it the job. The agent figures out how to get it done.
+        </p>
+      </motion.div>
+
+      {/* MOBILE — static stacked, no scroll-scrubbing */}
+      <div className={`md:hidden ${card} mt-4 overflow-hidden`}>
+        {diffSteps.map((step, i) => {
+          const Demo = diffDemos[i];
+          return (
+            <motion.div
+              key={step.n}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, margin: "-60px" }}
+              variants={fadeUp}
+              transition={{ duration: 0.5, ease: easeOut }}
+              className={`px-6 py-9 ${i > 0 ? "border-t" : ""} border-black/[0.06]`}
+            >
+              <DifferenceStepText step={step} />
+              <div className="mt-6">
+                <Demo />
+              </div>
+            </motion.div>
+          );
+        })}
+        <div className="py-5 text-center text-[11px] tracking-[0.14em] uppercase font-semibold text-black/40 border-t border-black/[0.06]">
+          No software to learn · No subscription · $10/hour
+        </div>
+      </div>
+
+      {/* DESKTOP — pinned panel, scroll scrubs through steps */}
+      <div ref={ref} className="hidden md:block relative mt-4" style={{ height: `${diffSteps.length * 90}vh` }}>
+        <div className={`sticky top-28 ${card} overflow-hidden`} style={{ height: "calc(100vh - 180px)" }}>
+          <div className="h-full grid grid-cols-2">
+            <div className="px-10 lg:px-14 py-10 flex flex-col justify-center border-r border-black/[0.06] overflow-y-auto">
+              <AnimatePresence>
+                <motion.div
+                  key={s.n}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -16 }}
+                  transition={{ duration: 0.3, ease: easeOut }}
+                >
+                  <DifferenceStepText step={s} />
+                </motion.div>
+              </AnimatePresence>
+
+              <div className="flex items-center gap-2 mt-10">
+                {diffSteps.map((step, i) => (
+                  <div key={step.n} className="h-1 rounded-full flex-1 bg-black/[0.08] overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all duration-300"
+                      style={{ width: i <= active ? "100%" : "0%", background: ACCENT }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="px-10 lg:px-14 py-10 flex items-center justify-center bg-[#FAFAF9]">
+              <div className="relative w-full max-w-[420px] h-[400px]">
+                <AnimatePresence>
+                  <motion.div
+                    key={s.n}
+                    className="absolute inset-0 flex items-center"
+                    initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -20, scale: 0.98 }}
+                    transition={{ duration: 0.35, ease: easeOut }}
+                  >
+                    <ActiveDemo />
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className={`hidden md:block ${card} mt-4 py-5 text-center text-[11px] tracking-[0.14em] uppercase font-semibold text-black/40`}>
+        No software to learn · No subscription · $10/hour
+      </div>
+    </section>
+  );
+}
 
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(2);
@@ -490,82 +773,7 @@ export default function Home() {
           </div>
         </motion.section>
 
-        {/* WHY ABSTRAK LABS — AI freelancer positioning */}
-        <motion.section id="difference" {...revealProps} className={`scroll-mt-28 ${card} mt-4 md:mt-5 overflow-hidden`}>
-          <div className="px-6 md:px-10 py-14 md:py-16 text-center border-b border-black/[0.06]">
-            <h2 className="text-[32px] sm:text-[42px] md:text-[52px] leading-[1.1] tracking-[-0.02em] font-semibold max-w-[720px] mx-auto">
-              Hire an AI freelancer.
-              <br />
-              <span style={{ color: ACCENT }}>Not another AI tool.</span>
-            </h2>
-            <p className={`${serif.className} text-[18px] md:text-[22px] text-black/55 mt-5 max-w-[520px] mx-auto`}>
-              You give it the job. The agent figures out how to get it done.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3">
-            {[
-              {
-                n: "01",
-                title: "Describe the task",
-                statement: "Tell us what you need in plain English.",
-                quotes: ["Find 1,000 qualified leads.", "Clean my CRM.", "Process 500 invoices."],
-                closing: "No prompting. No workflows.",
-              },
-              {
-                n: "02",
-                title: "Your AI agent gets to work",
-                statement: "We turn your request into a working agent.",
-                quotes: ["It researches, browses, processes, verifies and completes the task."],
-                closing: "You don't operate the agent. It does the work.",
-              },
-              {
-                n: "03",
-                title: "Get the result",
-                statement: "See the work happen. Pay for the time used.",
-                pill: "6h 42m → $67",
-                closing: "Finished files, data, reports or results — delivered.",
-              },
-            ].map((s, i) => (
-              <motion.div
-                key={s.n}
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, margin: "-60px" }}
-                variants={fadeUp}
-                transition={{ duration: 0.5, delay: i * 0.1, ease: easeOut }}
-                className={`px-7 md:px-8 py-9 md:py-10 ${i < 2 ? "md:border-r" : ""} ${i > 0 ? "border-t md:border-t-0" : ""} border-black/[0.06]`}
-              >
-                <div className="text-[11px] font-bold tracking-[0.08em] uppercase" style={{ color: ACCENT }}>
-                  {s.n} — {s.title}
-                </div>
-                <div className="text-[15px] font-semibold mt-3 leading-snug">{s.statement}</div>
-
-                {s.quotes && (
-                  <div className="mt-4 border-l-2 border-black/[0.1] pl-3 space-y-1.5">
-                    {s.quotes.map((q) => (
-                      <div key={q} className={`${serif.className} text-[14px] text-black/50 leading-relaxed`}>
-                        &quot;{q}&quot;
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {s.pill && (
-                  <div className="mt-4 inline-block mono text-[12px] px-3 py-1.5 rounded-lg" style={{ background: "#EEF1FB", color: "#5B6FCB" }}>
-                    {s.pill}
-                  </div>
-                )}
-
-                <div className="text-[13px] font-semibold mt-4 leading-snug">{s.closing}</div>
-              </motion.div>
-            ))}
-          </div>
-
-          <div className="py-5 text-center text-[11px] tracking-[0.14em] uppercase font-semibold text-black/40 border-t border-black/[0.06]">
-            No software to learn · No subscription · $10/hour
-          </div>
-        </motion.section>
+        <DifferenceSection />
 
         <motion.div {...revealProps} className="mt-4 md:mt-5 rounded-[22px] bg-[#141414] py-6 text-center">
           <div className="text-white text-[16px] md:text-[20px] tracking-[-0.02em] font-semibold">
