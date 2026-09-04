@@ -89,14 +89,6 @@ const services = [
   },
 ];
 
-const workers = [
-  { name: "Researcher", meta: "Market research · company research · web research" },
-  { name: "Data Worker", meta: "Extraction · cleaning · deduplication · enrichment" },
-  { name: "Lead Generator", meta: "Prospects · ICP lists · decision makers" },
-  { name: "Browser Operator", meta: "Websites · forms · portals · monitoring" },
-  { name: "Analyst", meta: "Competitors · pricing · markets · reports" },
-  { name: "Document Worker", meta: "PDFs · forms · invoices · records" },
-];
 
 const faqs = [
   { q: "What kind of work can you do?", a: "Research, data, lead generation, browser work, documents and analysis. If it's digital, repetitive, or involves moving information between places — we can likely handle it. Send the task if you're unsure." },
@@ -394,13 +386,47 @@ const diffDemos = [DiffDemoTask, DiffDemoWorking, DiffDemoResult];
 
 /* ---------- scroll-scrubbed word reveal for the section heading ---------- */
 
-function RevealWord({ children, progress, range }: { children: string; progress: MotionValue<number>; range: [number, number] }) {
-  const opacity = useTransform(progress, range, [0.14, 1]);
-  const y = useTransform(progress, range, [6, 0]);
+function RevealWord({ children, progress, range, color }: { children: string; progress: MotionValue<number>; range: [number, number]; color?: string }) {
+  const opacity = useTransform(progress, range, [0.12, 1]);
+  const y = useTransform(progress, range, [10, 0]);
   return (
-    <motion.span style={{ opacity, y }} className="inline-block mr-[0.26em]">
+    <motion.span style={{ opacity, y, color }} className="inline-block mr-[0.26em]">
       {children}
     </motion.span>
+  );
+}
+
+/* heading whose words write in as you scroll into the section */
+const HEAD_WORDS = [
+  ...["Hire", "an", "AI", "freelancer."].map((w) => ({ w, accent: false })),
+  ...["Not", "another", "AI", "tool."].map((w) => ({ w, accent: true })),
+];
+
+function AnimatedDiffHeading({ progress }: { progress: MotionValue<number> }) {
+  const END = 0.14; // words finish revealing within the heading-only intro
+  const subOpacity = useTransform(progress, [END * 0.7, END + 0.03], [0, 1]);
+  const subY = useTransform(progress, [END * 0.7, END + 0.03], [14, 0]);
+  return (
+    <div className="text-center mx-auto max-w-[1120px]">
+      <h2 className="text-[40px] lg:text-[56px] xl:text-[64px] leading-[1.08] tracking-[-0.02em] font-semibold">
+        {HEAD_WORDS.map(({ w, accent }, i) => (
+          <RevealWord
+            key={i}
+            progress={progress}
+            range={[(i / HEAD_WORDS.length) * END, ((i + 1) / HEAD_WORDS.length) * END]}
+            color={accent ? ACCENT : undefined}
+          >
+            {w}
+          </RevealWord>
+        ))}
+      </h2>
+      <motion.p
+        style={{ opacity: subOpacity, y: subY }}
+        className={`${serif.className} text-[19px] lg:text-[23px] text-black/50 mt-4`}
+      >
+        You give it the job. The agent figures out how to get it done.
+      </motion.p>
+    </div>
   );
 }
 
@@ -474,6 +500,37 @@ function StepNumber({ n }: { n: string }) {
   );
 }
 
+/* ---------- continuous vertical progress rail for the steps ---------- */
+
+function StepRail({ count, progress }: { count: number; progress: MotionValue<number> }) {
+  const fill = useTransform(progress, [0, 1], ["6%", "100%"]);
+  return (
+    <div className="relative w-[3px] shrink-0 self-stretch rounded-full bg-black/[0.08] overflow-hidden">
+      <motion.div
+        className="absolute left-0 top-0 w-full rounded-full"
+        style={{ height: fill, background: ACCENT }}
+      />
+      <div className="absolute inset-0 flex flex-col justify-between py-1">
+        {Array.from({ length: count }).map((_, i) => {
+          const start = i / count;
+          return <RailDot key={i} progress={progress} start={start} />;
+        })}
+      </div>
+    </div>
+  );
+}
+
+function RailDot({ progress, start }: { progress: MotionValue<number>; start: number }) {
+  const scale = useTransform(progress, [start - 0.02, start + 0.02], [1, 1.6]);
+  const bg = useTransform(progress, [start - 0.02, start + 0.02], ["#C6C6C3", ACCENT]);
+  return (
+    <motion.span
+      className="block w-[11px] h-[11px] -ml-[4px] rounded-full ring-[3px] ring-[#EFEEEC] shadow-[0_1px_3px_rgba(20,20,20,0.12)]"
+      style={{ scale, background: bg }}
+    />
+  );
+}
+
 /* ---------- typing animation for the task-input demo ---------- */
 
 function LazyMount({ children }: { children: React.ReactNode }) {
@@ -508,26 +565,29 @@ function DifferenceStepText({ step }: { step: (typeof diffSteps)[number] }) {
   return (
     <>
       <StepNumber n={step.n} />
-      <div className="text-[11px] font-bold tracking-[0.1em] uppercase text-black/40 mt-4">{step.title}</div>
-      <div className="text-[15px] font-semibold mt-2 leading-snug">{step.statement}</div>
+      <div className="text-[12px] md:text-[13px] font-bold tracking-[0.12em] uppercase text-black/40 mt-5">{step.title}</div>
+      <div className="text-[20px] md:text-[26px] font-semibold mt-2.5 leading-[1.25] tracking-[-0.01em]">{step.statement}</div>
       {step.quotes && (
-        <div className="mt-4 border-l-2 border-black/[0.1] pl-3 space-y-1.5">
+        <div className="mt-5 border-l-2 pl-4 space-y-2" style={{ borderColor: ACCENT }}>
           {step.quotes.map((q) => (
-            <div key={q} className={`${serif.className} text-[14px] text-black/50 leading-relaxed`}>
+            <div key={q} className={`${serif.className} text-[16px] md:text-[18px] text-black/55 leading-relaxed`}>
               &quot;{q}&quot;
             </div>
           ))}
         </div>
       )}
       {step.pill && (
-        <div className="mt-4 inline-block mono text-[12px] px-3 py-1.5 rounded-lg" style={{ background: "#EEF1FB", color: "#5B6FCB" }}>
+        <div className="mt-5 inline-block mono text-[14px] px-4 py-2 rounded-lg" style={{ background: "#EEF1FB", color: "#5B6FCB" }}>
           {step.pill}
         </div>
       )}
-      <div className="text-[13px] font-semibold mt-4 leading-snug">{step.closing}</div>
+      <div className="text-[15px] md:text-[16px] font-semibold text-black/70 mt-5 leading-snug">{step.closing}</div>
     </>
   );
 }
+
+// first slice of the scroll is a heading-only intro; steps reveal after it.
+const INTRO = 0.18;
 
 function DifferenceSection() {
   const ref = useRef<HTMLDivElement>(null);
@@ -536,31 +596,29 @@ function DifferenceSection() {
   const panelInView = useInView(ref, { once: true, margin: "-15% 0px -15% 0px" });
 
   useMotionValueEvent(scrollYProgress, "change", (v) => {
-    const idx = Math.min(diffSteps.length - 1, Math.max(0, Math.floor(v * diffSteps.length)));
+    const t = (v - INTRO) / (1 - INTRO);
+    const idx = Math.min(diffSteps.length - 1, Math.max(0, Math.floor(t * diffSteps.length)));
     setActive(idx);
   });
+
+  // heading sits centred during the intro, then rises as the steps fade in below it
+  const blockY = useTransform(scrollYProgress, [0, INTRO], [190, 0]);
+  const stepsOpacity = useTransform(scrollYProgress, [INTRO * 0.45, INTRO], [0, 1]);
+  const stepsY = useTransform(scrollYProgress, [INTRO * 0.45, INTRO], [48, 0]);
 
   const s = diffSteps[active];
   const ActiveDemo = diffDemos[active];
 
   return (
     <section id="difference" className="scroll-mt-28 mt-4 md:mt-5">
-      <div className="px-6 md:px-10 py-14 md:py-16 text-center">
-        <ScrollRevealHeading />
-        <motion.p
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-60px" }}
-          variants={fadeUp}
-          transition={{ duration: 0.5, delay: 0.2, ease: easeOut }}
-          className={`${serif.className} text-[18px] md:text-[22px] text-black/55 mt-5 max-w-[520px] mx-auto`}
-        >
-          You give it the job. The agent figures out how to get it done.
-        </motion.p>
-      </div>
-
-      {/* MOBILE — static stacked, no scroll-scrubbing */}
+      {/* MOBILE — heading + static stacked steps */}
       <div className="md:hidden mt-4">
+        <div className="px-6 pt-12 pb-2 text-center">
+          <ScrollRevealHeading />
+          <p className={`${serif.className} text-[18px] text-black/55 mt-5 max-w-[520px] mx-auto`}>
+            You give it the job. The agent figures out how to get it done.
+          </p>
+        </div>
         {diffSteps.map((step, i) => {
           const Demo = diffDemos[i];
           return (
@@ -587,46 +645,154 @@ function DifferenceSection() {
         </div>
       </div>
 
-      {/* DESKTOP — pinned panel, scroll scrubs through steps */}
-      <div ref={ref} className="hidden md:block relative mt-4" style={{ height: `${diffSteps.length * 90}vh` }}>
-        <div className="sticky top-28" style={{ height: "calc(100vh - 180px)" }}>
-          <div className="h-full grid grid-cols-2 gap-10">
-            <div className="flex flex-col justify-center overflow-y-auto">
-              <AnimatePresence>
-                <motion.div
-                  key={s.n}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -16 }}
-                  transition={{ duration: 0.3, ease: easeOut }}
-                >
-                  <DifferenceStepText step={s} />
-                </motion.div>
-              </AnimatePresence>
+      {/* DESKTOP — pinned: heading shows first, then the 1·2·3 steps reveal below it */}
+      <div ref={ref} className="hidden md:block relative" style={{ height: `${diffSteps.length * 100 + 80}vh` }}>
+        <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
+          <motion.div style={{ y: blockY }} className="mx-auto w-full max-w-[1240px] px-6">
+            {/* persistent heading — writes in first, on its own */}
+            <AnimatedDiffHeading progress={scrollYProgress} />
+
+            {/* steps — fade in after the heading intro */}
+            <motion.div
+              style={{ opacity: stepsOpacity, y: stepsY }}
+              className="mt-10 lg:mt-14 grid grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] gap-8 lg:gap-12 items-center"
+            >
+              {/* left — step text with a continuous progress rail */}
+              <div className="flex items-stretch gap-5">
+                <StepRail count={diffSteps.length} progress={scrollYProgress} />
+                <div className="min-h-[320px] flex flex-col justify-center">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={s.n}
+                      initial={{ opacity: 0, y: 14 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -14 }}
+                      transition={{ duration: 0.4, ease: easeOut }}
+                    >
+                      <DifferenceStepText step={s} />
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              </div>
+
+              {/* right — the working demo card, enlarged (fills the column width) */}
+              <div className="flex items-center justify-center">
+                <div className="relative w-full max-w-[720px] h-[460px]">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={s.n}
+                      className="absolute inset-0 flex flex-col justify-center"
+                      initial={{ opacity: 0, y: 24, scale: 0.97 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -24, scale: 0.97 }}
+                      transition={{ duration: 0.45, ease: easeOut }}
+                    >
+                      {panelInView && <ActiveDemo />}
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </div>
+
+      <div className="hidden md:block mt-2 py-4 text-center text-[11px] tracking-[0.14em] uppercase font-semibold text-black/40">
+        No software to learn · No subscription · $10/hour
+      </div>
+    </section>
+  );
+}
+
+/* ---------- "hire by task" — pinned heading + scroll-scrubbed task links ---------- */
+
+const taskLinks = [
+  { href: "/ai-freelancer", t: "Hire an AI Freelancer", d: "General — research, data, leads, documents from $10/hr" },
+  { href: "/ai-data-entry", t: "AI Data Entry Freelancer", d: "PDF → Excel, spreadsheets, CRM entry" },
+  { href: "/ai-research", t: "AI Research Freelancer", d: "Market, company and competitor research" },
+  { href: "/ai-lead-generation", t: "AI Lead Generation Freelancer", d: "Prospect lists, ICP filtering, verification" },
+  { href: "/ai-data-cleaning", t: "AI Data Cleaning Freelancer", d: "Deduplication, normalization, hygiene" },
+  { href: "/ai-crm-cleanup", t: "AI CRM Cleanup Freelancer", d: "De-dupe contacts, normalize fields" },
+  { href: "/ai-invoice-processing", t: "AI Invoice Processing Freelancer", d: "Extract line items, reconcile totals" },
+  { href: "/ai-ecommerce-operations", t: "AI E-commerce Operations Freelancer", d: "Catalog cleanup, product data entry" },
+  { href: "/ai-web-research", t: "AI Web Research Freelancer", d: "Company & web research with citations" },
+  { href: "/ai-document-processing", t: "AI Document Processing Freelancer", d: "PDF extraction, forms, records" },
+  { href: "/work", t: "Sample Workflows", d: "CRM cleanup, invoices, catalog — see task, input, output, time & cost" },
+];
+
+const TASK_SPACING = 116; // px between rows in the scrolling column
+// one consistent wave of horizontal indents (smooth sine, not random)
+const TASK_X = taskLinks.map((_, i) => Math.round(58 + 58 * Math.sin(i * 0.7)));
+
+function TaskRow({ l, i, focus }: { l: (typeof taskLinks)[number]; i: number; focus: MotionValue<number> }) {
+  const y = useTransform(focus, (v) => (i - v) * TASK_SPACING - 20);
+  const opacity = useTransform(focus, (v) => Math.max(0.12, 1 - Math.abs(i - v) * 0.5));
+  const scale = useTransform(focus, (v) => Math.max(0.85, 1 - Math.abs(i - v) * 0.1));
+  return (
+    <motion.div
+      style={{ y, opacity, scale, x: TASK_X[i] }}
+      className="absolute left-0 right-0 top-1/2 origin-left will-change-transform"
+    >
+      <Link href={l.href} className="group inline-block">
+        <div className="text-[24px] lg:text-[30px] leading-none tracking-[-0.01em] font-semibold">
+          {l.t} <span className="inline-block transition-transform group-hover:translate-x-1" style={{ color: ACCENT }}>→</span>
+        </div>
+        <div className="text-[13px] leading-relaxed text-black/45 mt-2.5">{l.d}</div>
+      </Link>
+    </motion.div>
+  );
+}
+
+function TaskScroll() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
+  const focus = useTransform(scrollYProgress, [0.05, 0.95], [0, taskLinks.length - 1]);
+
+  return (
+    <section id="task-index" className="mt-8 md:mt-12">
+      {/* MOBILE — static list */}
+      <div className="md:hidden">
+        <div className="px-6 pb-4">
+          <h2 className="text-[22px] tracking-[-0.02em] font-semibold">Hire an AI freelancer by task</h2>
+          <p className="text-[12.5px] text-black/45 mt-2">Choose the work you want to offload — each page explains the tasks, workflow, deliverables and cost.</p>
+        </div>
+        <div className="grid grid-cols-1 border-t border-black/[0.08]">
+          {taskLinks.map((l, i) => (
+            <Link key={l.href} href={l.href} className={`px-6 py-4 ${i > 0 ? "border-t" : ""} border-black/[0.06]`}>
+              <div className="text-[14px] font-semibold">{l.t} →</div>
+              <div className="text-[12.5px] text-black/50 mt-1">{l.d}</div>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* DESKTOP — pinned heading, scrubbed task list */}
+      <div ref={ref} className="hidden md:block relative" style={{ height: `${taskLinks.length * 30 + 50}vh` }}>
+        <div className="sticky top-24" style={{ height: "calc(100vh - 140px)" }}>
+          <div className="h-full overflow-hidden grid grid-cols-[0.85fr_1.15fr] px-4 lg:px-10">
+            {/* left — pinned heading */}
+            <div className="flex flex-col justify-center pr-10 lg:pr-14">
+              <div className="text-[11px] tracking-[0.12em] uppercase text-black/40 font-semibold">The task index</div>
+              <h2 className="text-[34px] lg:text-[46px] leading-[1.08] tracking-[-0.02em] font-semibold mt-4">
+                Hire an AI freelancer <span style={{ color: ACCENT }}>by task.</span>
+              </h2>
+              <p className={`${serif.className} text-[17px] lg:text-[19px] text-black/50 mt-5 max-w-[380px]`}>
+                Choose the work you want to offload — each page explains the tasks, workflow, deliverables and cost.
+              </p>
             </div>
 
-            <div className="flex items-center justify-center">
-              <div className="relative w-full max-w-[520px] h-[480px]">
-                <AnimatePresence>
-                  <motion.div
-                    key={s.n}
-                    className="absolute inset-0 flex items-center"
-                    initial={{ opacity: 0, y: 20, scale: 0.98 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -20, scale: 0.98 }}
-                    transition={{ duration: 0.35, ease: easeOut }}
-                  >
-                    {panelInView && <ActiveDemo />}
-                  </motion.div>
-                </AnimatePresence>
+            {/* right — scrolling, staggered task links */}
+            <div className="relative overflow-hidden">
+              <div className="pointer-events-none absolute inset-x-0 top-0 h-32 z-10 bg-gradient-to-b from-[#EFEEEC] to-transparent" />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 z-10 bg-gradient-to-t from-[#EFEEEC] to-transparent" />
+              <div className="relative h-full px-12 lg:px-16">
+                {taskLinks.map((l, i) => (
+                  <TaskRow key={l.href} l={l} i={i} focus={focus} />
+                ))}
               </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="hidden md:block mt-6 py-4 text-center text-[11px] tracking-[0.14em] uppercase font-semibold text-black/40">
-        No software to learn · No subscription · $10/hour
       </div>
     </section>
   );
@@ -888,7 +1054,7 @@ export default function Home() {
         </motion.div>
 
         {/* WHAT WE DO */}
-        <motion.section id="services" {...revealProps} className={`scroll-mt-28 ${card} mt-4 md:mt-5 overflow-hidden`}>
+        <motion.section id="services" {...revealProps} className={`scroll-mt-28 mt-10 md:mt-16 overflow-hidden`}>
           <div className="px-6 lg:px-8 py-8 border-b border-black/[0.06]">
             <h2 className="text-[24px] md:text-[30px] leading-[1.1] tracking-[-0.02em] font-semibold">What do you need off your plate?</h2>
             <p className="text-[13px] leading-relaxed text-black/50 mt-3 max-w-[560px]">
@@ -931,7 +1097,7 @@ export default function Home() {
         </motion.section>
 
         {/* PORTFOLIO */}
-        <motion.section id="work" {...revealProps} className={`scroll-mt-28 ${card} mt-4 md:mt-5 overflow-hidden`}>
+        <motion.section id="work" {...revealProps} className={`scroll-mt-28 mt-10 md:mt-16 overflow-hidden`}>
           <div className="px-6 lg:px-8 py-8 border-b border-black/[0.06] flex items-end justify-between gap-6">
             <div>
               <div className="text-[11px] font-semibold tracking-[0.08em] uppercase text-black/40">Our work — Things we&apos;ve actually done</div>
@@ -993,7 +1159,7 @@ export default function Home() {
         </motion.section>
 
         {/* HOW IT WORKS */}
-        <motion.section id="how" {...revealProps} className={`scroll-mt-28 ${card} mt-4 md:mt-5 overflow-hidden`}>
+        <motion.section id="how" {...revealProps} className={`scroll-mt-28 mt-10 md:mt-16 overflow-hidden`}>
           <div className="px-6 lg:px-8 py-8 border-b border-black/[0.06] text-center">
             <h2 className="text-[22px] md:text-[28px] leading-[1.1] tracking-[-0.02em] font-semibold">
               You have the task. We have the workers.
@@ -1036,7 +1202,7 @@ export default function Home() {
         </motion.section>
 
         {/* YOU'RE ALWAYS IN CONTROL */}
-        <motion.section {...revealProps} className={`${card} mt-4 md:mt-5 overflow-hidden`}>
+        <motion.section {...revealProps} className={`mt-10 md:mt-16 overflow-hidden`}>
           <div className="px-6 lg:px-8 py-8 border-b border-black/[0.06]">
             <h2 className="text-[24px] md:text-[30px] leading-[1.1] tracking-[-0.02em] font-semibold">You&apos;re always in control.</h2>
             <p className="text-[13px] leading-relaxed text-black/50 mt-3 max-w-[640px]">
@@ -1104,30 +1270,6 @@ export default function Home() {
           </div>
         </motion.section>
 
-        {/* WORKER TYPES */}
-        <motion.section {...revealProps} className={`${card} mt-4 md:mt-5 overflow-hidden`}>
-          <div className="px-6 lg:px-8 py-6 border-b border-black/[0.06] flex items-center justify-between gap-4">
-            <h2 className="text-[18px] md:text-[22px] tracking-[-0.02em] font-semibold">Hire the work. Not the tool.</h2>
-            <span className="hidden md:inline text-[11px] tracking-[0.06em] uppercase text-black/40">Powered by autonomous AI workers</span>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3">
-            {workers.map((w, i) => (
-              <motion.div
-                key={w.name}
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, margin: "-40px" }}
-                variants={fadeUp}
-                transition={{ duration: 0.5, delay: (i % 3) * 0.08, ease: easeOut }}
-                className={`px-6 py-5 ${i % 3 !== 2 ? "md:border-r" : ""} ${i < 3 ? "border-b md:border-b-0" : ""} border-black/[0.06]`}
-              >
-                <div className="text-[13px] font-semibold">{w.name}</div>
-                <div className="text-[12px] leading-relaxed text-black/50 mt-1">{w.meta}</div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.section>
-
         {/* PRICING */}
         <motion.section id="pricing" {...revealProps} className="scroll-mt-28 rounded-[22px] mt-4 md:mt-5 bg-[#141414] text-white overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 px-6 lg:px-10 py-9 lg:py-12 items-center">
@@ -1178,7 +1320,7 @@ export default function Home() {
         </motion.section>
 
         {/* TRANSPARENCY */}
-        <motion.section {...revealProps} className={`${card} mt-4 md:mt-5 overflow-hidden`}>
+        <motion.section {...revealProps} className={`mt-10 md:mt-16 overflow-hidden`}>
           <div className="px-6 lg:px-8 py-7 border-b border-black/[0.06]">
             <h2 className="text-[20px] md:text-[24px] leading-[1.1] tracking-[-0.02em] font-semibold">Know what you&apos;re paying for.</h2>
             <p className="text-[12px] text-black/45 mt-2">Every task has a clear scope, delivery and cost.</p>
@@ -1199,42 +1341,11 @@ export default function Home() {
           </div>
         </motion.section>
 
-        {/* SEO HUB */}
-        <motion.section {...revealProps} className={`${card} mt-4 md:mt-5 overflow-hidden`}>
-          <div className="px-6 lg:px-8 py-7 border-b border-black/[0.06]">
-            <h2 className="text-[18px] md:text-[22px] tracking-[-0.02em] font-semibold">Hire an AI freelancer by task</h2>
-            <p className="text-[12px] text-black/45 mt-2">Choose the work you want to offload — each page explains the tasks, workflow, deliverables and cost.</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {[
-              { href: "/ai-freelancer", t: "Hire an AI Freelancer →", d: "General — research, data, leads, documents from $10/hr" },
-              { href: "/ai-data-entry", t: "AI Data Entry Freelancer →", d: "PDF → Excel, spreadsheets, CRM entry" },
-              { href: "/ai-research", t: "AI Research Freelancer →", d: "Market, company and competitor research" },
-              { href: "/ai-lead-generation", t: "AI Lead Generation Freelancer →", d: "Prospect lists, ICP filtering, verification" },
-              { href: "/ai-data-cleaning", t: "AI Data Cleaning Freelancer →", d: "Deduplication, normalization, hygiene" },
-              { href: "/ai-crm-cleanup", t: "AI CRM Cleanup Freelancer →", d: "De-dupe contacts, normalize fields" },
-              { href: "/ai-invoice-processing", t: "AI Invoice Processing Freelancer →", d: "Extract line items, reconcile totals" },
-              { href: "/ai-ecommerce-operations", t: "AI E-commerce Operations Freelancer →", d: "Catalog cleanup, product data entry" },
-              { href: "/ai-web-research", t: "AI Web Research Freelancer →", d: "Company & web research with citations" },
-              { href: "/ai-document-processing", t: "AI Document Processing Freelancer →", d: "PDF extraction, forms, records" },
-              { href: "/work", t: "Sample Workflows →", d: "CRM cleanup, invoices, catalog — see task, input, output, time & cost" },
-            ].map((l, i, arr) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                className={`p-5 hover:bg-[#FAFAF9] hover:-translate-y-0.5 transition-all border-black/[0.06] ${(i + 1) % 3 !== 0 ? "lg:border-r" : ""} ${
-                  i % 2 === 0 ? "md:border-r lg:border-r-0" : ""
-                } ${i < arr.length - (arr.length % 3 === 0 ? 3 : arr.length % 3) ? "border-b" : ""}`}
-              >
-                <div className="text-[12.5px] font-semibold">{l.t}</div>
-                <div className="text-[12px] text-black/50 mt-1">{l.d}</div>
-              </Link>
-            ))}
-          </div>
-        </motion.section>
+        {/* SEO HUB — pinned heading + scrolling task links */}
+        <TaskScroll />
 
         {/* FAQ */}
-        <motion.section id="faq" {...revealProps} className={`scroll-mt-28 ${card} mt-4 md:mt-5 overflow-hidden`}>
+        <motion.section id="faq" {...revealProps} className={`scroll-mt-28 mt-10 md:mt-16 overflow-hidden`}>
           <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-8 px-6 lg:px-8 py-7 border-b border-black/[0.06]">
             <h2 className="text-[26px] md:text-[30px] tracking-[-0.02em] font-semibold">FAQ</h2>
             <div>
@@ -1275,7 +1386,7 @@ export default function Home() {
         </motion.section>
 
         {/* FINAL CTA */}
-        <motion.section id="cta" {...revealProps} className={`${card} mt-4 md:mt-5 text-center px-6 py-12 md:py-16`}>
+        <motion.section id="cta" {...revealProps} className={`mt-10 md:mt-16 text-center px-6 py-12 md:py-16`}>
           <h2 className="leading-[1.05] tracking-[-0.02em]">
             <span className="block text-[30px] md:text-[44px] font-semibold">What&apos;s the work</span>
             <span className={`${serif.className} block text-[30px] md:text-[44px]`}>you don&apos;t want to do?</span>
