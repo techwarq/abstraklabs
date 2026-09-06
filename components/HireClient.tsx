@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Instrument_Serif } from "next/font/google";
@@ -24,6 +24,17 @@ export default function HireClient() {
   const [error, setError] = useState("");
 
   const taRef = useRef<HTMLTextAreaElement>(null);
+
+  // Prefill the task from a job handed off by the homepage chatbox.
+  useEffect(() => {
+    try {
+      const brief = sessionStorage.getItem("talo_brief");
+      if (brief) {
+        setInput(brief);
+        sessionStorage.removeItem("talo_brief");
+      }
+    } catch {}
+  }, []);
 
   const handleConfirmDetails = (e: React.FormEvent) => {
     e.preventDefault();

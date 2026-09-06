@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { Instrument_Serif } from "next/font/google";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const serif = Instrument_Serif({ subsets: ["latin"], weight: "400", style: "italic" });
 
@@ -24,6 +25,12 @@ const findingBreakdown = [
   { pct: 48, label: "Amazon fees" },
   { pct: 31, label: "Ad spend" },
   { pct: 21, label: "Refunds" },
+];
+
+const heroExamples = [
+  "Why was my payout different?",
+  "Find where I’m losing money.",
+  "What should I reorder?",
 ];
 
 const dataSources = [
@@ -85,27 +92,6 @@ const heroStagger = { hidden: {}, show: { transition: { staggerChildren: 0.09, d
 
 /* ---------- primitives ---------- */
 
-function TypingText({ text, speed = 32, start = true }: { text: string; speed?: number; start?: boolean }) {
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    if (!start) return;
-    setCount(0);
-    let i = 0;
-    const id = setInterval(() => {
-      i += 1;
-      setCount(i);
-      if (i >= text.length) clearInterval(id);
-    }, speed);
-    return () => clearInterval(id);
-  }, [text, speed, start]);
-  return (
-    <>
-      {text.slice(0, count)}
-      <span className="inline-block w-[2px] h-[1em] bg-current ml-0.5 align-middle animate-pulse" />
-    </>
-  );
-}
-
 function LazyMount({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
@@ -142,32 +128,83 @@ function CheckChip({ name, color, delay, inView }: { name: string; color: string
   );
 }
 
-function HeroDemo() {
+function HeroChat() {
+  const router = useRouter();
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
+  const [input, setInput] = useState("Why did my profit drop last month?");
 
-  const checkBase = 1.9; // question types first
+  const checkBase = 0.7; // the box is prefilled, so Talo starts working sooner
   const checkStep = 0.42;
   const foundAt = checkBase + heroChecks.length * checkStep + 0.25;
+
+  const go = () => {
+    const t = input.trim();
+    if (t) {
+      try {
+        sessionStorage.setItem("talo_brief", t);
+      } catch {}
+    }
+    router.push("/hire");
+  };
 
   return (
     <div ref={ref} className="relative">
       <div
         className="absolute -inset-6 rounded-[40px] blur-3xl opacity-70 -z-10 pointer-events-none"
-        style={{ background: `radial-gradient(60% 55% at 50% 25%, ${ACCENT}44, transparent 72%)` }}
+        style={{ background: `radial-gradient(60% 55% at 50% 12%, ${ACCENT}44, transparent 72%)` }}
       />
-      <div className={`${card} overflow-hidden`}>
-        {/* You */}
-        <div className="px-5 md:px-7 py-5 border-b border-black/[0.06]">
-          <div className="flex items-center gap-2 text-[10.5px] font-semibold tracking-[0.1em] uppercase text-black/40">
-            <span className="w-4 h-4 rounded-full bg-black/[0.08] grid place-items-center text-[9px]">🧑</span> You
-          </div>
-          <div className="mt-2.5 relative text-[16px] md:text-[18px] leading-[1.5] font-medium bg-[#F5F4F1] rounded-xl pl-4 pr-3.5 py-3.5 overflow-hidden">
-            <span className="absolute left-0 top-0 bottom-0 w-[3px]" style={{ background: ACCENT }} />
-            {inView ? <TypingText text={"“Why did my profit drop last month?”"} /> : " "}
-          </div>
-        </div>
 
+      {/* the real compose chatbox (same as the /hire workspace) */}
+      <div className="relative rounded-[28px] bg-white shadow-[0_10px_40px_-12px_rgba(20,20,20,0.18)] focus-within:shadow-[0_16px_46px_-14px_rgba(20,20,20,0.24)] transition-shadow">
+        <textarea
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) go();
+          }}
+          placeholder="Ask Talo anything — e.g. Why did my profit drop last month?"
+          rows={2}
+          className="w-full bg-transparent border-0 p-5 pr-16 text-[15px] md:text-[16px] leading-relaxed placeholder:text-black/30 outline-none focus:outline-none focus:ring-0 resize-none appearance-none"
+        />
+        <button
+          onClick={go}
+          aria-label="Give Talo the job"
+          className="absolute right-3.5 bottom-3.5 w-11 h-11 rounded-full grid place-items-center text-white transition-all hover:scale-[1.06] active:scale-[0.95]"
+          style={{ background: ACCENT }}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 19V5M5 12l7-7 7 7" />
+          </svg>
+        </button>
+      </div>
+
+      {/* example jobs — click to fill */}
+      <div className="mt-3.5 flex flex-wrap justify-center gap-2">
+        {heroExamples.map((q) => (
+          <button
+            key={q}
+            onClick={() => setInput(q)}
+            className="text-[12.5px] text-black/55 bg-white border border-black/[0.07] rounded-full px-3 py-1.5 hover:border-black/25 hover:text-black transition-colors"
+          >
+            {q}
+          </button>
+        ))}
+      </div>
+
+      {/* connector */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={inView ? { opacity: 1 } : {}}
+        transition={{ delay: 0.35 }}
+        className="flex justify-center my-5 text-[22px]"
+        style={{ color: ACCENT }}
+      >
+        ↓
+      </motion.div>
+
+      {/* Talo works the job, live */}
+      <div className={`${card} overflow-hidden`}>
         {/* Talo working */}
         <div className="px-5 md:px-7 py-5 border-b border-black/[0.06]">
           <div className="flex items-center gap-2 text-[10.5px] font-semibold tracking-[0.1em] uppercase text-black/40">
@@ -396,21 +433,16 @@ export default function Home() {
             <motion.p variants={fadeUp} transition={{ duration: 0.5, ease: easeOut }} className="text-[15px] md:text-[17px] leading-[1.6] text-black/55 mt-6 max-w-[560px] mx-auto">
               Tell Talo what you need. It investigates your business and gets you the answer — with the evidence to back it up.
             </motion.p>
-            <motion.div variants={fadeUp} transition={{ duration: 0.5, ease: easeOut }} className="mt-8">
-              <Link href="/hire" className="inline-flex bg-[#141414] hover:bg-black text-white text-[14px] font-semibold px-8 py-4 rounded-full hover:scale-[1.03] active:scale-[0.97] transition-all">
-                Give Talo a job →
-              </Link>
-            </motion.div>
           </motion.div>
 
-          {/* live demo */}
+          {/* real chatbox + live demo */}
           <motion.div
             initial={{ opacity: 0, y: 30, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.7, delay: 0.35, ease: easeOut }}
-            className="mt-12 md:mt-16 max-w-[640px] mx-auto text-left"
+            className="mt-10 md:mt-12 max-w-[640px] mx-auto text-left"
           >
-            <HeroDemo />
+            <HeroChat />
           </motion.div>
         </section>
 
