@@ -6,6 +6,7 @@ import { Instrument_Serif } from "next/font/google";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { SourceLogo } from "../components/SourceLogo";
 
 const serif = Instrument_Serif({ subsets: ["latin"], weight: "400", style: "italic" });
 
@@ -108,10 +109,12 @@ function Check({ color = GREEN }: { color?: string }) {
 
 /* ---------- hero: a job, running live ---------- */
 
-function CheckChip({ name, color, delay, inView }: { name: string; color: string; delay: number; inView: boolean }) {
+function CheckChip({ name, delay, inView }: { name: string; delay: number; inView: boolean }) {
   return (
-    <div className="flex items-center gap-2 rounded-full border border-black/[0.07] bg-white px-3 py-1.5 text-[12px] font-medium shadow-[0_1px_4px_-2px_rgba(20,20,20,0.1)]">
-      <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: color }} />
+    <div className="flex items-center gap-2 rounded-full border border-black/[0.07] bg-white pl-1.5 pr-3 py-1 text-[12px] font-medium shadow-[0_1px_4px_-2px_rgba(20,20,20,0.1)]">
+      <span className="w-6 h-6 rounded-full bg-[#F5F4F1] grid place-items-center shrink-0">
+        <SourceLogo name={name} size={14} />
+      </span>
       <span>{name}</span>
       <span className="relative w-3.5 h-3.5 grid place-items-center">
         <motion.span
@@ -235,7 +238,7 @@ function HeroChat() {
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.35, delay: checkBase - 0.1 + i * 0.08, ease: easeOut }}
               >
-                <CheckChip name={c.name} color={c.color} delay={checkBase + i * checkStep} inView={inView} />
+                <CheckChip name={c.name} delay={checkBase + i * checkStep} inView={inView} />
               </motion.div>
             ))}
           </div>
@@ -290,8 +293,10 @@ function WiringDiagram() {
       <div className="hidden md:flex items-stretch justify-center gap-0 px-6 py-14">
         <div className="flex flex-col justify-center gap-2.5">
           {dataSources.map((s) => (
-            <div key={s.name} className="flex items-center gap-2.5 rounded-full border border-black/[0.08] bg-white px-4 py-2 text-[13px] font-medium mono shadow-[0_1px_4px_-2px_rgba(20,20,20,0.1)]">
-              <span className="w-1.5 h-1.5 rounded-full" style={{ background: s.color }} />
+            <div key={s.name} className="flex items-center gap-2.5 rounded-full border border-black/[0.08] bg-white pl-1.5 pr-4 py-1.5 text-[13px] font-medium mono shadow-[0_1px_4px_-2px_rgba(20,20,20,0.1)]">
+              <span className="w-6 h-6 rounded-full bg-[#F5F4F1] grid place-items-center shrink-0">
+                <SourceLogo name={s.name} size={15} />
+              </span>
               {s.name}
             </div>
           ))}
@@ -330,8 +335,10 @@ function WiringDiagram() {
       <div className="md:hidden px-6 py-10 flex flex-col items-center gap-4 text-center">
         <div className="flex flex-wrap justify-center gap-2">
           {dataSources.map((s) => (
-            <span key={s.name} className="flex items-center gap-1.5 rounded-full border border-black/[0.08] bg-white px-3 py-1.5 text-[12px] font-medium mono">
-              <span className="w-1.5 h-1.5 rounded-full" style={{ background: s.color }} />
+            <span key={s.name} className="flex items-center gap-1.5 rounded-full border border-black/[0.08] bg-white pl-1 pr-3 py-1 text-[12px] font-medium mono">
+              <span className="w-5 h-5 rounded-full bg-[#F5F4F1] grid place-items-center shrink-0">
+                <SourceLogo name={s.name} size={13} />
+              </span>
               {s.name}
             </span>
           ))}
