@@ -450,7 +450,8 @@ export default function Home() {
         <motion.section id="data" {...revealProps} className="scroll-mt-28 mt-8 md:mt-10 overflow-hidden">
           <div className="px-6 lg:px-8 py-8 border-b border-black/[0.06] text-center">
             <h2 className="text-[28px] md:text-[38px] leading-[1.08] tracking-[-0.02em] font-semibold">
-              You have the data. <span style={{ color: ACCENT }}>Talo does the digging.</span>
+              You have the data.{" "}
+              <span className={`${serif.className} font-normal`} style={{ color: ACCENT }}>Talo does the digging.</span>
             </h2>
           </div>
           <WiringDiagram />
