@@ -389,7 +389,7 @@ export default function Home() {
             </motion.div>
             <motion.h1 variants={fadeUp} transition={{ duration: 0.5, ease: easeOut }} className="mt-6 leading-[0.95] tracking-[-0.03em]">
               <span className="block text-[44px] sm:text-[62px] lg:text-[76px] font-semibold">Give Talo a job.</span>
-              <span className="block text-[44px] sm:text-[62px] lg:text-[76px] font-semibold" style={{ color: ACCENT }}>
+              <span className={`${serif.className} block text-[46px] sm:text-[66px] lg:text-[80px]`} style={{ color: ACCENT }}>
                 It gets it done.
               </span>
             </motion.h1>
