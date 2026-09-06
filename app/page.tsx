@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence, useScroll, useMotionValueEvent, useTransform, useInView, MotionValue } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { Instrument_Serif } from "next/font/google";
 import Link from "next/link";
 import Image from "next/image";
@@ -10,209 +10,76 @@ const serif = Instrument_Serif({ subsets: ["latin"], weight: "400", style: "ital
 
 const ACCENT = "#719DF4";
 const INK = "#141414";
+const GREEN = "#16A34A";
+const RED = "#DC2626";
 
-const portfolio = [
-  {
-    n: "01",
-    title: "500-Company Market Research",
-    request: "Find 500 SaaS companies in the US, including founders, funding, website and LinkedIn.",
-    workflow: "RESEARCH → FILTER → VERIFY → ENRICH",
-    delivered: "500 QUALIFIED COMPANIES",
-    time: "6h 42m",
-    cost: "$67",
-  },
-  {
-    n: "02",
-    title: "LinkedIn Data Collection",
-    request: "Collect 1,200 profiles matching our ICP criteria.",
-    workflow: "COLLECT → DEDUPLICATE → VERIFY → ENRICH",
-    delivered: "1,200 PROFILES",
-    time: "4h 12m",
-    cost: "$42",
-  },
-  {
-    n: "03",
-    title: "Lead Enrichment",
-    request: "Find 1,000 companies matching our criteria and enrich decision makers.",
-    workflow: "RESEARCH → FILTER → VERIFY → ENRICH",
-    delivered: "1,000 QUALIFIED LEADS",
-    time: "5h 30m",
-    cost: "$55",
-  },
-  {
-    n: "04",
-    title: "Competitor Research",
-    request: "Research competitors, pricing, features and positioning.",
-    workflow: "EXTRACT → COMPARE → ANALYZE → REPORT",
-    delivered: "15 COMPETITOR REPORTS",
-    time: "3h 15m",
-    cost: "$32",
-  },
+/* ---------- data ---------- */
+
+// the investigation the hero runs, and that the "how it works" section re-tells
+const heroTrace = [
+  { src: "Shopify", color: "#95BF47", note: "Revenue down 3%", dir: "down" },
+  { src: "Amazon", color: "#FF9900", note: "Fees up 27%", dir: "up-bad" },
+  { src: "Meta", color: "#4267B2", note: "Ad spend up 18%", dir: "up-bad" },
+  { src: "QuickBooks", color: "#2CA01C", note: "COGS unchanged", dir: "flat" },
+  { src: "Refunds", color: "#DC2626", note: "Refund rate up 4%", dir: "up-bad" },
+] as const;
+
+const findingBreakdown = [
+  { pct: 48, label: "Higher Amazon fees" },
+  { pct: 31, label: "Increased Meta spend" },
+  { pct: 21, label: "Higher refunds — 7 SKUs" },
 ];
 
-const services = [
-  {
-    n: "01",
-    title: "Research",
-    desc: "Market & company intelligence",
-    items: ["Market research", "Company research", "Competitor research", "Web research", "Tender / grant research"],
-  },
-  {
-    n: "02",
-    title: "Data",
-    desc: "Clean, structured, usable data",
-    items: ["Data collection", "Data entry", "Spreadsheet cleanup", "Deduplication", "Data enrichment"],
-  },
-  {
-    n: "03",
-    title: "Lead Generation",
-    desc: "Prospects ready for outreach",
-    items: ["Prospect research", "Company lists", "Decision-maker research", "Contact verification"],
-  },
-  {
-    n: "04",
-    title: "Browser Work",
-    desc: "Repetitive web operations",
-    items: ["Website research", "Information extraction", "Forms", "Portal workflows", "Monitoring"],
-  },
-  {
-    n: "05",
-    title: "Documents",
-    desc: "High-volume document handling",
-    items: ["PDF processing", "Invoice data", "Forms", "Record verification", "Document extraction"],
-  },
-  {
-    n: "06",
-    title: "Analysis",
-    desc: "Research that drives decisions",
-    items: ["Competitor analysis", "Pricing research", "Market intelligence", "Research reports"],
-  },
+const dashboards = [
+  { name: "Shopify", tells: "what sold" },
+  { name: "Triple Whale", tells: "what your ads did" },
+  { name: "Finaloop", tells: "your numbers" },
+  { name: "QuickBooks", tells: "your books" },
 ];
 
+const sources = ["Shopify", "Amazon", "Meta", "Google", "Stripe", "QuickBooks", "Your bank", "Inventory files"];
 
-const faqs = [
-  { q: "What kind of work can you do?", a: "Research, data, lead generation, browser work, documents and analysis. If it's digital, repetitive, or involves moving information between places — we can likely handle it. Send the task if you're unsure." },
-  { q: "Do I need technical knowledge?", a: "No. Describe the task in plain English. No prompts, no workflows to build, no software to learn. We figure out the workflow." },
-  { q: "How does $10/hour work?", a: "You pay for active work time at $10/hour, tracked to the second. A 6h 42m job is $67. No subscription, no minimum, no seat fees." },
-  { q: "What do I receive?", a: "The finished result — spreadsheet, dataset, report or completed workflow. Delivered as Google Sheet, Excel, CSV, PDF or your preferred format." },
-  { q: "How long does a task take?", a: "Most tasks complete in 2–8 hours. Large jobs are batched and you pay only for work done. You'll see time tracked transparently." },
-  { q: "Can you work with websites?", a: "Yes, for supported workflows — research, extraction, form workflows, portal updates and monitoring. Tell us the site and the task." },
-  { q: "Can you handle large datasets?", a: "Yes. We handle thousands of rows — 1,000 leads, 10,000 products — by breaking work into verified batches and delivering one clean result." },
-  { q: "What happens if something needs correction?", a: "We check output before delivery and handle corrections if the result doesn't meet the agreed requirements. Small fixes included." },
+const jobs = [
+  { n: "01", q: "Why did my profit change?", d: "Traces every dollar of movement to its source." },
+  { n: "02", q: "Why was my payout different?", d: "Reconciles expected vs. actual, line by line." },
+  { n: "03", q: "Find where I'm losing money.", d: "Sweeps fees, refunds, spend and margin for leaks." },
+  { n: "04", q: "Find anything unusual.", d: "Flags the anomalies before they become problems." },
+  { n: "05", q: "Tell me what needs my attention.", d: "Surfaces what actually matters this week." },
 ];
 
-/* ---------- footer orbit glyphs ---------- */
-
-function GlyphSheet({ color }: { color: string }) {
-  return (
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.6">
-      <rect x="3.5" y="3.5" width="17" height="17" rx="3" />
-      <path d="M3.5 10h17M10 10v10.5" />
-    </svg>
-  );
-}
-function GlyphCheck({ color }: { color: string }) {
-  return (
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2">
-      <circle cx="12" cy="12" r="9" />
-      <path d="M7.5 12.5l3 3 6-6.5" />
-    </svg>
-  );
-}
-function GlyphClock({ color }: { color: string }) {
-  return (
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.6">
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 7v5l3.5 2" />
-    </svg>
-  );
-}
-function GlyphDollar({ color }: { color: string }) {
-  return (
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.6">
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 6.5v11M15 9.2c0-1.2-1.3-2.2-3-2.2s-3 .9-3 2.2 1.3 1.9 3 2.2c1.7.3 3 1 3 2.3s-1.3 2.1-3 2.1-3-.8-3-2.1" />
-    </svg>
-  );
-}
-
-const orbitBadges = [
-  { Glyph: GlyphSheet, color: "#719DF4", top: "2%", left: "16%", delay: 0 },
-  { Glyph: GlyphCheck, color: "#4ADE80", top: "-4%", left: "68%", delay: 0.3 },
-  { Glyph: GlyphDollar, color: "#F5A623", top: "48%", left: "2%", delay: 0.6 },
-  { Glyph: GlyphClock, color: "#60A5FA", top: "42%", left: "84%", delay: 0.9 },
+const autonomy = [
+  { n: 1, level: "Investigate", behavior: "Explains what happened", ex: "“Here’s what happened.”" },
+  { n: 2, level: "Recommend", behavior: "Suggests next steps", ex: "“Here’s what I’d do.”" },
+  { n: 3, level: "Prepare", behavior: "Drafts the action", ex: "“I’ve prepared the purchase order.”" },
+  { n: 4, level: "Ask approval", behavior: "Confirms before acting", ex: "“Should I send it?”" },
+  { n: 5, level: "Execute", behavior: "Acts autonomously", ex: "“Done.”" },
 ];
 
-function FooterOrbit() {
-  return (
-    <div className="relative h-[190px] w-full overflow-hidden">
-      <div
-        className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 rounded-full border border-white/[0.14]"
-        style={{ width: 420, height: 420 }}
-      />
-      <div
-        className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 rounded-full border border-white/[0.12]"
-        style={{ width: 320, height: 320 }}
-      />
-      <div
-        className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 rounded-full border border-white/[0.1]"
-        style={{ width: 230, height: 230 }}
-      />
+const comparison = [
+  { tool: "Shopify Sidekick", promise: "AI for your Shopify store", talo: "AI for your entire ecommerce business" },
+  { tool: "Triple Whale", promise: "Understand & optimize ecommerce", talo: "Investigate and complete the job" },
+  { tool: "Finaloop", promise: "Financial operating system", talo: "Works with your existing financial stack" },
+  { tool: "A2X", promise: "Reconcile payouts", talo: "Investigate any financial problem" },
+  { tool: "Polar", promise: "Ecommerce BI", talo: "Don’t make me read dashboards" },
+  { tool: "Gumloop / Relevance AI", promise: "Build your own AI agents", talo: "You don’t build the employee — we give you one" },
+];
 
-      {orbitBadges.map((b, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-11 h-11 rounded-2xl grid place-items-center backdrop-blur-sm"
-          style={{ top: b.top, left: b.left, background: `${b.color}1F`, border: `1px solid ${b.color}40` }}
-          animate={{ y: [0, -8, 0] }}
-          transition={{ duration: 3 + i * 0.3, repeat: Infinity, ease: "easeInOut", delay: b.delay }}
-        >
-          <b.Glyph color={b.color} />
-        </motion.div>
-      ))}
+const laborWeek = [
+  { day: "Mon", h: "2h", task: "Reconcile payouts" },
+  { day: "Tue", h: "1h", task: "Analyze sales" },
+  { day: "Wed", h: "2h", task: "Inventory spreadsheet" },
+  { day: "Thu", h: "2h", task: "Investigate fees" },
+  { day: "Fri", h: "2h", task: "Weekly report" },
+];
 
-      <div className="absolute left-1/2 bottom-2 -translate-x-1/2 w-16 h-16 rounded-full bg-white grid place-items-center shadow-[0_10px_30px_-8px_rgba(0,0,0,0.5)] z-10">
-        <Image src="/icon-mark-dark.png" alt="" width={40} height={48} className="h-7 w-auto" />
-      </div>
-    </div>
-  );
-}
+const pricing = [
+  { name: "Starter", price: "$99–149", per: "/mo", features: "Core investigation jobs, one store", highlight: false },
+  { name: "Growth", price: "$299–499", per: "/mo", features: "Multiple data sources, scheduled jobs", highlight: true },
+  { name: "Pro", price: "$799–1,499+", per: "/mo", features: "Full data access, team access, actions & autonomy", highlight: false },
+  { name: "Enterprise", price: "$2K–10K+", per: "/mo", features: "Multiple stores, agencies, custom workflows", highlight: false },
+];
 
-function FooterSubscribeForm() {
-  const [email, setEmail] = useState("");
-  const [sent, setSent] = useState(false);
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!email) return;
-    window.location.href = `mailto:hello@abstraklabs.com?subject=${encodeURIComponent(
-      "Subscribe me to updates"
-    )}&body=${encodeURIComponent(`Please add ${email} to product updates.`)}`;
-    setSent(true);
-  }
-
-  return (
-    <form onSubmit={handleSubmit} className="mt-6 flex flex-col sm:flex-row gap-2.5 max-w-[380px]">
-      <input
-        type="email"
-        required
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="name@email.com"
-        className="text-[13px] bg-white/[0.06] border border-white/10 rounded-full px-4 py-3 flex-1 min-w-0 text-white placeholder:text-white/35 outline-none focus:border-white/25"
-      />
-      <button
-        type="submit"
-        className="shrink-0 bg-white text-[#141414] text-[13px] font-semibold px-6 py-3 rounded-full hover:bg-white/90 hover:scale-[1.03] active:scale-[0.97] transition-all"
-      >
-        Sign up
-      </button>
-      {sent && <div className="text-[11px] text-white/40 sm:hidden">Opening your mail client…</div>}
-    </form>
-  );
-}
-
-/* ---------- reusable surface classes ---------- */
+/* ---------- motion helpers ---------- */
 
 const card = "bg-white rounded-[22px] border border-black/[0.06] shadow-[0_2px_16px_-4px_rgba(20,20,20,0.06)]";
 const easeOut = [0.16, 1, 0.3, 1] as const;
@@ -235,313 +102,10 @@ const heroStagger = {
   show: { transition: { staggerChildren: 0.09, delayChildren: 0.1 } },
 };
 
-/* ---------- "why abstrak labs" scroll-scrubbed steps ---------- */
+/* ---------- small primitives ---------- */
 
-const diffSteps = [
-  {
-    n: "01",
-    title: "Describe the task",
-    statement: "Tell us what you need in plain English.",
-    quotes: ["Find 1,000 qualified leads.", "Clean my CRM.", "Process 500 invoices."],
-    closing: "No prompting. No workflows.",
-  },
-  {
-    n: "02",
-    title: "Your AI agent gets to work",
-    statement: "We turn your request into a working agent.",
-    quotes: ["It researches, browses, processes, verifies and completes the task."],
-    closing: "You don't operate the agent. It does the work.",
-  },
-  {
-    n: "03",
-    title: "Get the result",
-    statement: "See the work happen. Pay for the time used.",
-    pill: "6h 42m → $67",
-    closing: "Finished files, data, reports or results — delivered.",
-  },
-];
-
-function DiffDemoTask() {
-  return (
-    <div className="rounded-2xl border border-black/[0.06] bg-white shadow-[0_20px_50px_-20px_rgba(20,20,20,0.25)] overflow-hidden">
-      <div className="flex items-center gap-2 px-4 py-3 border-b border-black/[0.06] bg-[#FAFAF9]">
-        <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F57]" />
-        <span className="w-2.5 h-2.5 rounded-full bg-[#FEBC2E]" />
-        <span className="w-2.5 h-2.5 rounded-full bg-[#28C840]" />
-        <span className="ml-3 text-[10.5px] text-black/35 bg-white border border-black/[0.06] rounded-full px-3 py-1 flex-1 text-center max-w-[220px]">
-          app.abstraklabs.com
-        </span>
-      </div>
-      <div className="px-6 py-8">
-        <div className="text-[11.5px] font-semibold tracking-[0.08em] uppercase text-black/40">Describe your task</div>
-        <div className="mt-4 relative text-[16px] leading-[1.6] font-medium bg-[#F5F4F1] rounded-xl pl-5 pr-4 py-5 min-h-[62px] overflow-hidden">
-          <span className="absolute left-0 top-0 bottom-0 w-[3px]" style={{ background: ACCENT }} />
-          &quot;<TypingText text="Find 1,000 qualified leads matching our ICP." />&quot;
-        </div>
-        <div className="mt-5 flex justify-end">
-          <span className="inline-flex items-center gap-2 bg-[#141414] text-white text-[13.5px] font-semibold px-6 py-3 rounded-full">
-            Send task <span>→</span>
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function DiffDemoWorking() {
-  return (
-    <div className="rounded-2xl border border-black/[0.06] bg-white shadow-[0_20px_50px_-20px_rgba(20,20,20,0.25)] overflow-hidden">
-      <div className="flex items-center justify-between px-6 py-5 border-b border-black/[0.06]">
-        <div className="text-[11.5px] font-semibold tracking-[0.08em] uppercase text-black/40">Worker activity</div>
-        <span className="flex items-center gap-1.5 text-[11.5px] text-[#16A34A] font-semibold">
-          <span className="w-1.5 h-1.5 bg-[#16A34A] rounded-full animate-pulse" /> Working
-        </span>
-      </div>
-      <div className="px-6 py-7">
-        <div className="h-1.5 rounded-full bg-black/[0.06] overflow-hidden">
-          <motion.div
-            className="h-full rounded-full"
-            style={{ background: ACCENT }}
-            initial={{ width: 0 }}
-            whileInView={{ width: "62%" }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, ease: easeOut }}
-          />
-        </div>
-        <div className="mt-5 rounded-xl border border-black/[0.06] overflow-hidden">
-          {[
-            { t: "Searching companies", status: "done" },
-            { t: "Verifying websites", status: "done" },
-            { t: "Matching decision makers", status: "active" },
-            { t: "Enriching data", status: "queued" },
-          ].map((s) => (
-            <div key={s.t} className="flex items-center gap-3 px-4 py-3.5 border-b last:border-b-0 border-black/[0.05] text-[13.5px]">
-              <span className="relative w-[20px] h-[20px] shrink-0 grid place-items-center">
-                {s.status === "done" && (
-                  <span className="w-[20px] h-[20px] rounded-full bg-[#141414] grid place-items-center">
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M5 12.5l4.5 4.5L19 7" />
-                    </svg>
-                  </span>
-                )}
-                {s.status === "active" && (
-                  <>
-                    <span className="absolute w-[20px] h-[20px] rounded-full animate-ping" style={{ background: ACCENT, opacity: 0.35 }} />
-                    <span className="relative w-3 h-3 rounded-full" style={{ background: ACCENT }} />
-                  </>
-                )}
-                {s.status === "queued" && <span className="w-[16px] h-[16px] rounded-full border-2 border-black/15" />}
-              </span>
-              <span className={s.status === "queued" ? "text-black/35" : s.status === "active" ? "font-semibold" : "text-black/60"}>{s.t}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function DiffDemoResult() {
-  return (
-    <div className="rounded-2xl border border-black/[0.06] bg-white shadow-[0_20px_50px_-20px_rgba(20,20,20,0.25)] overflow-hidden">
-      <div className="flex items-center gap-2 px-6 py-4" style={{ background: ACCENT }}>
-        <span className="w-5 h-5 rounded-full bg-white/25 grid place-items-center shrink-0">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M5 12.5l4.5 4.5L19 7" />
-          </svg>
-        </span>
-        <div className="text-[11.5px] font-semibold tracking-[0.08em] uppercase text-white">Delivered</div>
-      </div>
-      <div className="px-6 py-7" style={{ background: "#F5F4F1" }}>
-        <div className="text-[19px] font-semibold tracking-tight">1,000 qualified leads</div>
-        <div className="mt-5 grid grid-cols-3 gap-2.5 text-center">
-          <div className="bg-white rounded-lg py-3.5 border border-black/[0.06]">
-            <div className="flex items-center justify-center gap-1 text-black/35">
-              <GlyphClock color="currentColor" />
-              <span className="text-[10px] font-semibold uppercase">Time</span>
-            </div>
-            <div className="text-[13.5px] font-semibold mt-1">5h 30m</div>
-          </div>
-          <div className="bg-white rounded-lg py-3.5 border border-black/[0.06]">
-            <div className="flex items-center justify-center gap-1 text-black/35">
-              <GlyphDollar color="currentColor" />
-              <span className="text-[10px] font-semibold uppercase">Cost</span>
-            </div>
-            <div className="text-[13.5px] font-semibold mt-1" style={{ color: ACCENT }}>$55</div>
-          </div>
-          <div className="bg-white rounded-lg py-3.5 border border-black/[0.06]">
-            <div className="flex items-center justify-center gap-1 text-black/35">
-              <GlyphSheet color="currentColor" />
-              <span className="text-[10px] font-semibold uppercase">Output</span>
-            </div>
-            <div className="text-[11.5px] font-semibold mt-1 leading-tight">Spreadsheet</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-const diffDemos = [DiffDemoTask, DiffDemoWorking, DiffDemoResult];
-
-/* ---------- scroll-scrubbed word reveal for the section heading ---------- */
-
-function RevealWord({ children, progress, range, color }: { children: string; progress: MotionValue<number>; range: [number, number]; color?: string }) {
-  const opacity = useTransform(progress, range, [0.12, 1]);
-  const y = useTransform(progress, range, [10, 0]);
-  return (
-    <motion.span style={{ opacity, y, color }} className="inline-block mr-[0.26em]">
-      {children}
-    </motion.span>
-  );
-}
-
-/* heading whose words write in as you scroll into the section */
-const HEAD_WORDS = [
-  ...["Hire", "an", "AI", "freelancer."].map((w) => ({ w, accent: false })),
-  ...["Not", "another", "AI", "tool."].map((w) => ({ w, accent: true })),
-];
-
-function AnimatedDiffHeading({ progress }: { progress: MotionValue<number> }) {
-  const END = 0.14; // words finish revealing within the heading-only intro
-  const subOpacity = useTransform(progress, [END * 0.7, END + 0.03], [0, 1]);
-  const subY = useTransform(progress, [END * 0.7, END + 0.03], [14, 0]);
-  return (
-    <div className="text-center mx-auto max-w-[1120px]">
-      <h2 className="text-[40px] lg:text-[56px] xl:text-[64px] leading-[1.08] tracking-[-0.02em] font-semibold">
-        {HEAD_WORDS.map(({ w, accent }, i) => (
-          <RevealWord
-            key={i}
-            progress={progress}
-            range={[(i / HEAD_WORDS.length) * END, ((i + 1) / HEAD_WORDS.length) * END]}
-            color={accent ? ACCENT : undefined}
-          >
-            {w}
-          </RevealWord>
-        ))}
-      </h2>
-      <motion.p
-        style={{ opacity: subOpacity, y: subY }}
-        className={`${serif.className} text-[19px] lg:text-[23px] text-black/50 mt-4`}
-      >
-        You give it the job. The agent figures out how to get it done.
-      </motion.p>
-    </div>
-  );
-}
-
-function ScrollRevealLine({
-  text,
-  className,
-  style,
-  progress,
-  range,
-}: {
-  text: string;
-  className?: string;
-  style?: React.CSSProperties;
-  progress: MotionValue<number>;
-  range: [number, number];
-}) {
-  const words = text.split(" ");
-  const [start, end] = range;
-  const span = end - start;
-  return (
-    <div className={className} style={style}>
-      {words.map((word, i) => {
-        const wStart = start + (i / words.length) * span;
-        const wEnd = start + ((i + 1) / words.length) * span;
-        return (
-          <RevealWord key={i} progress={progress} range={[wStart, wEnd]}>
-            {word}
-          </RevealWord>
-        );
-      })}
-    </div>
-  );
-}
-
-function ScrollRevealHeading() {
-  const container = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: container, offset: ["start 0.85", "start 0.3"] });
-
-  return (
-    <div ref={container}>
-      <ScrollRevealLine
-        text="Hire an AI freelancer."
-        className="text-[32px] sm:text-[42px] md:text-[52px] leading-[1.1] tracking-[-0.02em] font-semibold"
-        progress={scrollYProgress}
-        range={[0, 0.5]}
-      />
-      <ScrollRevealLine
-        text="Not another AI tool."
-        className="text-[32px] sm:text-[42px] md:text-[52px] leading-[1.1] tracking-[-0.02em] font-semibold"
-        style={{ color: ACCENT }}
-        progress={scrollYProgress}
-        range={[0.5, 1]}
-      />
-    </div>
-  );
-}
-
-/* ---------- sketch-style step number (numeral + diagonal stroke) ---------- */
-
-function StepNumber({ n }: { n: string }) {
-  const num = parseInt(n, 10);
-  return (
-    <div className="flex items-center gap-3">
-      <span className="text-[48px] md:text-[58px] font-semibold leading-none tracking-tight" style={{ color: ACCENT }}>
-        {num}
-      </span>
-      <svg width="22" height="38" viewBox="0 0 22 38" fill="none">
-        <line x1="19" y1="3" x2="3" y2="35" stroke={ACCENT} strokeWidth="2" strokeLinecap="round" />
-      </svg>
-    </div>
-  );
-}
-
-/* ---------- continuous vertical progress rail for the steps ---------- */
-
-function StepRail({ count, progress }: { count: number; progress: MotionValue<number> }) {
-  const fill = useTransform(progress, [0, 1], ["6%", "100%"]);
-  return (
-    <div className="relative w-[3px] shrink-0 self-stretch rounded-full bg-black/[0.08] overflow-hidden">
-      <motion.div
-        className="absolute left-0 top-0 w-full rounded-full"
-        style={{ height: fill, background: ACCENT }}
-      />
-      <div className="absolute inset-0 flex flex-col justify-between py-1">
-        {Array.from({ length: count }).map((_, i) => {
-          const start = i / count;
-          return <RailDot key={i} progress={progress} start={start} />;
-        })}
-      </div>
-    </div>
-  );
-}
-
-function RailDot({ progress, start }: { progress: MotionValue<number>; start: number }) {
-  const scale = useTransform(progress, [start - 0.02, start + 0.02], [1, 1.6]);
-  const bg = useTransform(progress, [start - 0.02, start + 0.02], ["#C6C6C3", ACCENT]);
-  return (
-    <motion.span
-      className="block w-[11px] h-[11px] -ml-[4px] rounded-full ring-[3px] ring-[#EFEEEC] shadow-[0_1px_3px_rgba(20,20,20,0.12)]"
-      style={{ scale, background: bg }}
-    />
-  );
-}
-
-/* ---------- typing animation for the task-input demo ---------- */
-
-function LazyMount({ children }: { children: React.ReactNode }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
-  return <div ref={ref}>{inView && children}</div>;
-}
-
-function TypingText({ text }: { text: string }) {
+function TypingText({ text, speed = 34 }: { text: string; speed?: number }) {
   const [count, setCount] = useState(0);
-
   useEffect(() => {
     setCount(0);
     let i = 0;
@@ -549,10 +113,9 @@ function TypingText({ text }: { text: string }) {
       i += 1;
       setCount(i);
       if (i >= text.length) clearInterval(id);
-    }, 32);
+    }, speed);
     return () => clearInterval(id);
-  }, [text]);
-
+  }, [text, speed]);
   return (
     <>
       {text.slice(0, count)}
@@ -561,281 +124,349 @@ function TypingText({ text }: { text: string }) {
   );
 }
 
-function DifferenceStepText({ step }: { step: (typeof diffSteps)[number] }) {
+function LazyMount({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
+  return <div ref={ref}>{inView && children}</div>;
+}
+
+function TrendMark({ dir }: { dir: string }) {
+  if (dir === "flat") return <span className="text-black/30">—</span>;
+  const up = dir.startsWith("up");
+  const bad = dir === "up-bad" || dir === "down";
   return (
-    <>
-      <StepNumber n={step.n} />
-      <div className="text-[12px] md:text-[13px] font-bold tracking-[0.12em] uppercase text-black/40 mt-5">{step.title}</div>
-      <div className="text-[20px] md:text-[26px] font-semibold mt-2.5 leading-[1.25] tracking-[-0.01em]">{step.statement}</div>
-      {step.quotes && (
-        <div className="mt-5 border-l-2 pl-4 space-y-2" style={{ borderColor: ACCENT }}>
-          {step.quotes.map((q) => (
-            <div key={q} className={`${serif.className} text-[16px] md:text-[18px] text-black/55 leading-relaxed`}>
-              &quot;{q}&quot;
-            </div>
-          ))}
-        </div>
-      )}
-      {step.pill && (
-        <div className="mt-5 inline-block mono text-[14px] px-4 py-2 rounded-lg" style={{ background: "#EEF1FB", color: "#5B6FCB" }}>
-          {step.pill}
-        </div>
-      )}
-      <div className="text-[15px] md:text-[16px] font-semibold text-black/70 mt-5 leading-snug">{step.closing}</div>
-    </>
+    <span style={{ color: bad ? RED : GREEN }} className="font-semibold">
+      {up ? "▲" : "▼"}
+    </span>
   );
 }
 
-// first slice of the scroll is a heading-only intro; steps reveal after it.
-const INTRO = 0.18;
+function SourceTag({ name, color }: { name: string; color: string }) {
+  return (
+    <span className="inline-flex items-center gap-1.5">
+      <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: color }} />
+      {name}
+    </span>
+  );
+}
 
-function DifferenceSection() {
+/* ---------- hero: a live investigation running ---------- */
+
+function HeroInvestigation() {
   const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
-  const [active, setActive] = useState(0);
-  const panelInView = useInView(ref, { once: true, margin: "-15% 0px -15% 0px" });
-
-  useMotionValueEvent(scrollYProgress, "change", (v) => {
-    const t = (v - INTRO) / (1 - INTRO);
-    const idx = Math.min(diffSteps.length - 1, Math.max(0, Math.floor(t * diffSteps.length)));
-    setActive(idx);
-  });
-
-  // heading sits centred during the intro, then rises as the steps fade in below it
-  const blockY = useTransform(scrollYProgress, [0, INTRO], [190, 0]);
-  const stepsOpacity = useTransform(scrollYProgress, [INTRO * 0.45, INTRO], [0, 1]);
-  const stepsY = useTransform(scrollYProgress, [INTRO * 0.45, INTRO], [48, 0]);
-
-  const s = diffSteps[active];
-  const ActiveDemo = diffDemos[active];
+  const inView = useInView(ref, { once: true, margin: "-60px" });
 
   return (
-    <section id="difference" className="scroll-mt-28 mt-4 md:mt-5">
-      {/* MOBILE — heading + static stacked steps */}
-      <div className="md:hidden mt-4">
-        <div className="px-6 pt-12 pb-2 text-center">
-          <ScrollRevealHeading />
-          <p className={`${serif.className} text-[18px] text-black/55 mt-5 max-w-[520px] mx-auto`}>
-            You give it the job. The agent figures out how to get it done.
-          </p>
-        </div>
-        {diffSteps.map((step, i) => {
-          const Demo = diffDemos[i];
-          return (
+    <div ref={ref}>
+      {/* ambient glow */}
+      <div
+        className="absolute -inset-8 rounded-[44px] blur-3xl opacity-70 -z-10 pointer-events-none"
+        style={{ background: `radial-gradient(60% 60% at 50% 30%, ${ACCENT}55, transparent 72%)` }}
+      />
+      <div
+        className="relative rounded-[28px] p-2.5 md:p-3 overflow-hidden shadow-[0_35px_70px_-20px_rgba(40,48,110,0.45)]"
+        style={{ background: `linear-gradient(150deg, #4E5FBD 0%, ${ACCENT} 55%, #D6DDF3 100%)` }}
+      >
+        <div
+          className="absolute inset-0 opacity-[0.5] mix-blend-overlay pointer-events-none"
+          style={{ background: "radial-gradient(120% 90% at 15% 0%, rgba(255,255,255,0.5), transparent 55%)" }}
+        />
+
+        <div className="relative rounded-[20px] bg-white border border-black/[0.06] shadow-[0_10px_30px_-12px_rgba(0,0,0,0.25)] overflow-hidden">
+          {/* window bar */}
+          <div className="flex items-center gap-2 px-4 py-3 border-b border-black/[0.06] bg-[#FAFAF9]">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F57]" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#FEBC2E]" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#28C840]" />
+            <span className="ml-3 text-[10.5px] text-black/35 bg-white border border-black/[0.06] rounded-full px-3 py-1 flex-1 text-center max-w-[200px]">
+              talo.abstraklabs.com
+            </span>
+            <span className="flex items-center gap-1.5 text-[10.5px] font-semibold" style={{ color: GREEN }}>
+              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: GREEN }} /> On the job
+            </span>
+          </div>
+
+          <div className="px-5 py-5">
+            {/* the job */}
+            <div className="text-[10.5px] font-semibold tracking-[0.08em] uppercase text-black/40">The job</div>
+            <div className="mt-2 relative text-[14px] leading-[1.5] font-medium bg-[#F5F4F1] rounded-xl pl-4 pr-3.5 py-3.5 overflow-hidden">
+              <span className="absolute left-0 top-0 bottom-0 w-[3px]" style={{ background: ACCENT }} />
+              {inView ? <TypingText text={"“Why did my profit drop last month?”"} /> : " "}
+            </div>
+
+            {/* investigation trace */}
+            <div className="mt-5 flex items-center justify-between">
+              <div className="text-[10.5px] font-semibold tracking-[0.08em] uppercase text-black/40">Investigation trace</div>
+              <div className="text-[10px] font-semibold text-black/35">5 systems checked</div>
+            </div>
+
+            <div className="mt-2 rounded-xl border border-black/[0.06] overflow-hidden mono">
+              {heroTrace.map((row, i) => (
+                <motion.div
+                  key={row.src}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={inView ? { opacity: 1, x: 0 } : {}}
+                  transition={{ duration: 0.4, delay: 1.1 + i * 0.18, ease: easeOut }}
+                  className="flex items-center gap-3 px-3.5 py-2.5 border-b last:border-b-0 border-black/[0.05] text-[11.5px]"
+                >
+                  <span className="w-[86px] shrink-0 font-semibold text-black/70">
+                    <SourceTag name={row.src} color={row.color} />
+                  </span>
+                  <span className="text-black/30">→</span>
+                  <span className="text-black/60">{row.note}</span>
+                  <span className="ml-auto">
+                    <TrendMark dir={row.dir} />
+                  </span>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* root cause / finding */}
             <motion.div
-              key={step.n}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, margin: "-60px" }}
-              variants={fadeUp}
-              transition={{ duration: 0.5, ease: easeOut }}
-              className={`px-6 py-9 ${i > 0 ? "border-t" : ""} border-black/[0.06]`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: 1.1 + heroTrace.length * 0.18 + 0.15, ease: easeOut }}
+              className="mt-3 rounded-xl overflow-hidden border border-black/[0.06]"
             >
-              <DifferenceStepText step={step} />
-              <div className="mt-6">
-                <LazyMount>
-                  <Demo />
-                </LazyMount>
+              <div className="flex items-center gap-2 px-4 py-2.5" style={{ background: ACCENT }}>
+                <span className="w-4 h-4 rounded-full bg-white/25 grid place-items-center shrink-0 text-white text-[10px]">✓</span>
+                <div className="text-[10.5px] font-semibold tracking-[0.08em] uppercase text-white">Root cause</div>
+              </div>
+              <div className="px-4 py-4" style={{ background: "#F5F4F1" }}>
+                <div className="text-[15px] font-semibold tracking-tight">
+                  Profit down 19% <span style={{ color: ACCENT }}>($12,430)</span>
+                </div>
+                <div className="mt-3 space-y-2">
+                  {findingBreakdown.map((b) => (
+                    <div key={b.label} className="flex items-center gap-3 text-[11px]">
+                      <span className="w-9 shrink-0 font-semibold mono text-black/70">{b.pct}%</span>
+                      <div className="flex-1 h-1.5 rounded-full bg-black/[0.07] overflow-hidden">
+                        <motion.div
+                          className="h-full rounded-full"
+                          style={{ background: ACCENT }}
+                          initial={{ width: 0 }}
+                          animate={inView ? { width: `${b.pct}%` } : {}}
+                          transition={{ duration: 0.8, delay: 2.4, ease: easeOut }}
+                        />
+                      </div>
+                      <span className="text-black/55 w-[130px] shrink-0 leading-tight">{b.label}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </motion.div>
-          );
-        })}
-        <div className="py-5 text-center text-[11px] tracking-[0.14em] uppercase font-semibold text-black/40 border-t border-black/[0.06]">
-          No software to learn · No subscription · $10/hour
+          </div>
         </div>
       </div>
+    </div>
+  );
+}
 
-      {/* DESKTOP — pinned: heading shows first, then the 1·2·3 steps reveal below it */}
-      <div ref={ref} className="hidden md:block relative" style={{ height: `${diffSteps.length * 100 + 80}vh` }}>
-        <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
-          <motion.div style={{ y: blockY }} className="mx-auto w-full max-w-[1240px] px-6">
-            {/* persistent heading — writes in first, on its own */}
-            <AnimatedDiffHeading progress={scrollYProgress} />
+/* ---------- how it works: the investigation, retold ---------- */
 
-            {/* steps — fade in after the heading intro */}
+function InvestigationFlow() {
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2">
+      {/* the trace */}
+      <div className="p-6 lg:p-8 lg:border-r border-black/[0.06]">
+        <div className="text-[10.5px] font-semibold tracking-[0.08em] uppercase text-black/40">Investigation trace</div>
+        <div className="mt-4 mono relative">
+          <div className="absolute left-[5px] top-2 bottom-8 w-px bg-black/[0.1]" />
+          {heroTrace.map((row, i) => (
             <motion.div
-              style={{ opacity: stepsOpacity, y: stepsY }}
-              className="mt-10 lg:mt-14 grid grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] gap-8 lg:gap-12 items-center"
+              key={row.src}
+              initial={{ opacity: 0, x: -8 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.4, delay: i * 0.08, ease: easeOut }}
+              className="relative flex items-center gap-3 pl-6 py-2.5 text-[13px]"
             >
-              {/* left — step text with a continuous progress rail */}
-              <div className="flex items-stretch gap-5">
-                <StepRail count={diffSteps.length} progress={scrollYProgress} />
-                <div className="min-h-[320px] flex flex-col justify-center">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={s.n}
-                      initial={{ opacity: 0, y: 14 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -14 }}
-                      transition={{ duration: 0.4, ease: easeOut }}
-                    >
-                      <DifferenceStepText step={s} />
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-              </div>
-
-              {/* right — the working demo card, enlarged (fills the column width) */}
-              <div className="flex items-center justify-center">
-                <div className="relative w-full max-w-[720px] h-[460px]">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={s.n}
-                      className="absolute inset-0 flex flex-col justify-center"
-                      initial={{ opacity: 0, y: 24, scale: 0.97 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: -24, scale: 0.97 }}
-                      transition={{ duration: 0.45, ease: easeOut }}
-                    >
-                      {panelInView && <ActiveDemo />}
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-              </div>
+              <span className="absolute left-0 w-[11px] h-[11px] rounded-full border-2 border-white" style={{ background: row.color }} />
+              <span className="w-[100px] shrink-0 font-semibold">{row.src}</span>
+              <span className="text-black/30">→</span>
+              <span className="text-black/60">{row.note}</span>
+              <span className="ml-auto">
+                <TrendMark dir={row.dir} />
+              </span>
             </motion.div>
+          ))}
+          <motion.div
+            initial={{ opacity: 0, x: -8 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: heroTrace.length * 0.08, ease: easeOut }}
+            className="relative flex items-center gap-3 pl-6 py-3 mt-1 text-[13px] border-t border-dashed border-black/15"
+          >
+            <span className="absolute left-0 w-[11px] h-[11px] rounded-full ring-4 ring-white" style={{ background: ACCENT }} />
+            <span className="font-bold tracking-[0.04em]" style={{ color: ACCENT }}>ROOT CAUSE</span>
+            <span className="text-black/30">→</span>
+            <span className="font-semibold">Profit down 19% ($12,430)</span>
           </motion.div>
         </div>
       </div>
 
-      <div className="hidden md:block mt-2 py-4 text-center text-[11px] tracking-[0.14em] uppercase font-semibold text-black/40">
-        No software to learn · No subscription · $10/hour
+      {/* the finding */}
+      <div className="p-6 lg:p-8 bg-[#FAFAF9]">
+        <div className="text-[10.5px] font-semibold tracking-[0.08em] uppercase text-black/40">The finding</div>
+        <p className="text-[19px] md:text-[22px] font-semibold tracking-[-0.01em] mt-4 leading-snug">
+          Your profit fell <span style={{ color: ACCENT }}>$12,430</span> this month.
+        </p>
+        <div className="mt-5 space-y-3.5">
+          {findingBreakdown.map((b, i) => (
+            <motion.div
+              key={b.label}
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.1, ease: easeOut }}
+              className="flex items-center gap-4"
+            >
+              <div className="text-[22px] font-semibold mono w-[52px] shrink-0" style={{ color: ACCENT }}>{b.pct}%</div>
+              <div className="flex-1">
+                <div className="h-2 rounded-full bg-black/[0.07] overflow-hidden">
+                  <motion.div
+                    className="h-full rounded-full"
+                    style={{ background: ACCENT }}
+                    initial={{ width: 0 }}
+                    whileInView={{ width: `${b.pct}%` }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.9, delay: 0.2 + i * 0.1, ease: easeOut }}
+                  />
+                </div>
+                <div className="text-[13px] text-black/55 mt-1.5">{b.label}</div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+        <a href="#evidence" className="inline-flex items-center gap-2 mt-7 text-[13px] font-semibold text-black hover:opacity-70 transition-opacity">
+          View the evidence <span style={{ color: ACCENT }}>→</span>
+        </a>
       </div>
-    </section>
+    </div>
   );
 }
 
-/* ---------- "hire by task" — pinned heading + scroll-scrubbed task links ---------- */
+/* ---------- evidence card: reconciliation ---------- */
 
-const taskLinks = [
-  { href: "/ai-freelancer", t: "Hire an AI Freelancer", d: "General — research, data, leads, documents from $10/hr" },
-  { href: "/ai-data-entry", t: "AI Data Entry Freelancer", d: "PDF → Excel, spreadsheets, CRM entry" },
-  { href: "/ai-research", t: "AI Research Freelancer", d: "Market, company and competitor research" },
-  { href: "/ai-lead-generation", t: "AI Lead Generation Freelancer", d: "Prospect lists, ICP filtering, verification" },
-  { href: "/ai-data-cleaning", t: "AI Data Cleaning Freelancer", d: "Deduplication, normalization, hygiene" },
-  { href: "/ai-crm-cleanup", t: "AI CRM Cleanup Freelancer", d: "De-dupe contacts, normalize fields" },
-  { href: "/ai-invoice-processing", t: "AI Invoice Processing Freelancer", d: "Extract line items, reconcile totals" },
-  { href: "/ai-ecommerce-operations", t: "AI E-commerce Operations Freelancer", d: "Catalog cleanup, product data entry" },
-  { href: "/ai-web-research", t: "AI Web Research Freelancer", d: "Company & web research with citations" },
-  { href: "/ai-document-processing", t: "AI Document Processing Freelancer", d: "PDF extraction, forms, records" },
-  { href: "/work", t: "Sample Workflows", d: "CRM cleanup, invoices, catalog — see task, input, output, time & cost" },
+const evidenceRows = [
+  { label: "Expected payout", val: "$48,293", strong: true },
+  { label: "Actual payout", val: "$44,472", strong: true },
+  { label: "Difference", val: "$3,821", diff: true },
+];
+const evidenceBreak = [
+  { label: "Amazon fees", val: "$2,940" },
+  { label: "Refunds", val: "$681" },
+  { label: "Adjustment", val: "$200" },
 ];
 
-const TASK_SPACING = 116; // px between rows in the scrolling column
-// one consistent wave of horizontal indents (smooth sine, not random)
-const TASK_X = taskLinks.map((_, i) => Math.round(58 + 58 * Math.sin(i * 0.7)));
-
-function TaskRow({ l, i, focus }: { l: (typeof taskLinks)[number]; i: number; focus: MotionValue<number> }) {
-  const y = useTransform(focus, (v) => (i - v) * TASK_SPACING - 20);
-  const opacity = useTransform(focus, (v) => Math.max(0.12, 1 - Math.abs(i - v) * 0.5));
-  const scale = useTransform(focus, (v) => Math.max(0.85, 1 - Math.abs(i - v) * 0.1));
+function EvidenceCard() {
   return (
-    <motion.div
-      style={{ y, opacity, scale, x: TASK_X[i] }}
-      className="absolute left-0 right-0 top-1/2 origin-left will-change-transform"
-    >
-      <Link href={l.href} className="group inline-block">
-        <div className="text-[24px] lg:text-[30px] leading-none tracking-[-0.01em] font-semibold">
-          {l.t} <span className="inline-block transition-transform group-hover:translate-x-1" style={{ color: ACCENT }}>→</span>
-        </div>
-        <div className="text-[13px] leading-relaxed text-black/45 mt-2.5">{l.d}</div>
-      </Link>
-    </motion.div>
-  );
-}
-
-function TaskScroll() {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
-  const focus = useTransform(scrollYProgress, [0.05, 0.95], [0, taskLinks.length - 1]);
-
-  return (
-    <section id="task-index" className="mt-8 md:mt-12">
-      {/* MOBILE — static list */}
-      <div className="md:hidden">
-        <div className="px-6 pb-4">
-          <h2 className="text-[22px] tracking-[-0.02em] font-semibold">Hire an AI freelancer by task</h2>
-          <p className="text-[12.5px] text-black/45 mt-2">Choose the work you want to offload — each page explains the tasks, workflow, deliverables and cost.</p>
-        </div>
-        <div className="grid grid-cols-1 border-t border-black/[0.08]">
-          {taskLinks.map((l, i) => (
-            <Link key={l.href} href={l.href} className={`px-6 py-4 ${i > 0 ? "border-t" : ""} border-black/[0.06]`}>
-              <div className="text-[14px] font-semibold">{l.t} →</div>
-              <div className="text-[12.5px] text-black/50 mt-1">{l.d}</div>
-            </Link>
+    <div className="rounded-2xl border border-black/[0.06] bg-white overflow-hidden shadow-[0_20px_50px_-24px_rgba(20,20,20,0.3)]">
+      <div className="px-5 py-4 border-b border-black/[0.06] bg-[#FAFAF9]">
+        <div className="text-[10.5px] font-semibold tracking-[0.08em] uppercase text-black/40">Finding</div>
+        <div className="text-[14px] font-semibold mt-1">Amazon fees caused $3,821 of the discrepancy</div>
+      </div>
+      <div className="px-5 py-5 mono text-[13px]">
+        {evidenceRows.map((r) => (
+          <div
+            key={r.label}
+            className={`flex items-center justify-between py-2 ${r.diff ? "border-t border-black/[0.08] mt-1 pt-3" : ""}`}
+          >
+            <span className={r.diff ? "font-semibold" : "text-black/55"}>{r.label}</span>
+            <span
+              className={r.diff ? "font-bold" : r.strong ? "font-semibold" : ""}
+              style={r.diff ? { color: ACCENT } : undefined}
+            >
+              {r.val}
+            </span>
+          </div>
+        ))}
+        <div className="mt-4 pt-3 border-t border-dashed border-black/10 space-y-2">
+          {evidenceBreak.map((r) => (
+            <div key={r.label} className="flex items-center justify-between text-[12px]">
+              <span className="text-black/45">{r.label}</span>
+              <span className="text-black/70">{r.val}</span>
+            </div>
           ))}
         </div>
       </div>
+      <a
+        href="#"
+        className="flex items-center justify-between px-5 py-3.5 border-t border-black/[0.06] text-[12.5px] font-semibold hover:bg-[#FAFAF9] transition-colors"
+      >
+        View transactions <span style={{ color: ACCENT }}>→</span>
+      </a>
+    </div>
+  );
+}
 
-      {/* DESKTOP — pinned heading, scrubbed task list */}
-      <div ref={ref} className="hidden md:block relative" style={{ height: `${taskLinks.length * 30 + 50}vh` }}>
-        <div className="sticky top-24" style={{ height: "calc(100vh - 140px)" }}>
-          <div className="h-full overflow-hidden grid grid-cols-[0.85fr_1.15fr] px-4 lg:px-10">
-            {/* left — pinned heading */}
-            <div className="flex flex-col justify-center pr-10 lg:pr-14">
-              <div className="text-[11px] tracking-[0.12em] uppercase text-black/40 font-semibold">The task index</div>
-              <h2 className="text-[34px] lg:text-[46px] leading-[1.08] tracking-[-0.02em] font-semibold mt-4">
-                Hire an AI freelancer <span style={{ color: ACCENT }}>by task.</span>
-              </h2>
-              <p className={`${serif.className} text-[17px] lg:text-[19px] text-black/50 mt-5 max-w-[380px]`}>
-                Choose the work you want to offload — each page explains the tasks, workflow, deliverables and cost.
-              </p>
-            </div>
+/* ---------- autonomy ladder ---------- */
 
-            {/* right — scrolling, staggered task links */}
-            <div className="relative overflow-hidden">
-              <div className="pointer-events-none absolute inset-x-0 top-0 h-32 z-10 bg-gradient-to-b from-[#EFEEEC] to-transparent" />
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 z-10 bg-gradient-to-t from-[#EFEEEC] to-transparent" />
-              <div className="relative h-full px-12 lg:px-16">
-                {taskLinks.map((l, i) => (
-                  <TaskRow key={l.href} l={l} i={i} focus={focus} />
-                ))}
-              </div>
-            </div>
+function AutonomyLadder() {
+  return (
+    <div className="grid grid-cols-1">
+      {autonomy.map((a, i) => (
+        <motion.div
+          key={a.n}
+          initial={{ opacity: 0, x: -16 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-30px" }}
+          transition={{ duration: 0.5, delay: i * 0.07, ease: easeOut }}
+          className={`grid grid-cols-[auto_1fr] md:grid-cols-[64px_180px_1fr_auto] items-center gap-x-4 gap-y-1 px-5 md:px-7 py-4 ${
+            i > 0 ? "border-t" : ""
+          } border-black/[0.06] hover:bg-[#FAFAF9] transition-colors`}
+          style={{ paddingLeft: `calc(1.25rem + ${i * 10}px)` }}
+        >
+          <div
+            className="w-9 h-9 rounded-full grid place-items-center text-[14px] font-semibold mono shrink-0"
+            style={{ background: `${ACCENT}18`, color: ACCENT }}
+          >
+            {a.n}
           </div>
-        </div>
-      </div>
-    </section>
+          <div className="text-[15px] font-semibold">{a.level}</div>
+          <div className="text-[13px] text-black/55 col-span-2 md:col-span-1">{a.behavior}</div>
+          <div className={`${serif.className} text-[15px] text-black/50 col-span-2 md:col-span-1 md:text-right`}>{a.ex}</div>
+        </motion.div>
+      ))}
+    </div>
   );
 }
 
 export default function Home() {
-  const [openFaq, setOpenFaq] = useState<number | null>(2);
-
   return (
     <main className="min-h-screen bg-[#EFEEEC] text-[#141414] selection:bg-[#719DF4] selection:text-white">
       <div className="fixed inset-0 bg-lines-soft pointer-events-none opacity-[0.7]" />
 
       <div className="relative z-10 max-w-[1920px] mx-auto px-3 md:px-5">
-        {/* NAV — dark floating pill */}
+        {/* NAV */}
         <header className="sticky top-3 md:top-4 z-50 pt-3 md:pt-4 flex justify-center">
           <motion.div
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: easeOut }}
-            className="w-full max-w-[980px] bg-[#141414] text-white rounded-full pl-4 pr-2 py-2 flex items-center justify-between gap-4 shadow-[0_10px_30px_-8px_rgba(0,0,0,0.35)]"
+            className="w-full max-w-[1020px] bg-[#141414] text-white rounded-full pl-4 pr-2 py-2 flex items-center justify-between gap-4 shadow-[0_10px_30px_-8px_rgba(0,0,0,0.35)]"
           >
             <Link href="/" className="flex items-center shrink-0">
               <Image src="/talo-logo-mark.png" alt="Talo" width={329} height={140} className="h-7 w-auto" priority />
             </Link>
 
             <nav className="hidden lg:flex items-center gap-5 text-[12.5px] text-white/65">
-              <a href="#difference" className="hover:text-white transition-colors">Difference</a>
-              <a href="#work" className="hover:text-white transition-colors">Work</a>
+              <a href="#problem" className="hover:text-white transition-colors">The problem</a>
               <a href="#how" className="hover:text-white transition-colors">How it works</a>
-              <a href="#services" className="hover:text-white transition-colors">What we do</a>
+              <a href="#evidence" className="hover:text-white transition-colors">Evidence</a>
+              <a href="#jobs" className="hover:text-white transition-colors">Jobs</a>
               <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
-              <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
             </nav>
 
             <div className="flex items-center gap-2 shrink-0">
               <span className="hidden md:inline-flex items-center gap-1.5 text-[11px] text-white/55 pr-1">
-                <span className="w-1.5 h-1.5 bg-[#4ADE80] rounded-full animate-pulse" /> Agents online
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#4ADE80" }} /> Talo online
               </span>
               <Link
                 href="/hire"
                 className="bg-white text-[#141414] text-[12.5px] font-semibold px-4 py-2 rounded-full hover:bg-white/90 hover:scale-[1.04] active:scale-[0.97] transition-all whitespace-nowrap"
               >
-                Hire a worker — $10/hr
+                Give Talo a job →
               </Link>
             </div>
           </motion.div>
@@ -851,22 +482,31 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-8 px-6 md:px-10 lg:px-14 py-12 md:py-16 lg:py-20 items-center">
             {/* LEFT */}
             <motion.div initial="hidden" animate="show" variants={heroStagger}>
-              <motion.h1 variants={fadeUp} transition={{ duration: 0.5, ease: easeOut }} className="leading-[0.98] tracking-[-0.02em]">
-                <span className={`${serif.className} block text-[40px] sm:text-[50px] lg:text-[58px] text-black/70`}>
-                  Have work to do?
+              <motion.div variants={fadeUp} transition={{ duration: 0.5, ease: easeOut }}>
+                <span className="inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.1em] uppercase text-black/45 bg-[#F3F2EF] border border-black/[0.06] rounded-full px-3 py-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full" style={{ background: ACCENT }} /> AI Employee for Ecommerce
                 </span>
-                <span className="block text-[38px] sm:text-[48px] lg:text-[54px] font-semibold">
-                  Hire an AI <span style={{ color: ACCENT }}>Freelancer.</span>
+              </motion.div>
+
+              <motion.h1
+                variants={fadeUp}
+                transition={{ duration: 0.5, ease: easeOut }}
+                className="leading-[0.98] tracking-[-0.02em] mt-5"
+              >
+                <span className="block text-[38px] sm:text-[48px] lg:text-[56px] font-semibold">Give Talo a job.</span>
+                <span className={`${serif.className} block text-[40px] sm:text-[50px] lg:text-[58px]`} style={{ color: ACCENT }}>
+                  It gets it done.
                 </span>
               </motion.h1>
 
               <motion.p
                 variants={fadeUp}
                 transition={{ duration: 0.5, ease: easeOut }}
-                className="text-[14.5px] leading-[1.65] text-black/55 mt-5 max-w-[440px]"
+                className="text-[14.5px] leading-[1.65] text-black/55 mt-5 max-w-[460px]"
               >
-                Research, data, lead generation, browser work, document processing and other repetitive digital
-                tasks — <span className="font-semibold text-black/80">handled from start to finish.</span>
+                Talo is the AI employee that investigates what&apos;s wrong with your ecommerce business — and tells you
+                exactly why, <span className="font-semibold text-black/80">with evidence</span> — instead of another
+                dashboard you have to interpret yourself.
               </motion.p>
 
               <motion.div variants={fadeUp} transition={{ duration: 0.5, ease: easeOut }} className="mt-7 flex flex-wrap items-center gap-3">
@@ -874,590 +514,404 @@ export default function Home() {
                   href="/hire"
                   className="bg-[#141414] hover:bg-black text-white text-[13px] font-semibold px-6 py-3.5 rounded-full hover:scale-[1.03] active:scale-[0.97] transition-all"
                 >
-                  Give us a task →
+                  Give Talo your first job →
                 </Link>
-                <a
-                  href="#work"
-                  className="text-[13px] font-semibold text-black/70 hover:text-black transition-colors px-2"
-                >
-                  View our work
+                <a href="#how" className="text-[13px] font-semibold text-black/70 hover:text-black transition-colors px-2">
+                  See a real investigation
                 </a>
               </motion.div>
 
-              <motion.div variants={fadeUp} transition={{ duration: 0.5, ease: easeOut }} className="mt-7 flex flex-wrap gap-2">
-                {["Research", "Data", "Lead Generation", "Browser Work", "Documents"].map((t) => (
-                  <span key={t} className="text-[11.5px] text-black/55 bg-[#F3F2EF] border border-black/[0.06] rounded-full px-3 py-1.5">
-                    {t}
-                  </span>
-                ))}
+              <motion.div variants={fadeUp} transition={{ duration: 0.5, ease: easeOut }} className="mt-8">
+                <div className="text-[10.5px] font-semibold tracking-[0.1em] uppercase text-black/35">Investigates across</div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {sources.map((t) => (
+                    <span key={t} className="text-[11.5px] text-black/55 bg-[#F3F2EF] border border-black/[0.06] rounded-full px-3 py-1.5">
+                      {t}
+                    </span>
+                  ))}
+                </div>
               </motion.div>
             </motion.div>
 
-            {/* RIGHT — floating browser mockup */}
+            {/* RIGHT */}
             <motion.div
               initial={{ opacity: 0, x: 28, scale: 0.97 }}
               animate={{ opacity: 1, x: 0, scale: 1 }}
               transition={{ duration: 0.7, delay: 0.25, ease: easeOut }}
               className="relative lg:pl-4"
             >
-              {/* ambient glow */}
-              <div
-                className="absolute -inset-8 rounded-[44px] blur-3xl opacity-70 -z-10 pointer-events-none"
-                style={{ background: `radial-gradient(60% 60% at 50% 35%, ${ACCENT}66, transparent 72%)` }}
-              />
-
-              {/* gradient frame */}
-              <div
-                className="relative rounded-[28px] p-2.5 md:p-3 overflow-hidden shadow-[0_35px_70px_-20px_rgba(40,48,110,0.45)]"
-                style={{ background: `linear-gradient(150deg, #4E5FBD 0%, ${ACCENT} 55%, #D6DDF3 100%)` }}
-              >
-                <div
-                  className="absolute inset-0 opacity-[0.5] mix-blend-overlay pointer-events-none"
-                  style={{ background: "radial-gradient(120% 90% at 15% 0%, rgba(255,255,255,0.5), transparent 55%)" }}
-                />
-
-                <div className="relative rounded-[20px] bg-white border border-black/[0.06] shadow-[0_10px_30px_-12px_rgba(0,0,0,0.25)] overflow-hidden">
-                  <div className="flex items-center gap-2 px-4 py-3 border-b border-black/[0.06] bg-[#FAFAF9]">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F57]" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#FEBC2E]" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#28C840]" />
-                    <span className="ml-3 text-[10.5px] text-black/35 bg-white border border-black/[0.06] rounded-full px-3 py-1 flex-1 text-center max-w-[220px]">
-                      app.abstraklabs.com
-                    </span>
-                  </div>
-
-                  <div className="px-5 py-5">
-                  <div className="flex items-center justify-between">
-                    <div className="text-[10.5px] font-semibold tracking-[0.08em] uppercase text-black/40">Customer request</div>
-                    <span className="flex items-center gap-1.5 text-[10.5px] text-[#16A34A] font-semibold">
-                      <span className="w-1.5 h-1.5 bg-[#16A34A] rounded-full animate-pulse" /> Worker online
-                    </span>
-                  </div>
-                  <div className="mt-2 relative text-[13px] leading-[1.5] font-medium bg-[#F5F4F1] rounded-xl pl-4 pr-3.5 py-3.5 overflow-hidden">
-                    <span className="absolute left-0 top-0 bottom-0 w-[3px]" style={{ background: ACCENT }} />
-                    &quot;Find 500 US SaaS companies, their founders, funding and LinkedIn.&quot;
-                  </div>
-
-                  <div className="mt-5 flex items-center justify-between">
-                    <div className="text-[10.5px] font-semibold tracking-[0.08em] uppercase text-black/40">Worker activity</div>
-                    <div className="text-[10px] font-semibold text-black/35">2/4 done</div>
-                  </div>
-                  <div className="mt-1.5 h-1 rounded-full bg-black/[0.06] overflow-hidden">
-                    <motion.div
-                      className="h-full rounded-full"
-                      style={{ background: ACCENT }}
-                      initial={{ width: 0 }}
-                      animate={{ width: "50%" }}
-                      transition={{ duration: 0.8, delay: 0.75, ease: easeOut }}
-                    />
-                  </div>
-
-                  <div className="mt-3 rounded-xl border border-black/[0.06] overflow-hidden">
-                    {[
-                      { n: "01", t: "Searching companies", status: "done" },
-                      { n: "02", t: "Verifying websites", status: "done" },
-                      { n: "03", t: "Matching founders", status: "active" },
-                      { n: "04", t: "Enriching data", status: "queued" },
-                    ].map((s, i) => (
-                      <motion.div
-                        key={s.n}
-                        initial={{ opacity: 0, x: -12 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.4, delay: 0.6 + i * 0.1, ease: easeOut }}
-                        className="flex items-center gap-3 px-3.5 py-2.5 border-b last:border-b-0 border-black/[0.05] text-[11.5px]"
-                      >
-                        <span className="relative w-[18px] h-[18px] shrink-0 grid place-items-center">
-                          {s.status === "done" && (
-                            <span className="w-[18px] h-[18px] rounded-full bg-[#141414] grid place-items-center">
-                              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M5 12.5l4.5 4.5L19 7" />
-                              </svg>
-                            </span>
-                          )}
-                          {s.status === "active" && (
-                            <>
-                              <span className="absolute w-[18px] h-[18px] rounded-full animate-ping" style={{ background: ACCENT, opacity: 0.35 }} />
-                              <span className="relative w-2.5 h-2.5 rounded-full" style={{ background: ACCENT }} />
-                            </>
-                          )}
-                          {s.status === "queued" && <span className="w-[14px] h-[14px] rounded-full border-2 border-black/15" />}
-                        </span>
-                        <span className={s.status === "queued" ? "text-black/35" : s.status === "active" ? "font-semibold" : "text-black/60"}>
-                          {s.t}
-                        </span>
-                        <span
-                          className={`ml-auto text-[9.5px] font-semibold tracking-wide uppercase px-2 py-1 rounded-full ${
-                            s.status === "done" ? "bg-black/[0.05] text-black/40" : s.status === "queued" ? "text-black/30" : "text-white"
-                          }`}
-                          style={s.status === "active" ? { background: ACCENT } : undefined}
-                        >
-                          {s.status === "done" ? "Done" : s.status === "active" ? "Working" : "Queued"}
-                        </span>
-                      </motion.div>
-                    ))}
-                  </div>
-
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 1.05, ease: easeOut }}
-                    className="mt-4 rounded-xl overflow-hidden border border-black/[0.06]"
-                  >
-                    <div className="flex items-center gap-2 px-4 py-2.5" style={{ background: ACCENT }}>
-                      <span className="w-4 h-4 rounded-full bg-white/25 grid place-items-center shrink-0">
-                        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M5 12.5l4.5 4.5L19 7" />
-                        </svg>
-                      </span>
-                      <div className="text-[10.5px] font-semibold tracking-[0.08em] uppercase text-white">Delivered</div>
-                    </div>
-                    <div className="px-4 py-4" style={{ background: "#F5F4F1" }}>
-                      <div className="text-[16px] font-semibold tracking-tight">500 qualified companies</div>
-                      <div className="mt-3 grid grid-cols-3 gap-2 text-center">
-                        <div className="bg-white rounded-lg py-2.5 border border-black/[0.06]">
-                          <div className="flex items-center justify-center gap-1 text-black/35">
-                            <GlyphClock color="currentColor" />
-                            <span className="text-[9px] font-semibold uppercase">Time</span>
-                          </div>
-                          <div className="text-[12px] font-semibold mt-1">6h 42m</div>
-                        </div>
-                        <div className="bg-white rounded-lg py-2.5 border border-black/[0.06]">
-                          <div className="flex items-center justify-center gap-1 text-black/35">
-                            <GlyphDollar color="currentColor" />
-                            <span className="text-[9px] font-semibold uppercase">Cost</span>
-                          </div>
-                          <div className="text-[12px] font-semibold mt-1" style={{ color: ACCENT }}>$67</div>
-                        </div>
-                        <div className="bg-white rounded-lg py-2.5 border border-black/[0.06]">
-                          <div className="flex items-center justify-center gap-1 text-black/35">
-                            <GlyphSheet color="currentColor" />
-                            <span className="text-[9px] font-semibold uppercase">Output</span>
-                          </div>
-                          <div className="text-[10px] font-semibold mt-1 leading-tight">Spreadsheet</div>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                  </div>
-                </div>
-              </div>
+              <HeroInvestigation />
             </motion.div>
           </div>
         </motion.section>
 
-        <DifferenceSection />
-
-        <motion.div {...revealProps} className="mt-4 md:mt-5 rounded-[22px] bg-[#141414] py-6 text-center">
-          <div className="text-white text-[16px] md:text-[20px] tracking-[-0.02em] font-semibold">
-            You buy the result. <span style={{ color: ACCENT }}>Not the software.</span>
-          </div>
-        </motion.div>
-
-        {/* WHAT WE DO */}
-        <motion.section id="services" {...revealProps} className={`scroll-mt-28 mt-10 md:mt-16 overflow-hidden`}>
+        {/* PROBLEM */}
+        <motion.section id="problem" {...revealProps} className="scroll-mt-28 mt-10 md:mt-16 overflow-hidden">
           <div className="px-6 lg:px-8 py-8 border-b border-black/[0.06]">
-            <h2 className="text-[24px] md:text-[30px] leading-[1.1] tracking-[-0.02em] font-semibold">What do you need off your plate?</h2>
-            <p className="text-[13px] leading-relaxed text-black/50 mt-3 max-w-[560px]">
-              Give us the boring, repetitive, research-heavy work your team doesn&apos;t want to spend hours doing.
-            </p>
+            <h2 className="text-[26px] md:text-[34px] leading-[1.1] tracking-[-0.02em] font-semibold">
+              Your business already has enough dashboards.
+            </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3">
-            {services.map((s, i) => (
+          <div className="grid grid-cols-2 md:grid-cols-4">
+            {dashboards.map((d, i) => (
+              <div
+                key={d.name}
+                className={`px-6 py-7 ${i % 4 !== 3 ? "md:border-r" : ""} ${i % 2 === 0 ? "border-r md:border-r" : ""} ${
+                  i < 2 ? "border-b md:border-b-0" : ""
+                } border-black/[0.06]`}
+              >
+                <div className="text-[14px] font-semibold">{d.name}</div>
+                <div className="text-[12.5px] text-black/45 mt-1.5 leading-relaxed">
+                  tells you <span className="text-black/70">{d.tells}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 border-t border-black/[0.06]">
+            <div className="px-6 lg:px-8 py-8 lg:border-r border-black/[0.06]">
+              <p className="text-[15px] leading-[1.7] text-black/65">
+                None of them tell you <span className="font-semibold text-black">why</span> something went wrong, or{" "}
+                <span className="font-semibold text-black">what to do about it</span>.
+              </p>
+              <p className="text-[15px] leading-[1.7] text-black/65 mt-4">
+                So someone on your team spends <span className="font-semibold text-black">8–10 hours a week</span> manually
+                stitching it together — reconciling payouts, chasing fee discrepancies, digging through spreadsheets to
+                explain a number that doesn&apos;t look right.
+              </p>
+            </div>
+            <div className="px-6 lg:px-8 py-10 flex items-center bg-[#141414]">
+              <p className={`${serif.className} text-[26px] md:text-[32px] leading-[1.25] text-white`}>
+                You don&apos;t have a data problem. You have an{" "}
+                <span style={{ color: ACCENT }}>investigation problem.</span>
+              </p>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* SOLUTION / POSITIONING */}
+        <motion.section {...revealProps} className="mt-10 md:mt-16 overflow-hidden">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr]">
+            <div className="px-6 lg:px-10 py-10 lg:border-r border-black/[0.06]">
+              <div className="text-[11px] font-semibold tracking-[0.1em] uppercase text-black/40">Not a dashboard</div>
+              <h2 className="text-[26px] md:text-[34px] leading-[1.12] tracking-[-0.02em] font-semibold mt-4">
+                Talo doesn&apos;t show you metrics.{" "}
+                <span style={{ color: ACCENT }}>It goes and finds the answer.</span>
+              </h2>
+              <p className="text-[15px] leading-[1.7] text-black/60 mt-5 max-w-[560px]">
+                Talo is an AI employee, not a dashboard. Ask it a real question — &quot;why did my profit drop,&quot;
+                &quot;why was my payout short,&quot; &quot;find where I&apos;m losing money&quot; — and it investigates across
+                every system your business runs on.
+              </p>
+              <p className="text-[15px] leading-[1.7] text-black/60 mt-4 max-w-[560px]">
+                It comes back with a finding, the evidence behind it, and{" "}
+                <span className="font-semibold text-black/80">what it already did</span> (or recommends doing) about it.
+              </p>
+            </div>
+            <div className="px-6 lg:px-10 py-10 bg-[#FAFAF9]">
+              <div className="text-[11px] font-semibold tracking-[0.1em] uppercase text-black/40">Systems it runs on</div>
+              <div className="mt-5 grid grid-cols-2 gap-x-4 gap-y-3">
+                {sources.map((s) => (
+                  <div key={s} className="flex items-center gap-2.5 text-[14px] text-black/70">
+                    <span className="w-6 h-6 rounded-full bg-white border border-black/[0.08] grid place-items-center text-[11px]" style={{ color: ACCENT }}>
+                      ✓
+                    </span>
+                    {s}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* HOW IT WORKS — THE INVESTIGATION */}
+        <motion.section id="how" {...revealProps} className="scroll-mt-28 mt-10 md:mt-16 overflow-hidden">
+          <div className="px-6 lg:px-8 py-8 border-b border-black/[0.06] flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <div>
+              <div className="text-[11px] font-semibold tracking-[0.1em] uppercase text-black/40">How it works</div>
+              <h2 className="text-[26px] md:text-[34px] leading-[1.1] tracking-[-0.02em] font-semibold mt-3">
+                Watch Talo work a real job.
+              </h2>
+            </div>
+            <div className={`${serif.className} text-[18px] text-black/50 md:text-right`}>
+              &quot;Why did my profit drop last month?&quot;
+            </div>
+          </div>
+          <InvestigationFlow />
+        </motion.section>
+
+        {/* EVIDENCE */}
+        <motion.section id="evidence" {...revealProps} className="scroll-mt-28 mt-10 md:mt-16 overflow-hidden">
+          <div className="grid grid-cols-1 lg:grid-cols-2">
+            <div className="px-6 lg:px-10 py-10 lg:py-14 lg:border-r border-black/[0.06] flex flex-col justify-center">
+              <div className="text-[11px] font-semibold tracking-[0.1em] uppercase text-black/40">Trust</div>
+              <h2 className="text-[26px] md:text-[34px] leading-[1.12] tracking-[-0.02em] font-semibold mt-4">
+                Talo shows its work. <span style={{ color: ACCENT }}>Every time.</span>
+              </h2>
+              <p className="text-[15px] leading-[1.7] text-black/60 mt-5 max-w-[460px]">
+                No black-box answers. Every finding comes with the underlying numbers, so you can ask &quot;how do you
+                know?&quot; and actually get shown.
+              </p>
+            </div>
+            <div className="px-6 lg:px-10 py-10 lg:py-14 bg-[#FAFAF9] flex items-center justify-center">
+              <div className="w-full max-w-[420px]">
+                <LazyMount>
+                  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: easeOut }}>
+                    <EvidenceCard />
+                  </motion.div>
+                </LazyMount>
+              </div>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* FIVE KILLER JOBS */}
+        <motion.section id="jobs" {...revealProps} className="scroll-mt-28 mt-10 md:mt-16 overflow-hidden">
+          <div className="px-6 lg:px-8 py-8 border-b border-black/[0.06]">
+            <div className="text-[11px] font-semibold tracking-[0.1em] uppercase text-black/40">V1 scope</div>
+            <h2 className="text-[26px] md:text-[34px] leading-[1.1] tracking-[-0.02em] font-semibold mt-3">
+              Start with five jobs. Nail them completely.
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {jobs.map((j, i) => (
               <motion.div
-                key={s.n}
+                key={j.n}
                 initial="hidden"
                 whileInView="show"
                 viewport={{ once: true, margin: "-40px" }}
                 variants={fadeUp}
                 transition={{ duration: 0.5, delay: (i % 3) * 0.08, ease: easeOut }}
                 whileHover={{ y: -4 }}
-                className={`px-6 py-7 group hover:bg-[#FAFAF9] transition-colors ${i % 3 !== 2 ? "md:border-r" : ""} ${
-                  i < 3 ? "border-b" : ""
-                } border-black/[0.06]`}
+                className={`px-6 py-8 group hover:bg-[#FAFAF9] transition-colors border-black/[0.06] ${
+                  i % 3 !== 2 ? "lg:border-r" : ""
+                } ${i % 2 === 0 ? "md:border-r lg:border-r" : ""} border-b`}
               >
-                <div className="flex items-start justify-between">
-                  <div className="text-[10px] tracking-[0.12em] text-black/30 font-semibold">{s.n}</div>
+                <div className="flex items-center justify-between">
+                  <div className="text-[11px] mono font-semibold text-black/30">{j.n}</div>
                   <span className="w-7 h-7 rounded-full border border-black/[0.08] grid place-items-center text-[11px] group-hover:bg-black group-hover:text-white group-hover:border-black transition-colors">
                     →
                   </span>
                 </div>
-                <div className="text-[14px] font-semibold mt-3">{s.title}</div>
-                <div className="text-[12px] text-black/45 mt-1">{s.desc}</div>
-                <ul className="mt-4 space-y-1.5 text-[12.5px] leading-relaxed text-black/55">
-                  {s.items.map((it) => (
-                    <li key={it} className="flex gap-2">
-                      <span className="text-black/25">·</span> {it}
-                    </li>
-                  ))}
-                </ul>
+                <div className="text-[17px] font-semibold mt-4 leading-snug tracking-[-0.01em]">&quot;{j.q}&quot;</div>
+                <div className="text-[13px] text-black/50 mt-2.5 leading-relaxed">{j.d}</div>
               </motion.div>
             ))}
+            <div className="px-6 py-8 flex flex-col justify-center bg-[#141414] text-white border-b border-black/[0.06]">
+              <div className="text-[13px] leading-relaxed text-white/70">
+                Every job runs the same way:
+                <span className="text-white font-semibold"> investigate, gather evidence, explain the finding, recommend or take action.</span>
+              </div>
+            </div>
           </div>
         </motion.section>
 
-        {/* PORTFOLIO */}
-        <motion.section id="work" {...revealProps} className={`scroll-mt-28 mt-10 md:mt-16 overflow-hidden`}>
-          <div className="px-6 lg:px-8 py-8 border-b border-black/[0.06] flex items-end justify-between gap-6">
-            <div>
-              <div className="text-[11px] font-semibold tracking-[0.08em] uppercase text-black/40">Our work — Things we&apos;ve actually done</div>
-              <h2 className="text-[24px] md:text-[30px] leading-[1.1] tracking-[-0.02em] font-semibold mt-2">
-                Real work. Real deliverables.
-              </h2>
-            </div>
-            <div className="hidden md:flex items-center gap-3 shrink-0">
-              <div className="text-right">
-                <div className="text-[10px] tracking-[0.1em] uppercase text-black/40">All Projects</div>
-                <div className="text-[20px] font-semibold leading-none">04</div>
+        {/* AUTONOMY LADDER */}
+        <motion.section id="autonomy" {...revealProps} className="scroll-mt-28 mt-10 md:mt-16 overflow-hidden">
+          <div className="px-6 lg:px-8 py-8 border-b border-black/[0.06]">
+            <div className="text-[11px] font-semibold tracking-[0.1em] uppercase text-black/40">Trust progression</div>
+            <h2 className="text-[26px] md:text-[34px] leading-[1.1] tracking-[-0.02em] font-semibold mt-3">
+              You control how much Talo does on its own.
+            </h2>
+          </div>
+          <AutonomyLadder />
+          <div className="px-6 lg:px-8 py-6 border-t border-black/[0.06]">
+            <p className={`${serif.className} text-[18px] md:text-[20px] text-black/55`}>
+              Talo starts as an analyst. <span className="text-black">You decide when it becomes an operator.</span>
+            </p>
+          </div>
+        </motion.section>
+
+        {/* COMPARISON */}
+        <motion.section {...revealProps} className="mt-10 md:mt-16 overflow-hidden">
+          <div className="px-6 lg:px-8 py-8 border-b border-black/[0.06]">
+            <h2 className="text-[24px] md:text-[30px] leading-[1.15] tracking-[-0.02em] font-semibold max-w-[820px]">
+              Talo isn&apos;t trying to replace your tools. It&apos;s trying to replace{" "}
+              <span style={{ color: ACCENT }}>the person stitching them together.</span>
+            </h2>
+          </div>
+
+          <div className="overflow-x-auto">
+            <div className="min-w-[640px]">
+              <div className="grid grid-cols-[1fr_1.2fr_1.4fr] px-6 lg:px-8 py-3.5 border-b border-black/[0.06] text-[10.5px] font-semibold tracking-[0.08em] uppercase text-black/40 bg-[#FAFAF9]">
+                <div>Tool</div>
+                <div>Their promise</div>
+                <div style={{ color: ACCENT }}>Talo</div>
               </div>
-              <div className="w-8 h-8 rounded-full bg-[#141414] text-white grid place-items-center text-[11px]">→</div>
+              {comparison.map((r, i) => (
+                <div
+                  key={r.tool}
+                  className={`grid grid-cols-[1fr_1.2fr_1.4fr] px-6 lg:px-8 py-4 items-center text-[13.5px] ${
+                    i > 0 ? "border-t" : ""
+                  } border-black/[0.06] hover:bg-[#FAFAF9] transition-colors`}
+                >
+                  <div className="font-semibold pr-4">{r.tool}</div>
+                  <div className="text-black/50 pr-4">{r.promise}</div>
+                  <div className="font-medium">{r.talo}</div>
+                </div>
+              ))}
             </div>
+          </div>
+        </motion.section>
+
+        {/* ATTACK THE LABOR */}
+        <motion.section {...revealProps} className="mt-10 md:mt-16 overflow-hidden">
+          <div className="px-6 lg:px-8 py-8 border-b border-black/[0.06]">
+            <div className="text-[11px] font-semibold tracking-[0.1em] uppercase text-black/40">Attack the labor</div>
+            <h2 className="text-[26px] md:text-[34px] leading-[1.1] tracking-[-0.02em] font-semibold mt-3">
+              Replace the 10 hours, not the software.
+            </h2>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2">
-            {portfolio.map((p, i) => (
-              <motion.div
-                key={p.n}
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, margin: "-40px" }}
-                variants={fadeUp}
-                transition={{ duration: 0.5, delay: (i % 2) * 0.1, ease: easeOut }}
-                whileHover={{ y: -4 }}
-                className={`px-6 lg:px-8 py-7 ${i % 2 === 0 ? "lg:border-r" : ""} ${i < 2 ? "border-b" : ""} border-black/[0.06]`}
-              >
-                <div className="flex items-center gap-2 text-[10.5px] font-semibold tracking-[0.06em] uppercase text-black/40">
-                  <span className="bg-[#141414] text-white rounded-full px-2.5 py-1">Project {p.n}</span>
-                  <span className="hidden sm:inline truncate text-black/35">{p.workflow}</span>
-                </div>
-
-                <h3 className="text-[16px] font-semibold tracking-tight mt-4 leading-tight">{p.title}</h3>
-
-                <div className="mt-4 text-[10.5px] font-semibold tracking-[0.08em] uppercase text-black/40">Client request</div>
-                <div className="text-[13px] leading-relaxed text-black/60 mt-1">&quot;{p.request}&quot;</div>
-
-                <div className="mt-5 grid grid-cols-2 gap-2">
-                  <div className="bg-[#F5F4F1] rounded-xl p-3">
-                    <div className="text-[10px] uppercase text-black/40">Time</div>
-                    <div className="text-[13px] font-semibold mt-1">{p.time}</div>
+            {/* before */}
+            <div className="px-6 lg:px-8 py-8 lg:border-r border-black/[0.06]">
+              <div className="text-[11px] font-semibold tracking-[0.08em] uppercase text-black/40">Before Talo — a typical week</div>
+              <div className="mt-5 rounded-2xl border border-black/[0.06] overflow-hidden mono">
+                {laborWeek.map((r, i) => (
+                  <div key={r.day} className={`flex items-center gap-4 px-4 py-3 text-[13px] ${i > 0 ? "border-t" : ""} border-black/[0.05]`}>
+                    <span className="w-10 font-semibold text-black/40">{r.day}</span>
+                    <span className="w-10 font-semibold" style={{ color: RED }}>{r.h}</span>
+                    <span className="text-black/60">{r.task}</span>
                   </div>
-                  <div className="bg-[#F5F4F1] rounded-xl p-3">
-                    <div className="text-[10px] uppercase text-black/40">Cost</div>
-                    <div className="text-[13px] font-semibold mt-1" style={{ color: ACCENT }}>{p.cost}</div>
-                  </div>
-                  <div className="col-span-2 bg-[#F5F4F1] rounded-xl p-3 flex items-center justify-between">
-                    <div>
-                      <div className="text-[10px] uppercase text-black/40">Delivered</div>
-                      <div className="text-[12px] font-semibold mt-1">{p.delivered}</div>
-                    </div>
-                    <span className="w-7 h-7 rounded-full bg-white border border-black/[0.08] grid place-items-center text-[11px]">→</span>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.section>
-
-        {/* HOW IT WORKS */}
-        <motion.section id="how" {...revealProps} className={`scroll-mt-28 mt-10 md:mt-16 overflow-hidden`}>
-          <div className="px-6 lg:px-8 py-8 border-b border-black/[0.06] text-center">
-            <h2 className="text-[22px] md:text-[28px] leading-[1.1] tracking-[-0.02em] font-semibold">
-              You have the task. We have the workers.
-            </h2>
-            <p className="text-[12.5px] text-black/45 mt-3">Five steps. No mystery.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-5">
-            {[
-              { n: "01", t: "Tell us", d: "Describe what you need.", note: "“Find 500 companies matching these criteria.”" },
-              { n: "02", t: "Get an estimate", d: "We ask questions and estimate the time/cost." },
-              { n: "03", t: "Approve", d: "Authorize the maximum budget." },
-              { n: "04", t: "We work", d: "Your AI freelancer gets started." },
-              { n: "05", t: "Get it done", d: "Receive the finished work and pay only for actual time." },
-            ].map((s, i) => (
-              <motion.div
-                key={s.n}
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, margin: "-40px" }}
-                variants={fadeUp}
-                transition={{ duration: 0.5, delay: i * 0.08, ease: easeOut }}
-                className={`px-6 py-8 relative ${i < 4 ? "md:border-r" : ""} border-black/[0.06] ${i > 0 ? "border-t md:border-t-0" : ""}`}
-              >
-                <div className="text-[11px] font-semibold tracking-[0.08em]" style={{ color: ACCENT }}>{s.n}</div>
-                <h3 className="text-[13px] font-semibold mt-2">{s.t}</h3>
-                <p className="text-[12.5px] text-black/55 mt-2 leading-relaxed">{s.d}</p>
-                {s.note && <p className="text-[11.5px] text-black/40 mt-2">{s.note}</p>}
-                {i < 4 && (
-                  <div className="hidden md:grid absolute top-1/2 -right-3.5 w-7 h-7 -translate-y-1/2 bg-white border border-black/[0.08] rounded-full place-items-center text-[11px] z-10">
-                    →
-                  </div>
-                )}
-              </motion.div>
-            ))}
-          </div>
-          <div className="py-5 text-center text-[11px] tracking-[0.1em] uppercase font-semibold border-t border-black/[0.06] text-black/50">
-            That&apos;s it.
-          </div>
-        </motion.section>
-
-        {/* YOU'RE ALWAYS IN CONTROL */}
-        <motion.section {...revealProps} className={`mt-10 md:mt-16 overflow-hidden`}>
-          <div className="px-6 lg:px-8 py-8 border-b border-black/[0.06]">
-            <h2 className="text-[24px] md:text-[30px] leading-[1.1] tracking-[-0.02em] font-semibold">You&apos;re always in control.</h2>
-            <p className="text-[13px] leading-relaxed text-black/50 mt-3 max-w-[640px]">
-              We don&apos;t ask you to blindly pay for an AI and hope it works.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-            <div className="p-6 lg:p-7 border-b lg:border-b-0 lg:border-r border-black/[0.06]">
-              <div className="text-[11px] font-semibold tracking-[0.06em]" style={{ color: ACCENT }}>01 — SEE THE ESTIMATE</div>
-              <p className="text-[12.5px] leading-relaxed text-black/60 mt-3">Before work starts, we&apos;ll ask the questions needed to understand your task.</p>
-              <div className="mt-4 rounded-xl bg-[#F5F4F1] p-4 text-[12px] leading-relaxed">
-                <div><span className="text-black/45 uppercase text-[10px]">Estimated:</span> <span className="font-semibold">4–6 hours</span></div>
-                <div><span className="text-black/45 uppercase text-[10px]">Rate:</span> <span className="font-semibold">$10/hour</span></div>
-                <div><span className="text-black/45 uppercase text-[10px]">Maximum:</span> <span className="font-semibold">$60</span></div>
+                ))}
+              </div>
+              <div className="mt-4 text-[13px] font-semibold">
+                = <span style={{ color: RED }}>9 hours/week</span> of manual investigation
               </div>
             </div>
 
-            <div className="p-6 lg:p-7 border-b lg:border-b-0 lg:border-r border-black/[0.06]">
-              <div className="text-[11px] font-semibold tracking-[0.06em]" style={{ color: ACCENT }}>02 — AUTHORIZE THE BUDGET</div>
-              <p className="text-[12.5px] leading-relaxed text-black/60 mt-3">You approve the maximum amount before your AI freelancer starts.</p>
-              <div className="mt-4 rounded-xl bg-[#141414] text-white text-[12px] leading-relaxed p-4 text-center font-semibold">
-                You will only be charged for actual work performed.
+            {/* after */}
+            <div className="px-6 lg:px-8 py-8 bg-[#141414] flex flex-col justify-center">
+              <div className="text-[11px] font-semibold tracking-[0.08em] uppercase text-white/40">With Talo</div>
+              <div className="mt-6 flex items-baseline gap-3">
+                <span className="text-[56px] md:text-[72px] font-semibold leading-none mono" style={{ color: ACCENT }}>37</span>
+                <span className="text-[18px] md:text-[22px] font-semibold text-white leading-tight">
+                  jobs completed<br />this week.
+                </span>
               </div>
-            </div>
-
-            <div className="p-6 lg:p-7 border-b lg:border-b-0 lg:border-r border-black/[0.06]">
-              <div className="text-[11px] font-semibold tracking-[0.06em]" style={{ color: ACCENT }}>03 — WATCH THE WORK</div>
-              <p className="text-[12.5px] leading-relaxed text-black/60 mt-3">Your task dashboard shows:</p>
-              <div className="mt-4 rounded-xl p-4 bg-[#F5F4F1]">
-                <div className="text-[10.5px] tracking-[0.06em] uppercase font-semibold flex items-center gap-2">
-                  Working <span className="w-1.5 h-1.5 bg-[#16A34A] rounded-full animate-pulse" />
-                </div>
-                <div className="text-[12.5px] mt-2"><span className="text-black/45">Progress:</span> <span className="font-semibold">1,247 / 2,000</span></div>
-                <div className="text-[12.5px] mt-1"><span className="text-black/45">Current cost:</span> <span className="font-semibold">$26.83</span></div>
-                <div className="text-[12.5px] mt-1"><span className="text-black/45">Budget:</span> <span className="font-semibold">$60</span></div>
-                <div className="text-[10.5px] text-black/40 mt-3">No mystery bill at the end.</div>
+              <div className="mt-6 flex items-center gap-2 text-[12.5px] text-white/50">
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#4ADE80" }} />
+                Talo, working while you slept.
               </div>
-            </div>
-
-            <div className="p-6 lg:p-7">
-              <div className="text-[11px] font-semibold tracking-[0.06em]" style={{ color: ACCENT }}>04 — GET THE RESULT</div>
-              <p className="text-[12.5px] leading-relaxed text-black/60 mt-3">When the task is complete:</p>
-              <div className="mt-4 rounded-xl bg-[#F5F4F1] p-4 text-[12px]">
-                <div><span className="text-black/45 uppercase text-[10px]">Time:</span> <span className="font-semibold">4h 18m</span></div>
-                <div className="mt-1"><span className="text-black/45 uppercase text-[10px]">Final cost:</span> <span className="font-semibold" style={{ color: ACCENT }}>$43.00</span></div>
-                <div className="text-[12px] text-black/55 mt-3 leading-relaxed">You only pay for what was actually used.</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 border-t border-black/[0.06]">
-            <div className="col-span-12 lg:col-span-4 bg-[#141414] text-white p-6 lg:p-8 flex flex-col justify-center">
-              <h3 className="text-[18px] leading-[1.1] tracking-[-0.02em] font-semibold" style={{ color: ACCENT }}>Not what you expected?</h3>
-              <p className="text-[12.5px] leading-relaxed text-white/65 mt-3">Tell us what went wrong.</p>
-            </div>
-            <div className="col-span-12 lg:col-span-8 p-6 lg:p-8" style={{ background: ACCENT }}>
-              <p className="text-[13.5px] leading-relaxed font-medium text-white">We&apos;ll review the original requirements and delivered work.</p>
-              <p className="text-[13.5px] leading-relaxed font-semibold mt-2 text-white">If we didn&apos;t complete the agreed task correctly, we&apos;ll make it right — either by redoing the affected work at no additional charge or refunding the applicable amount.</p>
-              <p className="text-[11px] leading-relaxed text-white/80 mt-4">Changes to requirements, incomplete instructions, or work completed according to the agreed scope aren&apos;t eligible for refunds.</p>
-              <Link href="/work-guarantee" className="inline-block mt-4 text-[11px] tracking-[0.06em] uppercase font-semibold border border-white/40 rounded-full px-4 py-2 text-white hover:bg-white hover:text-[#141414] transition-colors">
-                Read guarantee details →
-              </Link>
             </div>
           </div>
         </motion.section>
 
         {/* PRICING */}
-        <motion.section id="pricing" {...revealProps} className="scroll-mt-28 rounded-[22px] mt-4 md:mt-5 bg-[#141414] text-white overflow-hidden">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 px-6 lg:px-10 py-9 lg:py-12 items-center">
+        <motion.section id="pricing" {...revealProps} className="scroll-mt-28 mt-10 md:mt-16 overflow-hidden">
+          <div className="px-6 lg:px-8 py-8 border-b border-black/[0.06] flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
-              <div className="text-[11px] tracking-[0.08em] uppercase text-white/40">Pricing — Simple by design</div>
-              <div className="text-[44px] md:text-[56px] leading-none tracking-[-0.03em] font-semibold mt-3">
-                $10 <span className="text-white/40 text-[22px] align-middle">/</span> <span style={{ color: ACCENT }}>hour.</span>
-              </div>
-              <div className="text-[12.5px] leading-relaxed text-white/55 mt-4">
-                No subscription. No minimum commitment. No software to learn.
-              </div>
-              <div className="mt-6 text-[11px] tracking-[0.06em] uppercase font-semibold text-white/60">Pay for the work. Not the software.</div>
-              <Link
-                href="/hire"
-                className="mt-6 inline-flex bg-white hover:bg-white/90 text-[#141414] text-[13px] font-semibold px-6 py-3.5 rounded-full hover:scale-[1.03] active:scale-[0.97] transition-all"
+              <div className="text-[11px] font-semibold tracking-[0.1em] uppercase text-black/40">Pricing</div>
+              <h2 className="text-[26px] md:text-[34px] leading-[1.1] tracking-[-0.02em] font-semibold mt-3">
+                Priced like an employee, not a seat.
+              </h2>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+            {pricing.map((p, i) => (
+              <motion.div
+                key={p.name}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, margin: "-40px" }}
+                variants={fadeUp}
+                transition={{ duration: 0.5, delay: i * 0.08, ease: easeOut }}
+                className={`px-6 py-8 flex flex-col border-black/[0.06] ${i % 4 !== 3 ? "lg:border-r" : ""} ${
+                  i % 2 === 0 ? "md:border-r lg:border-r" : ""
+                } ${i < 2 ? "border-b md:border-b lg:border-b-0" : ""} ${i === 2 ? "border-b md:border-b-0" : ""} ${
+                  p.highlight ? "bg-[#141414] text-white" : "hover:bg-[#FAFAF9] transition-colors"
+                }`}
               >
-                Give us a task →
-              </Link>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {[
-                { l: "500 companies researched", t: "6h 42m", c: "$67" },
-                { l: "1,000 leads enriched", t: "5h 30m", c: "$55" },
-                { l: "10,000 products processed", t: "7h 50m", c: "$78" },
-              ].map((r, i) => (
-                <motion.div
-                  key={r.l}
-                  initial="hidden"
-                  whileInView="show"
-                  viewport={{ once: true, margin: "-40px" }}
-                  variants={fadeUp}
-                  transition={{ duration: 0.5, delay: i * 0.08, ease: easeOut }}
-                  whileHover={{ y: -3 }}
-                  className="rounded-xl bg-white/[0.06] border border-white/10 px-5 py-4"
-                >
-                  <div className="text-[11.5px] text-white/50 leading-tight">{r.l}</div>
-                  <div className="text-[13px] font-semibold mt-2">
-                    {r.t} <span className="text-white/30">→</span> <span style={{ color: ACCENT }}>{r.c}</span>
-                  </div>
-                </motion.div>
-              ))}
-              <div className="rounded-xl bg-white/[0.03] border border-dashed border-white/15 px-5 py-4 flex items-center justify-center text-center">
-                <div className="text-[11.5px] text-white/45 leading-snug">Any size job — same simple rate.</div>
-              </div>
-            </div>
-          </div>
-        </motion.section>
-
-        {/* TRANSPARENCY */}
-        <motion.section {...revealProps} className={`mt-10 md:mt-16 overflow-hidden`}>
-          <div className="px-6 lg:px-8 py-7 border-b border-black/[0.06]">
-            <h2 className="text-[20px] md:text-[24px] leading-[1.1] tracking-[-0.02em] font-semibold">Know what you&apos;re paying for.</h2>
-            <p className="text-[12px] text-black/45 mt-2">Every task has a clear scope, delivery and cost.</p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-5">
-            {[
-              { label: "Task", desc: "What you asked us to do." },
-              { label: "Work", desc: "What was executed." },
-              { label: "Time", desc: "How long it took." },
-              { label: "Delivery", desc: "What you received." },
-              { label: "Cost", desc: "What you paid." },
-            ].map((c, i) => (
-              <div key={c.label} className={`px-6 py-6 ${i < 4 ? "md:border-r" : ""} ${i % 2 === 0 ? "border-r md:border-r-0" : ""} ${i < 3 ? "border-b md:border-b-0" : ""} border-black/[0.06]`}>
-                <div className="text-[12.5px] tracking-[0.02em] font-semibold">{c.label}</div>
-                <div className="text-[12px] leading-relaxed text-black/45 mt-2">{c.desc}</div>
-              </div>
+                <div className="flex items-center justify-between">
+                  <div className="text-[13px] font-semibold tracking-[0.04em] uppercase">{p.name}</div>
+                  {p.highlight && (
+                    <span className="text-[9.5px] font-semibold tracking-[0.08em] uppercase px-2 py-0.5 rounded-full" style={{ background: ACCENT }}>
+                      Popular
+                    </span>
+                  )}
+                </div>
+                <div className="mt-5">
+                  <span className="text-[28px] font-semibold tracking-tight mono">{p.price}</span>
+                  <span className={p.highlight ? "text-white/40 text-[14px]" : "text-black/40 text-[14px]"}>{p.per}</span>
+                </div>
+                <p className={`text-[13px] leading-relaxed mt-4 flex-1 ${p.highlight ? "text-white/60" : "text-black/55"}`}>
+                  {p.features}
+                </p>
+              </motion.div>
             ))}
           </div>
-        </motion.section>
 
-        {/* SEO HUB — pinned heading + scrolling task links */}
-        <TaskScroll />
-
-        {/* FAQ */}
-        <motion.section id="faq" {...revealProps} className={`scroll-mt-28 mt-10 md:mt-16 overflow-hidden`}>
-          <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-8 px-6 lg:px-8 py-7 border-b border-black/[0.06]">
-            <h2 className="text-[26px] md:text-[30px] tracking-[-0.02em] font-semibold">FAQ</h2>
-            <div>
-              <div className="text-[12px] font-semibold">Most common questions</div>
-              <div className="text-[11.5px] text-black/45">No worries, here you can find all the answers</div>
-            </div>
-          </div>
-          <div className="divide-y divide-black/[0.06]">
-            {faqs.map((f, i) => {
-              const open = openFaq === i;
-              return (
-                <div key={f.q}>
-                  <button
-                    onClick={() => setOpenFaq(open ? null : i)}
-                    className="w-full flex items-center justify-between gap-6 px-6 lg:px-8 py-4 text-left hover:bg-[#FAFAF9] transition-colors"
-                  >
-                    <span className="text-[13.5px] font-medium leading-snug">{f.q}</span>
-                    <span
-                      className="w-7 h-7 shrink-0 rounded-full grid place-items-center text-[14px] font-semibold text-white"
-                      style={{ background: open ? INK : ACCENT }}
-                    >
-                      {open ? "×" : "+"}
-                    </span>
-                  </button>
-                  <AnimatePresence>
-                    {open && (
-                      <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-                        <div className="px-6 lg:px-8 pb-5">
-                          <div className="text-[13px] leading-relaxed text-black/60 bg-[#F5F4F1] rounded-xl p-4 max-w-[720px]">{f.a}</div>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              );
-            })}
-          </div>
-        </motion.section>
-
-        {/* FINAL CTA */}
-        <motion.section id="cta" {...revealProps} className={`mt-10 md:mt-16 text-center px-6 py-12 md:py-16`}>
-          <h2 className="leading-[1.05] tracking-[-0.02em]">
-            <span className="block text-[30px] md:text-[44px] font-semibold">What&apos;s the work</span>
-            <span className={`${serif.className} block text-[30px] md:text-[44px]`}>you don&apos;t want to do?</span>
-          </h2>
-          <div className="text-[13px] text-black/55 mt-4">Send it to us.</div>
-          <div className="text-[12px] tracking-[0.04em] leading-relaxed mt-5 text-black/60">
-            <div>You explain it. We figure it out. <span className="font-semibold text-black">You get it done.</span></div>
-          </div>
-          <div className="text-[11px] tracking-[0.08em] uppercase font-semibold mt-5 text-black/40">$10 / hour</div>
-          <Link
-            href="/hire"
-            className="mt-6 inline-flex bg-[#141414] hover:bg-black text-white text-[13px] font-semibold px-8 py-4 rounded-full hover:scale-[1.03] active:scale-[0.97] transition-all"
-          >
-            Give us your task →
-          </Link>
-          <div className="text-[11px] tracking-[0.06em] uppercase text-black/40 mt-4">
-            $10/HR · SEE ESTIMATE FIRST · PAY FOR ACTUAL WORK ·{" "}
-            <Link href="/work-guarantee" className="underline hover:text-black">
-              WORK GUARANTEE
+          <div className="px-6 lg:px-8 py-6 border-t border-black/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-[13px] text-black/55">Not sure where you fit? Start with a free investigation.</p>
+            <Link
+              href="/hire"
+              className="bg-[#141414] hover:bg-black text-white text-[13px] font-semibold px-6 py-3 rounded-full hover:scale-[1.03] active:scale-[0.97] transition-all whitespace-nowrap"
+            >
+              Start with a free investigation →
             </Link>
           </div>
         </motion.section>
 
+        {/* FINAL CTA */}
+        <motion.section {...revealProps} className="mt-10 md:mt-16 text-center px-6 py-14 md:py-20">
+          <h2 className="leading-[1.05] tracking-[-0.02em]">
+            <span className="block text-[30px] md:text-[46px] font-semibold">Stop asking which dashboard</span>
+            <span className="block text-[30px] md:text-[46px] font-semibold">has the answer.</span>
+          </h2>
+          <p className={`${serif.className} text-[22px] md:text-[28px] text-black/55 mt-5`}>
+            Just tell Talo what needs to get done.
+          </p>
+          <Link
+            href="/hire"
+            className="mt-8 inline-flex bg-[#141414] hover:bg-black text-white text-[13.5px] font-semibold px-8 py-4 rounded-full hover:scale-[1.03] active:scale-[0.97] transition-all"
+          >
+            Give Talo a job →
+          </Link>
+        </motion.section>
+
         {/* FOOTER */}
         <motion.footer {...revealProps} className="mt-4 md:mt-5 mb-6 rounded-[32px] bg-[#0E0F10] overflow-hidden relative">
-          {/* SUBSCRIBE */}
-          <div className="relative px-6 md:px-10 pt-10 md:pt-12 pb-6 md:pb-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-center">
-              <div>
-                <h3 className="text-white text-[26px] md:text-[32px] font-semibold tracking-[-0.02em]">
-                  Get updates from Abstrak Labs
-                </h3>
-                <p className="text-white/45 text-[13px] leading-relaxed mt-3 max-w-[380px]">
-                  New worker types, pricing changes and product updates — no spam, unsubscribe anytime.
-                </p>
-                <FooterSubscribeForm />
-              </div>
-              <FooterOrbit />
-            </div>
-          </div>
-
-          {/* LINKS */}
-          <div className="relative border-t border-white/[0.08] px-6 md:px-10 py-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="relative px-6 md:px-10 pt-10 md:pt-12 pb-8 grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr] gap-8">
             <div>
               <Image src="/talo-by-abstrak-lockup.png" alt="Talo by Abstrak Labs" width={613} height={464} className="h-16 w-auto" />
-              <div className="text-white/35 text-[11px] mt-3">© 2026 Talo. All rights reserved.</div>
+              <p className="text-white/45 text-[13px] leading-relaxed mt-4 max-w-[300px]">
+                Your AI employee for ecommerce. It investigates what&apos;s wrong — and shows you why.
+              </p>
+              <div className="text-white/35 text-[11px] mt-4">© 2026 Talo. All rights reserved.</div>
             </div>
 
             <div>
-              <div className="text-white text-[12px] font-semibold uppercase tracking-[0.04em] mb-3">Useful links</div>
+              <div className="text-white text-[12px] font-semibold uppercase tracking-[0.04em] mb-3">Product</div>
               <div className="flex flex-col gap-2 text-[12.5px] text-white/50">
-                <Link href="/work-guarantee" className="hover:text-white transition-colors w-fit">Work Guarantee</Link>
-                <Link href="/privacy" className="hover:text-white transition-colors w-fit">Privacy Policy</Link>
-                <a href="#" className="hover:text-white transition-colors w-fit">Terms of Service</a>
+                <a href="#how" className="hover:text-white transition-colors w-fit">How it works</a>
+                <a href="#jobs" className="hover:text-white transition-colors w-fit">The five jobs</a>
+                <a href="#pricing" className="hover:text-white transition-colors w-fit">Pricing</a>
               </div>
             </div>
 
             <div>
-              <div className="text-white text-[12px] font-semibold uppercase tracking-[0.04em] mb-3">Contact</div>
+              <div className="text-white text-[12px] font-semibold uppercase tracking-[0.04em] mb-3">Company</div>
               <div className="flex flex-col gap-2 text-[12.5px] text-white/50">
-                <Link href="/work" className="hover:text-white transition-colors w-fit">Sample work</Link>
-                <Link href="/hire" className="hover:text-white transition-colors w-fit">Hire a worker</Link>
+                <Link href="/privacy" className="hover:text-white transition-colors w-fit">Privacy Policy</Link>
+                <Link href="/hire" className="hover:text-white transition-colors w-fit">Give Talo a job</Link>
                 <a href="mailto:hello@abstraklabs.com" className="hover:text-white transition-colors w-fit">hello@abstraklabs.com</a>
               </div>
             </div>
           </div>
 
-          {/* WORDMARK BLEED */}
-          <div className="relative select-none pointer-events-none text-center leading-none font-semibold tracking-[-0.03em] text-[19vw] md:text-[13vw] lg:text-[168px] translate-y-[30%]">
-            <span className="text-white/[0.05]">ABSTRAK </span>
-            <span style={{ color: ACCENT, opacity: 0.1 }}>LABS</span>
+          <div className="relative border-t border-white/[0.08] px-6 md:px-10 py-5">
+            <p className="text-white/40 text-[12.5px]">
+              <span className="text-white/70 font-semibold">Talo</span> — Your AI employee for ecommerce.
+            </p>
+          </div>
+
+          {/* wordmark bleed */}
+          <div className="relative select-none pointer-events-none text-center leading-none font-semibold tracking-[-0.03em] text-[26vw] md:text-[18vw] lg:text-[220px] translate-y-[32%]">
+            <span style={{ color: ACCENT, opacity: 0.1 }}>TALO</span>
           </div>
         </motion.footer>
       </div>

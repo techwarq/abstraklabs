@@ -1,29 +1,30 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Analytics } from "@vercel/analytics/next";
 import AnalyticsTracker from "../components/AnalyticsTracker";
 import { JsonLd } from "../components/JsonLd";
+import TopBanner from "../components/TopBanner";
 import { siteUrl } from "../lib/site";
 import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Hire an AI Freelancer From $10/Hour | Abstrak Labs",
-    template: "%s | Abstrak Labs",
+    default: "Talo — The AI Employee for Ecommerce",
+    template: "%s | Talo",
   },
   description:
-    "Hire an AI freelancer to handle research, data entry, lead generation, data cleaning, document processing and repetitive digital work. Start at $10/hour.",
-  applicationName: "Abstrak Labs",
+    "Talo is the AI employee that investigates what's wrong with your ecommerce business — and tells you exactly why, with evidence. Not another dashboard.",
+  applicationName: "Talo",
   referrer: "origin-when-cross-origin",
   keywords: [
-    "AI freelancer",
-    "hire AI freelancer",
-    "AI data entry",
-    "AI research",
-    "AI lead generation",
-    "data cleaning",
-    "digital labor",
+    "AI employee",
+    "ecommerce AI",
+    "ecommerce investigation",
+    "profit analysis",
+    "payout reconciliation",
+    "Shopify AI",
+    "Amazon fees",
+    "Talo",
     "Abstrak Labs",
   ],
   authors: [{ name: "Abstrak Labs", url: siteUrl }],
@@ -52,24 +53,24 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: siteUrl,
-    siteName: "Abstrak Labs",
-    title: "Hire an AI Freelancer From $10/Hour | Abstrak Labs",
+    siteName: "Talo",
+    title: "Talo — The AI Employee for Ecommerce",
     description:
-      "Hire an AI freelancer to handle research, data entry, lead generation, data cleaning, document processing and repetitive digital work. Start at $10/hour.",
+      "Talo is the AI employee that investigates what's wrong with your ecommerce business — and tells you exactly why, with evidence. Not another dashboard.",
     images: [
       {
         url: `${siteUrl}/og-image.jpg`,
         width: 1200,
         height: 675,
-        alt: "Talo by Abstrak Labs — Hire AI freelancers and get work done.",
+        alt: "Talo — The AI employee for ecommerce. Give Talo a job. It gets it done.",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Hire an AI Freelancer From $10/Hour | Abstrak Labs",
+    title: "Talo — The AI Employee for Ecommerce",
     description:
-      "Hire an AI freelancer to handle research, data entry, lead generation, data cleaning, document processing and repetitive digital work. Start at $10/hour.",
+      "Talo is the AI employee that investigates what's wrong with your ecommerce business — and tells you exactly why, with evidence. Not another dashboard.",
     images: [`${siteUrl}/og-image.jpg`],
   },
   icons: {
@@ -119,13 +120,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <JsonLd data={[organizationJsonLd, websiteJsonLd]} />
-        <Link
-          href="/hire"
-          className="block bg-[#141414] text-center py-2.5 px-4 text-[12.5px] sm:text-[13px] font-semibold hover:bg-black transition-colors"
-          style={{ color: "#719DF4" }}
-        >
-          We&apos;re not live yet — tell us what you want to get done today and we&apos;ll get back to you with 50% off access to Talo →
-        </Link>
+        <TopBanner />
         {children}
         <Analytics />
         <AnalyticsTracker />
